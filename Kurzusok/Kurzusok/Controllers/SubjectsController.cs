@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kurzusok.Data;
 using Kurzusok.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kurzusok.Controllers
 {
@@ -20,6 +21,7 @@ namespace Kurzusok.Controllers
         }
 
         // GET: Subjects
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Subjects.ToListAsync());
