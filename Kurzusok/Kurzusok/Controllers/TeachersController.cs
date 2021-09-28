@@ -7,27 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kurzusok.Data;
 using Kurzusok.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Kurzusok.Controllers
 {
-    public class SubjectsController : Controller
+    public class TeachersController : Controller
     {
         private readonly KurzusokContext _context;
 
-        public SubjectsController(KurzusokContext context)
+        public TeachersController(KurzusokContext context)
         {
             _context = context;
         }
 
-        // GET: Subjects
-        [Authorize]
+        // GET: Teachers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Subjects.ToListAsync());
+            return View(await _context.Teachers.ToListAsync());
         }
 
-        // GET: Subjects/Details/5
+        // GET: Teachers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,39 +33,39 @@ namespace Kurzusok.Controllers
                 return NotFound();
             }
 
-            var subjects = await _context.Subjects
+            var teachers = await _context.Teachers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (subjects == null)
+            if (teachers == null)
             {
                 return NotFound();
             }
 
-            return View(subjects);
+            return View(teachers);
         }
 
-        // GET: Subjects/Create
+        // GET: Teachers/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Subjects/Create
+        // POST: Teachers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
+        public async Task<IActionResult> Create([Bind("Id,Name,Hoursperweek")] Teachers teachers)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(subjects);
+                _context.Add(teachers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(subjects);
+            return View(teachers);
         }
 
-        // GET: Subjects/Edit/5
+        // GET: Teachers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +73,22 @@ namespace Kurzusok.Controllers
                 return NotFound();
             }
 
-            var subjects = await _context.Subjects.FindAsync(id);
-            if (subjects == null)
+            var teachers = await _context.Teachers.FindAsync(id);
+            if (teachers == null)
             {
                 return NotFound();
             }
-            return View(subjects);
+            return View(teachers);
         }
 
-        // POST: Subjects/Edit/5
+        // POST: Teachers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Hoursperweek")] Teachers teachers)
         {
-            if (id != subjects.Id)
+            if (id != teachers.Id)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace Kurzusok.Controllers
             {
                 try
                 {
-                    _context.Update(subjects);
+                    _context.Update(teachers);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectsExists(subjects.Id))
+                    if (!TeachersExists(teachers.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +113,10 @@ namespace Kurzusok.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(subjects);
+            return View(teachers);
         }
 
-        // GET: Subjects/Delete/5
+        // GET: Teachers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,44 +124,30 @@ namespace Kurzusok.Controllers
                 return NotFound();
             }
 
-            var subjects = await _context.Subjects
+            var teachers = await _context.Teachers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (subjects == null)
+            if (teachers == null)
             {
                 return NotFound();
             }
 
-            return View(subjects);
+            return View(teachers);
         }
 
-        // POST: Subjects/Delete/5
+        // POST: Teachers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subjects = await _context.Subjects.FindAsync(id);
-            _context.Subjects.Remove(subjects);
+            var teachers = await _context.Teachers.FindAsync(id);
+            _context.Teachers.Remove(teachers);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubjectsExists(int id)
+        private bool TeachersExists(int id)
         {
-            return _context.Subjects.Any(e => e.Id == id);
+            return _context.Teachers.Any(e => e.Id == id);
         }
-
-        // GET: SearchForm
-        [Authorize]
-        public async Task<IActionResult> SearchForm()
-        {
-            return View();
-        }
-        // POST: Show SearchResult
-        [Authorize]
-        public async Task<IActionResult> SearchResult(String SearchPhrase)
-        {
-            return View("Index", await _context.Subjects.Where(j => j.Name.Contains(SearchPhrase)).ToListAsync());
-        }
-
     }
 }
