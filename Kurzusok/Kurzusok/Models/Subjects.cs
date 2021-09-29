@@ -16,8 +16,8 @@ namespace Kurzusok.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public int EHours { get; set; }
-        public int GyHours { get; set; }
+        public int? EHours { get; set; }
+        public int? GyHours { get; set; }
         public string SubjectCode { get; set; }
 
         public virtual ICollection<Courses> Courses { get; set; }

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 namespace Kurzusok.Models
 {
-    public partial class Szakok
+    public partial class Programmes
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
-        public string Tagozat { get; set; }
-        public string Szint { get; set; }
+        public string Training { get; set; }
+        public string Levels { get; set; }
     }
 }

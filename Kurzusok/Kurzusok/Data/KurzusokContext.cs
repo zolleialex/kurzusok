@@ -29,15 +29,16 @@ namespace Kurzusok.Data
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Courses> Courses { get; set; }
         public virtual DbSet<CoursesTeachers> CoursesTeachers { get; set; }
-        public virtual DbSet<SubjectSzakok> SubjectSzakok { get; set; }
+        public virtual DbSet<Programmes> Programmes { get; set; }
+        public virtual DbSet<SubjectProgramme> SubjectProgramme { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
-        public virtual DbSet<Szakok> Szakok { get; set; }
         public virtual DbSet<Teachers> Teachers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost;Database=Kurzusok;Trusted_Connection=True;");
             }
         }
@@ -150,18 +151,23 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Classroom)
                     .HasColumnName("classroom")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Comment)
                     .HasColumnName("comment")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CourseCode)
+                    .IsRequired()
+                    .HasColumnName("course_code")
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CourseType)
-                    .IsRequired()
                     .HasColumnName("course_type")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Hours).HasColumnName("hours");
@@ -172,7 +178,7 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Softvware)
                     .HasColumnName("softvware")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
@@ -209,11 +215,38 @@ namespace Kurzusok.Data
                     .HasConstraintName("courses_teachers_fk1");
             });
 
-            modelBuilder.Entity<SubjectSzakok>(entity =>
+            modelBuilder.Entity<Programmes>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Levels)
+                    .IsRequired()
+                    .HasColumnName("levels")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Training)
+                    .IsRequired()
+                    .HasColumnName("training")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Year).HasColumnName("year");
+            });
+
+            modelBuilder.Entity<SubjectProgramme>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToTable("subject_szakok");
+                entity.ToTable("subject_programme");
 
                 entity.Property(e => e.SubjectsId).HasColumnName("subjects_id");
 
@@ -245,41 +278,14 @@ namespace Kurzusok.Data
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.SubjectCode)
                     .IsRequired()
                     .HasColumnName("subject_code")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Szakok>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Szint)
-                    .IsRequired()
-                    .HasColumnName("szint")
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Tagozat)
-                    .IsRequired()
-                    .HasColumnName("tagozat")
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Year).HasColumnName("year");
             });
 
             modelBuilder.Entity<Teachers>(entity =>
@@ -293,8 +299,9 @@ namespace Kurzusok.Data
                     .HasDefaultValueSql("('0')");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasColumnName("name")
-                    .HasMaxLength(1)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
             });
 

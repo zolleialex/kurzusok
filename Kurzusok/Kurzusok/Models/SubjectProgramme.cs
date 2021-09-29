@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 namespace Kurzusok.Models
 {
-    public partial class SubjectSzakok
+    public partial class SubjectProgramme
     {
         public int SubjectsId { get; set; }
         public int SzakokId { get; set; }
 
         public virtual Subjects Subjects { get; set; }
-        public virtual Szakok Szakok { get; set; }
+        public virtual Programmes Szakok { get; set; }
     }
 }

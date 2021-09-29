@@ -1150,10 +1150,8 @@ C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kur
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.TagHelpers.output.cache
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.RazorCoreGenerate.cache
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
-C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
-C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
@@ -1688,3 +1686,36 @@ C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.csproj.CopyComplete
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.genruntimeconfig.cache
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_SignInLayout.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\AccessDenied.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ConfirmEmail.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ConfirmEmailChange.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ForgotPassword.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ForgotPasswordConfirmation.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Lockout.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Login.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Logout.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\ChangePassword.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\Email.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\GenerateRecoveryCodes.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\Index.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\PersonalData.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\SetPassword.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_Layout.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ManageNav.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_StatusMessage.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ViewImports.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Register.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\RegisterConfirmation.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ResetPassword.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\ResetPasswordConfirmation.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\_StatusMessage.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\_ViewImports.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Error.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ValidationScriptsPartial.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
+C:\Users\varga\Desktop\ASP.NET MVC\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_SignInLayout.cshtml.g.cs
