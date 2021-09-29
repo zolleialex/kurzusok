@@ -4,47 +4,41 @@
 @{
     ViewData["Title"] = "Belépés";
 }
-
-<div class="d-flex justify-content-center">
-    <div class="col-md-4">
-        <h2>Bejelentkezés</h2>
-        <hr />
-        <section>
-            <form id="account" method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Input.Email">Email cím</label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password">Jelszó</label>
-                    <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label asp-for="Input.RememberMe">
-                            <input asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Bejelentkezés</button>
-                </div>
-                <div class="form-group">
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Elfelejtette a jelszavát?</a>
-                    </p>
-                    @*<p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>*@
-                </div>
-            </form>
-        </section>
+<h2 class="h3 mb-3 font-weight-normal">Bejelentkezés</h2>
+<hr />
+<section>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Input.Email" class="sr-only">Email cím</label>
+        <input asp-for="Input.Email" type="email" class="form-control" placeholder="Email cím" required="" autofocus="" />
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
     </div>
-    @*<div class="col-md-6 col-md-offset-2">
+    <div class="form-group">
+        <label asp-for="Input.Password" class="sr-only">Jelszó</label>
+        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Jelszó" required="" />
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label asp-for="Input.RememberMe">
+                <input asp-for="Input.RememberMe" />
+                @Html.DisplayNameFor(m => m.Input.RememberMe)
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Bejelentkezés</button>
+    </div>
+    <div class="form-group">
+        <p>
+            <a id="forgot-password" asp-page="./ForgotPassword">Elfelejtette a jelszavát?</a>
+        </p>
+        <p>
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+        </p>
+    </div>
+</section>
+@*<div class="col-md-6 col-md-offset-2">
         <section>
             <h4>Use another service to log in.</h4>
             <hr />
@@ -74,8 +68,6 @@
             }
         </section>
     </div>*@
-</div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
