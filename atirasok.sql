@@ -1,6 +1,5 @@
 exec sp_rename 'Szakok', 'Programmes'
 exec sp_rename 'subject_szakok', 'subject_programmes'
-exec sp_rename 'Szakok', 'Programmes'
 exec sp_rename 'Programmes.tagozat', 'training' , 'COLUMN';
 exec sp_rename 'Programmes.szint', 'levels' , 'COLUMN';
 alter table Courses ADD course_code varchar(100) NOT NULL
