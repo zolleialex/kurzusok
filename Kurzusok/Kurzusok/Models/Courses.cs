@@ -10,7 +10,6 @@ namespace Kurzusok.Models
     public partial class Courses
     {
         public int Id { get; set; }
-        public int SubjectId { get; set; }
         public string CourseType { get; set; }
         public int Members { get; set; }
         public string Classroom { get; set; }
@@ -19,6 +18,7 @@ namespace Kurzusok.Models
         public string Softvware { get; set; }
         public int? Hours { get; set; }
         public string CourseCode { get; set; }
+        public int SubjectId { get; set; }
 
         public virtual Subjects Subject { get; set; }
     }

@@ -30,6 +30,7 @@ namespace Kurzusok.Data
         public virtual DbSet<Courses> Courses { get; set; }
         public virtual DbSet<CoursesTeachers> CoursesTeachers { get; set; }
         public virtual DbSet<Programmes> Programmes { get; set; }
+        public virtual DbSet<Semester> Semester { get; set; }
         public virtual DbSet<SubjectProgramme> SubjectProgramme { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
         public virtual DbSet<Teachers> Teachers { get; set; }
@@ -166,6 +167,7 @@ namespace Kurzusok.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.CourseType)
+                    .IsRequired()
                     .HasColumnName("course_type")
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -242,6 +244,19 @@ namespace Kurzusok.Data
                 entity.Property(e => e.Year).HasColumnName("year");
             });
 
+            modelBuilder.Entity<Semester>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Date)
+                    .IsRequired()
+                    .HasColumnName("date")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<SubjectProgramme>(entity =>
             {
                 entity.HasNoKey();
@@ -281,11 +296,19 @@ namespace Kurzusok.Data
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.SemesterId).HasColumnName("semester_id");
+
                 entity.Property(e => e.SubjectCode)
                     .IsRequired()
                     .HasColumnName("subject_code")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Semester)
+                    .WithMany(p => p.Subjects)
+                    .HasForeignKey(d => d.SemesterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Subjects_fk0");
             });
 
             modelBuilder.Entity<Teachers>(entity =>

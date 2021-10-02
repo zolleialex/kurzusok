@@ -19,7 +19,9 @@ namespace Kurzusok.Models
         public int? EHours { get; set; }
         public int? GyHours { get; set; }
         public string SubjectCode { get; set; }
+        public int SemesterId { get; set; }
 
+        public virtual Semester Semester { get; set; }
         public virtual ICollection<Courses> Courses { get; set; }
     }
 }
