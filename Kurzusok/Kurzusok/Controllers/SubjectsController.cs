@@ -152,12 +152,6 @@ namespace Kurzusok.Controllers
             return _context.Subjects.Any(e => e.Id == id);
         }
 
-        // GET: SearchForm
-        [Authorize]
-        public async Task<IActionResult> SearchForm()
-        {
-            return View();
-        }
         // POST: Show SearchResult
         [Authorize]
         public async Task<IActionResult> SearchResult(String SearchPhrase)

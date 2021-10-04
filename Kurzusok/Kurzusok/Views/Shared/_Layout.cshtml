@@ -4,44 +4,55 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Kurzusok</title>
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" runat="server"  />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" runat="server" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Subjects" asp-action="Index">Kurzusok</a>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark bg-dark border-bottom box-shadow mb-3 px-6">
+            <div class="container-fluid">
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="navbar-brand" asp-area="" asp-controller="Subjects" asp-action="Index">Kurzusok</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Teachers" asp-action="Index">Statisztika</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">Beállítások</a>
+                        </li>
+                    </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "", new { area = "" })">
-                                <button type="submit" class="nav-link btn btn-link text-dark">Kijelentkezés</button>
+                                <button type="submit" class="nav-link btn btn-link">Kijelentkezés</button>
                             </form>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" a-action="Index">Statisztika</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">Beállítások</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    @if (IsSectionDefined("SideBar"))
+    {
+        <div class="container-fluid">
+            <div class="row">
+                @RenderSection("SideBar")
+                <div class="col-sm-12 main">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-sm-12 main">
             @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        </div>
+    }
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
