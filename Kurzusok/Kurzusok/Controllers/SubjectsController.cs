@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Kurzusok.Data;
 using Kurzusok.Models;
 using Microsoft.AspNetCore.Authorization;
+using Kurzusok.ViewModels;
 
 namespace Kurzusok.Controllers
 {
@@ -24,7 +25,13 @@ namespace Kurzusok.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Subjects.ToListAsync());
+            HomeViewModel homeViewModel = new HomeViewModel();
+            var subjects = _context.Subjects.Include(c => c.Semester).ToListAsync();            
+            homeViewModel.Subjects = await subjects;
+            var semesters = _context.Semester.ToListAsync();
+            homeViewModel.Semester = await semesters;
+            return View(homeViewModel);
+
         }
 
         // GET: Subjects/Details/5
