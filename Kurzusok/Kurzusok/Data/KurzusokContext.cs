@@ -147,8 +147,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<Courses>(entity =>
             {
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Classroom)
                     .HasColumnName("classroom")
@@ -220,8 +219,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<Programmes>(entity =>
             {
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Levels)
                     .IsRequired()
@@ -247,8 +245,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<Semester>(entity =>
             {
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Date)
                     .IsRequired()
@@ -283,8 +280,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<Subjects>(entity =>
             {
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.EHours).HasColumnName("e_hours");
 
@@ -314,8 +310,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<Teachers>(entity =>
             {
                 entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Hoursperweek)
                     .HasColumnName("hoursperweek")

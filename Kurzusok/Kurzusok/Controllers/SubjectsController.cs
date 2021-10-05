@@ -9,14 +9,14 @@ using Kurzusok.Data;
 using Kurzusok.Models;
 using Microsoft.AspNetCore.Authorization;
 using Kurzusok.ViewModels;
+//using Microsoft.AspNetCore.Identity;
 
 namespace Kurzusok.Controllers
 {
     public class SubjectsController : Controller
     {
         private readonly KurzusokContext _context;
-
-        public SubjectsController(KurzusokContext context)
+        public SubjectsController(KurzusokContext context )
         {
             _context = context;
         }
@@ -28,12 +28,15 @@ namespace Kurzusok.Controllers
             HomeViewModel homeViewModel = new HomeViewModel();
             var subjects = _context.Subjects.Include(c => c.Semester).ToListAsync();            
             homeViewModel.Subjects = await subjects;
+
             var semesters = _context.Semester.ToListAsync();
             homeViewModel.Semester = await semesters;
+
+          
             return View(homeViewModel);
 
         }
-
+  
         // GET: Subjects/Details/5
         public async Task<IActionResult> Details(int? id)
         {

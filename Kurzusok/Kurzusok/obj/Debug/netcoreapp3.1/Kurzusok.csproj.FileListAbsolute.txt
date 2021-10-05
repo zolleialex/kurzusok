@@ -2190,3 +2190,4 @@ C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.csproj
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.dll
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.pdb
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.genruntimeconfig.cache
+C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\Index.cshtml.g.cs

@@ -35,6 +35,7 @@ namespace Kurzusok
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -65,7 +66,7 @@ namespace Kurzusok
             app.UseStaticFiles();
 
             app.UseRouting();
-
+           
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -76,6 +77,7 @@ namespace Kurzusok
                     pattern: "{controller=Subjects}/{action=Index}");
                 endpoints.MapRazorPages();
             });
+
         }
     }
 }

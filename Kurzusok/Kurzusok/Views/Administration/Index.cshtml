@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@{;
+    ViewBag.Tilte = "Felhasználói szintek";
+}
+<h1>Felhasználói szintek</h1>
+@if (Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+               <p>ID: @item.Id</p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@item.Name</h5>                
+                <a href="#" class="btn btn-primary">Felhasználók kezelése</a>
+            </div>
+        </div>
+    }
+
+}
+else
+{
+<p>Nincsenek felhasználói szintek!</p>
+}
