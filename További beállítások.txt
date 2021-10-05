@@ -1,0 +1,7 @@
+Mivel alapból az adatbázis id-kra nem állítottam be auto incrementet,
+ezért mindenki manuálisan állítsa be azokon a táblákon, ahol van id.
+(Pl.: Subjects->design->properties->identity column:id)
+
+
+
+A kódban már átírtam ehhez a _dbcontext fájlt.
