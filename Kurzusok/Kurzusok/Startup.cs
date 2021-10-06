@@ -73,7 +73,7 @@ namespace Kurzusok
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Subjects}/{action=Index}");
+                    pattern: "{controller=Subjects}/{action=Index}/{semester=0}");
                 endpoints.MapRazorPages();
             });
 

@@ -60,20 +60,22 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark dropdown-toggle pl-1" id="dropdownMenu1" data-toggle="dropdown">
-                    Link
+                    @{Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Model.GetSemesterId());
+                        string date=temp.Date.ToString(); }
+                    @date
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                     @foreach (var item in Model.Semester)
                     {
-                        
-                        <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" href="#">@item.Date</a></li>
-
+                        if (date!=item.Date)
+                        {
+                            <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" asp-route-semester="@item.Id">@item.Date</a></li>
+                        }
                     }
-                    
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark pl-1" asp-area="" asp-controller="Teachers" asp-action="Index">Statisztika</a>
+                <a class="nav-link text-dark pl-1" asp-area="" asp-controller="Subjects" asp-action="Index">Placeholder</a>
             </li>
         </ul>
     </div>

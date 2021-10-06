@@ -9,35 +9,58 @@ using Kurzusok.Data;
 using Kurzusok.Models;
 using Microsoft.AspNetCore.Authorization;
 using Kurzusok.ViewModels;
-//using Microsoft.AspNetCore.Identity;
 
 namespace Kurzusok.Controllers
 {
     public class SubjectsController : Controller
     {
         private readonly KurzusokContext _context;
-        public SubjectsController(KurzusokContext context )
+        private HomeViewModel homeViewModel;
+        public SubjectsController(KurzusokContext context)
         {
+            homeViewModel = new HomeViewModel();
             _context = context;
         }
-
-        // GET: Subjects
-        [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult DefaultIndex(int semester)
         {
-            HomeViewModel homeViewModel = new HomeViewModel();
-            var subjects = _context.Subjects.Include(c => c.Semester).ToListAsync();
-            
-            homeViewModel.Subjects = await subjects;
+            return RedirectToAction(nameof(Index), new { semester });
+        }
+        public Task<IActionResult> Index()
+        {
+            return Index(null);
+        }
 
+        // GET: Subjects/{semester}
+        [Authorize]
+        [Route("{semester}")]
+        public async Task<IActionResult> Index(int? semester)
+        {
+            
             var semesters = _context.Semester.ToListAsync();
             homeViewModel.Semester = await semesters;
-
-          
+            int lastId = homeViewModel.Semester.Last().Id;
+            Task<List<Subjects>> subjects;
+            if (semester == null)
+            {
+                subjects = _context.Subjects.Where(s=>s.SemesterId==homeViewModel.GetSemesterId()).ToListAsync();
+            }
+            else
+            {
+                subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
+                if (subjects.Result.Count() == 0) {
+                    subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
+                    homeViewModel.SetSemesterId(lastId);
+                }
+                else
+                {
+                    homeViewModel.SetSemesterId((int)semester);
+                }
+            }
+            homeViewModel.Subjects = await subjects;
+            System.Diagnostics.Debug.WriteLine("A jelenlegi szemeszter" + homeViewModel.GetSemesterId());
             return View(homeViewModel);
-
         }
-  
+
         // GET: Subjects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -169,6 +192,11 @@ namespace Kurzusok.Controllers
         {
             return View("Index", await _context.Subjects.Where(j => j.Name.Contains(SearchPhrase)).ToListAsync());
         }
-
+        //GET: URL Param
+        [HttpGet()]
+        public IActionResult GetParam([FromQuery(Name = "sem")] string sem)
+        {
+            return Content(sem);
+        }
     }
 }
