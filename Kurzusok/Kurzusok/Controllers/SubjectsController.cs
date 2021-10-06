@@ -26,7 +26,8 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> Index()
         {
             HomeViewModel homeViewModel = new HomeViewModel();
-            var subjects = _context.Subjects.Include(c => c.Semester).ToListAsync();            
+            var subjects = _context.Subjects.Include(c => c.Semester).ToListAsync();
+            
             homeViewModel.Subjects = await subjects;
 
             var semesters = _context.Semester.ToListAsync();

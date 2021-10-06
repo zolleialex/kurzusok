@@ -1,7 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+﻿@using Kurzusok.ViewModels
+@model List<RolesViewModel>
 @{;
     ViewBag.Tilte = "Felhasználói szintek";
 }
@@ -12,11 +10,16 @@
     {
         <div class="card">
             <div class="card-header">
-               <p>ID: @item.Id</p>
+                <h5 class="card-title">@item.roleName</h5>
             </div>
             <div class="card-body">
-                <h5 class="card-title">@item.Name</h5>                
-                <a href="#" class="btn btn-primary">Felhasználók kezelése</a>
+                @foreach (var userName in item.Users)
+                {
+                <p>@userName</p>
+                }
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Administration" asp-action="EditUserRole" asp-route-roleId="@item.roleId" class="btn btn-primary">Felhasználók kezelése</a>
             </div>
         </div>
     }
@@ -24,5 +27,5 @@
 }
 else
 {
-<p>Nincsenek felhasználói szintek!</p>
+    <p>Nincsenek felhasználói szintek!</p>
 }

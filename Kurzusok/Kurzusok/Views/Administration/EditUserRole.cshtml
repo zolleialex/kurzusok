@@ -1,0 +1,33 @@
+﻿@using Kurzusok.ViewModels
+@model List<RoleEditViewModel>
+@{
+    var roleId = ViewBag.roleId;
+}
+
+<form method="post">
+
+    <div class="card">
+        <div class="card-header">
+            <p>Felhasználó eltávolítása, vagy törlése</p>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+            <div class="form-check">
+                <input type="hidden" asp-for="@Model[i].UserId" />
+                <input type="hidden" asp-for="@Model[i].UserName" />
+                <input asp-for="@Model[i].Selected" class="form-check-input" />
+                <label asp-for="@Model[i].Selected" class="form-check-label">
+                    @Model[i].UserName
+                </label>
+            </div>
+            }
+
+
+            <input type="submit" class="btn btn-primary" value="Hozzáadás" />
+            <a asp-controller="Administration" asp-action="Index" asp-route-roleId="@roleId" class="btn btn-primary">Mégse</a>
+
+        </div>
+    </div>
+
+</form>
