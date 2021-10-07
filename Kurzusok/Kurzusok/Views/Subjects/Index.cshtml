@@ -60,7 +60,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark dropdown-toggle pl-1" id="dropdownMenu1" data-toggle="dropdown">
-                    @{Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Model.GetSemesterId());
+                    @{Semester temp = Model.Semester.FirstOrDefault(c => c.Id == 1);
                         string date=temp.Date.ToString(); }
                     @date
                 </a>

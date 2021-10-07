@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uyRC1aHnfDn3dRAYvnohQ2UypF2gaQxCxlSaBsK1MpG6huVxR2MpyiSh/QzFpCkz4NywAs6ianRfdvmKpi+yxQ==",
+  "dgSpecHash": "c/ACByeeB0sQjWAFSf6U8SdY0M5F68oNoWTKFp0cJHmt33FQKirvIwd7e8szBEbjfz1OSnOD6oLk5krHytCFlA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+  "projectFilePath": "C:\\Users\\zolle\\Documents\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zolle\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.18\\microsoft.aspnetcore.cryptography.internal.3.1.18.nupkg.sha512",
     "C:\\Users\\zolle\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.18\\microsoft.aspnetcore.cryptography.keyderivation.3.1.18.nupkg.sha512",

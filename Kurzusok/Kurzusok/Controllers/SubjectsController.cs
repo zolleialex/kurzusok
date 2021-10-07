@@ -42,22 +42,16 @@ namespace Kurzusok.Controllers
             Task<List<Subjects>> subjects;
             if (semester == null)
             {
-                subjects = _context.Subjects.Where(s=>s.SemesterId==homeViewModel.GetSemesterId()).ToListAsync();
+                subjects = _context.Subjects.Where(s=>s.SemesterId==lastId).ToListAsync();
             }
             else
             {
                 subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
                 if (subjects.Result.Count() == 0) {
                     subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
-                    homeViewModel.SetSemesterId(lastId);
-                }
-                else
-                {
-                    homeViewModel.SetSemesterId((int)semester);
                 }
             }
             homeViewModel.Subjects = await subjects;
-            System.Diagnostics.Debug.WriteLine("A jelenlegi szemeszter" + homeViewModel.GetSemesterId());
             return View(homeViewModel);
         }
 
