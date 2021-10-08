@@ -36,9 +36,13 @@ namespace Kurzusok
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddSession(option => {
+                option.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
             services.AddAuthorization(options =>
             {
                 options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -68,12 +72,12 @@ namespace Kurzusok
             
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Subjects}/{action=DefaultIndex}/{semester=0}");
+                    pattern: "{controller=Subjects}/{action=Index}/{semester?}");
                 endpoints.MapRazorPages();
             });
 

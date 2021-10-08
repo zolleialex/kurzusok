@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kurzusok.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -19,7 +19,6 @@ namespace Kurzusok.Controllers
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
-
         }
         public async Task<IActionResult> Index()
         {            
