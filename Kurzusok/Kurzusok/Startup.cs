@@ -38,6 +38,12 @@ namespace Kurzusok
                 .AddRoles<IdentityRole>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Login";
+                options.LogoutPath = $"/Logout";
+                options.AccessDeniedPath = $"/AccessDenied";
+            });
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSession(option => {
@@ -63,7 +69,7 @@ namespace Kurzusok
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -75,10 +81,10 @@ namespace Kurzusok
             app.UseSession();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Subjects}/{action=Index}/{semester?}");
-                endpoints.MapRazorPages();
+                    pattern: "{controller=Home}/{action=Index}/{semester?}");
             });
 
         }

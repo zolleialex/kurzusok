@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" runat="server" />
 </head>
 <body>
-    <header>
+    <header>        
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark bg-dark border-bottom box-shadow mb-3 px-6">
             <div class="container-fluid">
                 <div class="navbar-collapse collapse d-sm-inline-flex">
+                   
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" asp-controller="Subjects" asp-action="Index">Kurzusok</a>
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kurzusok</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Teachers" asp-action="Index">Statisztika</a>
@@ -26,8 +27,6 @@
                                 <a class="nav-link" asp-area="" asp-controller="Administration" asp-action="Index">Adminisztráció</a>
                             </li>
                         }
-
-
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">Beállítások</a>
                         </li>

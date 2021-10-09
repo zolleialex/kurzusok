@@ -1,73 +1,39 @@
-﻿@page
+﻿@page "/Login"
 @model LoginModel
 
 @{
+    Layout = "/Views/Shared/_SignInLayout.cshtml";
     ViewData["Title"] = "Belépés";
 }
-<h2 class="h3 mb-3 font-weight-normal">Bejelentkezés</h2>
-<hr />
-<section>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Input.Email" class="sr-only">Email cím</label>
-        <input asp-for="Input.Email" type="email" class="form-control" placeholder="Email cím" required="" autofocus="" />
-        <span asp-validation-for="Input.Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Input.Password" class="sr-only">Jelszó</label>
-        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Jelszó" required="" />
-        <span asp-validation-for="Input.Password" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <div class="checkbox">
-            <label asp-for="Input.RememberMe">
-                <input asp-for="Input.RememberMe" />
-                @Html.DisplayNameFor(m => m.Input.RememberMe)
-            </label>
+<h1 class="mb-6">Kurzuskiírási rendszer</h1>
+<form class="form-signin" id="account" method="post">
+    <h2 class="h3 mb-3 font-weight-normal">Bejelentkezés</h2>
+    <hr />
+    <section>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Input.Email" class="sr-only">Email cím</label>
+            <input asp-for="Input.Email" type="email" class="form-control" placeholder="Email cím" required="" autofocus="" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
         </div>
-    </div>
-    <div class="form-group">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Bejelentkezés</button>
-    </div>
-    <div class="form-group">
-        <p>
-            <a id="forgot-password" asp-page="./ForgotPassword">Elfelejtette a jelszavát?</a>
-        </p>
-        <p>
-            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-        </p>
-    </div>
-</section>
-@*<div class="col-md-6 col-md-offset-2">
-        <section>
-            <h4>Use another service to log in.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
-    </div>*@
+        <div class="form-group">
+            <label asp-for="Input.Password" class="sr-only">Jelszó</label>
+            <input type="password" asp-for="Input.Password" class="form-control" placeholder="Jelszó" required="" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Bejelentkezés</button>
+        </div>
+        <div class="form-group">
+            <p>
+                <a id="forgot-password" asp-page="./ForgotPassword">Elfelejtette a jelszavát?</a>
+            </p>
+            <p>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Regisztrálás</a>
+            </p>
+        </div>
+    </section>
+</form>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

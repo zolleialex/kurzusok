@@ -1,0 +1,115 @@
+﻿@model Kurzusok.ViewModels.HomeViewModel
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Kurzusok";
+    var SemesterName = ViewBag.SemesterName;
+}
+@{Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Convert.ToInt32(Context.Session.GetString("SemesterId")));
+    string date = temp.Date.ToString();
+    string id = temp.Id.ToString();
+    }
+
+<h1>@date félév</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create" asp-route-id="@id">Új tárgy hozzáadása</a>
+    <a class="btn btn-danger" asp-action="SemsterDelete" asp-route-id="@id">Félév törlése</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tárgy kód
+            </th>
+            <th>
+                Név
+            </th>
+            <th>
+            </th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Subjects)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubjectCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <a class="text-dark" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="text-dark" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="text-dark" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section SideBar{
+    <div class="sidebar">
+        <ul class="nav nav-sidebar justify-content-center">
+            <li class="nav-item">
+                <form class="navbar-form navbar-right" asp-action="SearchResult">
+                    <input type="text" name="SearchPhrase" class="form-control" placeholder="Keresés">
+                </form>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark dropdown-toggle pl-1" id="dropdownMenu1" data-toggle="dropdown">
+
+                    @date
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    @foreach (var item in Model.Semester)
+                    {
+                        if (date != item.Date)
+                        {
+                            <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" asp-route-semester="@item.Id">@item.Date</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark pl-1" asp-area="" asp-controller="Home" asp-action="Index">Placeholder</a>
+            </li>
+        </ul>
+        <button class="btn btn-outline-primary" onclick="showSemester()">Új félév hozzáadása</button>
+        <div id="semesterForm" style="display:none">
+            <form method="post" asp-action="CreateSemester">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input name="SemesterName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Hozzáadás" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    function showSemester() {
+        var x = document.getElementById("semesterForm");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+
+</script>
+
