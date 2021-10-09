@@ -27,45 +27,40 @@ namespace Kurzusok.Controllers
         public IActionResult Index()
         {
             string SessionSemesterId = HttpContext.Session.GetString("SemesterId");
+            int semester;
             if (SessionSemesterId != null)
             {
-                int semester = Convert.ToInt32(SessionSemesterId);
-                return RedirectToAction(nameof(Index), new { semester });
+                semester = Convert.ToInt32(SessionSemesterId);
             }
             else
             {
-                return RedirectToAction(nameof(Index),null);
+                var semesters = _context.Semester.ToListAsync();
+                semester = semesters.Result.Last().Id;
             }
+            return RedirectToAction(nameof(Index), new { semester });
         }
 
         // GET: Home/{semester}
         [Authorize]
-        [Route("{semester?}")]
-        public async Task<IActionResult> Index(int? semester)
+        [Route("{semester}")]
+        public async Task<IActionResult> Index(int semester)
         {
             var semesters = _context.Semester.ToListAsync();
             homeViewModel.Semester = await semesters;
             int lastId = homeViewModel.Semester.Last().Id;
             Task<List<Subjects>> subjects;
-            if (semester == null)
+            subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
+            if (subjects.Result.Count() == 0)
             {
                 subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
                 HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
             }
             else
             {
-                subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
-                if (subjects.Result.Count() == 0)
-                {
-                    subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
-                }
-                else
-                {
-                    HttpContext.Session.SetString("SemesterId", Convert.ToString(semester));
-                }
+                HttpContext.Session.SetString("SemesterId", Convert.ToString(semester));
             }
             homeViewModel.Subjects = await subjects;
-            return View(homeViewModel);         
+            return View(homeViewModel);
         }
 
         // GET: Subjects/Details/5
