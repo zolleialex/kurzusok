@@ -4,17 +4,16 @@
 @{
     ViewData["Title"] = "Kurzusok";
     var SemesterName = ViewBag.SemesterName;
-}
-@{Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Convert.ToInt32(Context.Session.GetString("SemesterId")));
+    Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Convert.ToInt32(Context.Session.GetString("SemesterId")));
     string date = temp.Date.ToString();
     string id = temp.Id.ToString();
-    }
-
+    string lastSemester = Model.Semester.Last().Date;
+}
 <h1>@date félév</h1>
 
 <p>
     <a class="btn btn-primary" asp-action="Create" asp-route-id="@id">Új tárgy hozzáadása</a>
-    <a class="btn btn-danger" asp-action="SemsterDelete" asp-route-id="@id">Félév törlése</a>
+    <a class="btn btn-danger" asp-action="SemesterDelete" asp-route-id="@id">Félév törlése</a>
 </p>
 <table class="table">
     <thead>
@@ -61,13 +60,12 @@
     <div class="sidebar">
         <ul class="nav nav-sidebar justify-content-center">
             <li class="nav-item">
-                <form class="navbar-form navbar-right" asp-action="SearchResult">
+                <form class="navbar-form navbar-right" asp-area="" asp-controller="Home" asp-action="SearchResult">
                     <input type="text" name="SearchPhrase" class="form-control" placeholder="Keresés">
                 </form>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark dropdown-toggle pl-1" id="dropdownMenu1" data-toggle="dropdown">
-
                     @date
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -81,35 +79,37 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark pl-1" asp-area="" asp-controller="Home" asp-action="Index">Placeholder</a>
+                <form method="post" class="navbar-form navbar-right" asp-area="" asp-controller="Home" asp-action="CreateSemester">
+                    <button class="btn text-dark pl-1" type="submit" name="lastSemester" value="@lastSemester">Új félév hozzáadása</button>
+                </form>
             </li>
         </ul>
-        <button class="btn btn-outline-primary" onclick="showSemester()">Új félév hozzáadása</button>
-        <div id="semesterForm" style="display:none">
-            <form method="post" asp-action="CreateSemester">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label class="control-label"></label>
-                    <input name="SemesterName" class="form-control" />
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Hozzáadás" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
+        @*<button class="btn btn-outline-primary" onclick="showSemester()">Új félév hozzáadása</button>
+            <div id="semesterForm" style="display:none">
+                <form method="post" asp-action="CreateSemester">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input name="SemesterName" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Hozzáadás" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>*@
     </div>
 }
-<script type="text/javascript">
+@*<script type="text/javascript">
 
-    function showSemester() {
-        var x = document.getElementById("semesterForm");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
+        function showSemester() {
+            var x = document.getElementById("semesterForm");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
         }
-    }
 
 
-</script>
+    </script>*@
 

@@ -28,7 +28,7 @@ namespace Kurzusok.Controllers
         {
             string SessionSemesterId = HttpContext.Session.GetString("SemesterId");
             int semester;
-            if (SessionSemesterId != null)
+            if (!string.IsNullOrEmpty(SessionSemesterId))
             {
                 semester = Convert.ToInt32(SessionSemesterId);
             }
@@ -42,22 +42,29 @@ namespace Kurzusok.Controllers
 
         // GET: Home/{semester}
         [Authorize]
-        [Route("{semester}")]
-        public async Task<IActionResult> Index(int semester)
+        [Route("{semester}/{SearchPrase?}")]
+        public async Task<IActionResult> Index(int semester, string SearchPhrase)
         {
             var semesters = _context.Semester.ToListAsync();
             homeViewModel.Semester = await semesters;
             int lastId = homeViewModel.Semester.Last().Id;
             Task<List<Subjects>> subjects;
-            subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
-            if (subjects.Result.Count() == 0)
+            if (!string.IsNullOrEmpty(SearchPhrase))
             {
-                subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
-                HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
+                subjects = _context.Subjects.Where(c => c.SemesterId == semester && c.Name.Contains(SearchPhrase)).ToListAsync();
             }
             else
             {
-                HttpContext.Session.SetString("SemesterId", Convert.ToString(semester));
+                subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
+                if (subjects.Result.Count() == 0)
+                {
+                    subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
+                    HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SemesterId", Convert.ToString(semester));
+                }
             }
             homeViewModel.Subjects = await subjects;
             return View(homeViewModel);
@@ -104,29 +111,61 @@ namespace Kurzusok.Controllers
         //POST:  Create Semester
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSemester(string SemesterName)
+        public async Task<IActionResult> CreateSemester(string LastSemester)
         {
-            string SessionSemesterId = SemesterName;
-            Semester semester = new Semester { 
-                Date=SemesterName
+            int[] NewSemesterNumbers = LastSemester.Split('/').Select(int.Parse).ToArray();
+            int startIteration = 0;
+            if (NewSemesterNumbers[2]==1)
+            {
+                startIteration = NewSemesterNumbers.Length - 1;
+            }
+            else
+            {
+                NewSemesterNumbers[2] = 0; //Ne folyjon át 3ra a szemeszter
+            }
+            for (int i = startIteration; i < NewSemesterNumbers.Length; i++)
+            {
+                NewSemesterNumbers[i]++;
+            }
+            string NewSemester = "";
+            int[] CopySemesterNumbers = NewSemesterNumbers; //CopySemester, aminek elemeit le kell másolni az új félévhez
+            string CopySemester = "";
+            for (int i = 0; i < NewSemesterNumbers.Length; i++)
+            {
+                if (i==2)
+                {
+                    NewSemester += NewSemesterNumbers[i];
+                    CopySemester += CopySemesterNumbers[i];
+                }
+                else
+                {
+                    NewSemester += NewSemesterNumbers[i] + "/";
+                    CopySemester += --CopySemesterNumbers[i] + "/";
+                }
+            }
+            Semester semester = new Semester
+            {
+                Date = NewSemester
             };
             _context.Add(semester);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("SemesterId", "");
             return RedirectToAction(nameof(Index));
 
         }
         // DELETE Semester
-        public async Task<IActionResult> SemsterDelete(int id)
+        public async Task<IActionResult> SemesterDelete(int id)
         {
             var subjects = await _context.Subjects.Where(c => c.SemesterId == id).ToListAsync();
             foreach (var subject in subjects)
             {
                 _context.Subjects.Remove(subject);
-            }            
+            }
             await _context.SaveChangesAsync();
             var semester = await _context.Semester.FindAsync(id);
             _context.Semester.Remove(semester);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("SemesterId", "");
             return RedirectToAction(nameof(Index));
         }
 
@@ -147,8 +186,6 @@ namespace Kurzusok.Controllers
         }
 
         // POST: Subjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
@@ -217,15 +254,10 @@ namespace Kurzusok.Controllers
 
         // POST: Show SearchResult
         [Authorize]
-        public async Task<IActionResult> SearchResult(String SearchPhrase)
+        public IActionResult SearchResult(string SearchPhrase)
         {
-            return View("Index", await _context.Subjects.Where(j => j.Name.Contains(SearchPhrase)).ToListAsync());
-        }
-        //GET: URL Param
-        [HttpGet()]
-        public IActionResult GetParam([FromQuery(Name = "sem")] string sem)
-        {
-            return Content(sem);
+            int semester = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            return RedirectToAction(nameof(Index), new { semester, SearchPhrase });
         }
     }
 }

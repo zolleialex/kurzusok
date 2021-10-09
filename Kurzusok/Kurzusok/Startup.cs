@@ -46,8 +46,9 @@ namespace Kurzusok
             });
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddSession(option => {
-                option.IdleTimeout = TimeSpan.FromMinutes(30);
+            services.AddSession(options => {
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddAuthorization(options =>
             {
