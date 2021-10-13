@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {}
+    "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {}
   },
   "projects": {
-    "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {
+    "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+        "projectUniqueName": "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
         "projectName": "Kurzusok",
-        "projectPath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+        "projectPath": "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
         "packagesPath": "C:\\Users\\zolle\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\obj\\",
+        "outputPath": "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\zolle\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,29 +40,37 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
-            "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[3.1.18, )"
-            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.18, )"
+              "version": "[3.1.10, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
-              "version": "[3.1.18, )"
+              "version": "[3.1.10, )"
             },
             "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
               "target": "Package",
               "version": "[3.1.18, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.11, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.18, )"
+              "version": "[5.0.11, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.18, )"
+              "version": "[5.0.11, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",

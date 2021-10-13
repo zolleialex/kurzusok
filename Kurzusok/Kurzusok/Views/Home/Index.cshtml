@@ -1,13 +1,10 @@
 ﻿@model Kurzusok.ViewModels.HomeViewModel
-@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Kurzusok";
-    var SemesterName = ViewBag.SemesterName;
-    Semester temp = Model.Semester.FirstOrDefault(c => c.Id == Convert.ToInt32(Context.Session.GetString("SemesterId")));
-    string date = temp.Date.ToString();
-    string id = temp.Id.ToString();
-    string lastSemester = Model.Semester.Last().Date;
+    string date = Model.CurrentSemester.Date;
+    string id = Model.CurrentSemester.Id.ToString();
+    string lastSemester = Model.SemestersList.Last().Date;
 }
 <h1>@date félév</h1>
 
@@ -25,16 +22,22 @@
                 Név
             </th>
             <th>
+                Szakok
             </th>
             <th>
+                Kurzusok
             </th>
-            <th></th>
+            <th>
+                Oktatók
+            </th>
+            <th>
+                Egyéb
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Subjects)
+        @foreach (var item in Model.CurrentSemester.Subjects)
         {
-
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.SubjectCode)
@@ -43,15 +46,79 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
+                    @foreach (var programme in item.ProgrammesLink)
+                    {
+                        @Html.DisplayFor(modelItem => programme.Training)
+                        @Html.Raw(" ")
+                        @Html.DisplayFor(modelItem => programme.Name)
+                        @Html.Raw(" ")
+                        @Html.DisplayFor(modelItem => programme.Levels)
+                        @Html.Raw(" ")
+                        @Html.DisplayFor(modelItem => programme.Year)
+                        @Html.Raw(" ")
+                        <br />
+                    }
                 </td>
-                <td>
-                </td>
-                <td>
-                    <a class="text-dark" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a class="text-dark" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a class="text-dark" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                @foreach (var course in item.Courses.Take(1))
+                {
+                    <td>
+                        Típus:
+                        @Html.DisplayFor(modelItem => course.CourseType)
+                        <br />
+                        Kód:
+                        @Html.DisplayFor(modelItem => course.CourseCode)
+                        <br />
+                        Terem:
+                        @Html.DisplayFor(modelItem => course.Classroom)
+                        <br />
+                        Létszám:
+                        @Html.DisplayFor(modelItem => course.Members)
+                    </td>
+                    <td>
+                        @foreach (var teacher in course.TeachersLink)
+                        {
+                            @Html.DisplayFor(modelItem => teacher.Name)
+                            <br />
+                        }
+                    </td>
+                }
+                @*<td>
+                    <a class="text-dark" asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
+                    <a class="text-dark" asp-action="Details" asp-route-id="@item.SubjectId">Details</a> |
+                    <a class="text-dark" asp-action="Delete" asp-route-id="@item.SubjectId">Delete</a>
+                </td>*@
             </tr>
+
+            @foreach (var course in item.Courses.Skip(1))
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        Típus:
+                        @Html.DisplayFor(modelItem => course.CourseType)
+                        <br />
+                        Kód:
+                        @Html.DisplayFor(modelItem => course.CourseCode)
+                        <br />
+                        Terem:
+                        @Html.DisplayFor(modelItem => course.Classroom)
+                        <br />
+                        Létszám:
+                        @Html.DisplayFor(modelItem => course.Members)
+                    </td>
+                    <td>
+                        @foreach (var teacher in course.TeachersLink)
+                        {
+                            @Html.DisplayFor(modelItem => teacher.Name)
+                            <br />
+                        }
+                    </td>
+                    <td></td>
+                </tr>
+            }
+
         }
     </tbody>
 </table>
@@ -69,11 +136,11 @@
                     @date
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    @foreach (var item in Model.Semester)
+                    @foreach (var item in Model.SemestersList)
                     {
                         if (date != item.Date)
                         {
-                            <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" asp-route-semester="@item.Id">@item.Date</a></li>
+                            <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a></li>
                         }
                     }
                 </ul>

@@ -27,46 +27,49 @@ namespace Kurzusok.Controllers
         public IActionResult Index()
         {
             string SessionSemesterId = HttpContext.Session.GetString("SemesterId");
-            int semester;
+            int currentSemesterId;
             if (!string.IsNullOrEmpty(SessionSemesterId))
             {
-                semester = Convert.ToInt32(SessionSemesterId);
+                currentSemesterId = Convert.ToInt32(SessionSemesterId);
             }
             else
             {
                 var semesters = _context.Semester.ToListAsync();
-                semester = semesters.Result.Last().Id;
+                currentSemesterId = semesters.Result.Last().Id;
             }
-            return RedirectToAction(nameof(Index), new { semester });
+            return RedirectToAction(nameof(Index), new { currentSemesterId });
         }
 
         // GET: Home/{semester}
         [Authorize]
-        [Route("{semester}/{SearchPrase?}")]
-        public async Task<IActionResult> Index(int semester, string SearchPhrase)
+        [Route("{currentSemesterId}/{SearchPrase?}")]
+        public async Task<IActionResult> Index(int currentSemesterId, string SearchPhrase)
         {
+            //Összes szemeszter lekérdezése
             var semesters = _context.Semester.ToListAsync();
-            homeViewModel.Semester = await semesters;
-            int lastId = homeViewModel.Semester.Last().Id;
-            Task<List<Subjects>> subjects;
+            homeViewModel.SemestersList = await semesters;
+            int lastId = homeViewModel.SemestersList.Last().Id;
+            Task<Semester> currentSemester;
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
-                subjects = _context.Subjects.Where(c => c.SemesterId == semester && c.Name.Contains(SearchPhrase)).ToListAsync();
+                //Egy adott szemeszter lekérdezése tárgynév szűréssel
+                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k=>k.Courses).ThenInclude(b=>b.TeachersLink).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
             }
             else
             {
-                subjects = _context.Subjects.Where(c => c.SemesterId == semester).ToListAsync();
-                if (subjects.Result.Count() == 0)
+                //Egy adott szemeszter lekérdezése tárgyakkal
+                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+                if (currentSemester == null) //Ha nincs a megadott ID-s szemeszter akkor az utolsót kérdezzük le
                 {
-                    subjects = _context.Subjects.Where(s => s.SemesterId == lastId).ToListAsync();
+                    currentSemester = _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
                 }
                 else
                 {
-                    HttpContext.Session.SetString("SemesterId", Convert.ToString(semester));
+                    HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
                 }
             }
-            homeViewModel.Subjects = await subjects;
+            homeViewModel.CurrentSemester = await currentSemester;
             return View(homeViewModel);
         }
 
@@ -79,7 +82,7 @@ namespace Kurzusok.Controllers
             }
 
             var subjects = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.SubjectId == id);
             if (subjects == null)
             {
                 return NotFound();
@@ -115,7 +118,7 @@ namespace Kurzusok.Controllers
         {
             int[] NewSemesterNumbers = LastSemester.Split('/').Select(int.Parse).ToArray();
             int startIteration = 0;
-            if (NewSemesterNumbers[2]==1)
+            if (NewSemesterNumbers[2] == 1)
             {
                 startIteration = NewSemesterNumbers.Length - 1;
             }
@@ -132,7 +135,7 @@ namespace Kurzusok.Controllers
             string CopySemester = "";
             for (int i = 0; i < NewSemesterNumbers.Length; i++)
             {
-                if (i==2)
+                if (i == 2)
                 {
                     NewSemester += NewSemesterNumbers[i];
                     CopySemester += CopySemesterNumbers[i];
@@ -190,7 +193,7 @@ namespace Kurzusok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
         {
-            if (id != subjects.Id)
+            if (id != subjects.SubjectId)
             {
                 return NotFound();
             }
@@ -204,7 +207,7 @@ namespace Kurzusok.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectsExists(subjects.Id))
+                    if (!SubjectsExists(subjects.SubjectId))
                     {
                         return NotFound();
                     }
@@ -227,7 +230,7 @@ namespace Kurzusok.Controllers
             }
 
             var subjects = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.SubjectId == id);
             if (subjects == null)
             {
                 return NotFound();
@@ -249,15 +252,15 @@ namespace Kurzusok.Controllers
 
         private bool SubjectsExists(int id)
         {
-            return _context.Subjects.Any(e => e.Id == id);
+            return _context.Subjects.Any(e => e.SubjectId == id);
         }
 
         // POST: Show SearchResult
         [Authorize]
         public IActionResult SearchResult(string SearchPhrase)
         {
-            int semester = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { semester, SearchPhrase });
+            int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            return RedirectToAction(nameof(Index), new { currentSemesterId, SearchPhrase });
         }
     }
 }

@@ -9,11 +9,11 @@ namespace Kurzusok.Models
 {
     public partial class CoursesTeachers
     {
-        public int CoursesId { get; set; }
-        public int TeachersId { get; set; }
-        public int? Load { get; set; }
+        public int CourseId { get; set; }
+        public int TeacherId { get; set; }
+        public int? Loads { get; set; }
 
-        public virtual Courses Courses { get; set; }
-        public virtual Teachers Teachers { get; set; }
+        public Courses Course { get; private set; }
+        public Teachers Teacher { get; private set; }
     }
 }

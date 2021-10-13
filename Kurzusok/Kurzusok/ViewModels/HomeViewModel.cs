@@ -8,9 +8,9 @@ namespace Kurzusok.ViewModels
 {
     public class HomeViewModel
     {
-        public IList<Subjects> Subjects { get; set; }
-        public IList<Semester> Semester { get; set; }
-        public IList<Courses> Courses { get; set; }
-
+        public IList<Semester> SemestersList { get; set; }
+        public Semester CurrentSemester { get; set; }
+        //public IList<Teachers> Teachers { get; set; }
+        //public IList<Programmes> Programmes { get; set; }
     }
 }

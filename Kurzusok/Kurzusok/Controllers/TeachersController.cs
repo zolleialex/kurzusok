@@ -34,7 +34,7 @@ namespace Kurzusok.Controllers
             }
 
             var teachers = await _context.Teachers
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.TeacherId == id);
             if (teachers == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace Kurzusok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Hoursperweek")] Teachers teachers)
         {
-            if (id != teachers.Id)
+            if (id != teachers.TeacherId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace Kurzusok.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeachersExists(teachers.Id))
+                    if (!TeachersExists(teachers.TeacherId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace Kurzusok.Controllers
             }
 
             var teachers = await _context.Teachers
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.TeacherId == id);
             if (teachers == null)
             {
                 return NotFound();
@@ -147,7 +147,7 @@ namespace Kurzusok.Controllers
 
         private bool TeachersExists(int id)
         {
-            return _context.Teachers.Any(e => e.Id == id);
+            return _context.Teachers.Any(e => e.TeacherId == id);
         }
     }
 }

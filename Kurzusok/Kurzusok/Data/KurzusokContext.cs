@@ -31,9 +31,10 @@ namespace Kurzusok.Data
         public virtual DbSet<CoursesTeachers> CoursesTeachers { get; set; }
         public virtual DbSet<Programmes> Programmes { get; set; }
         public virtual DbSet<Semester> Semester { get; set; }
-        public virtual DbSet<SubjectProgramme> SubjectProgramme { get; set; }
+        public virtual DbSet<SubjectProgrammes> SubjectProgrammes { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
         public virtual DbSet<Teachers> Teachers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
@@ -50,7 +51,7 @@ namespace Kurzusok.Data
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedName)
-                    .HasName("RoleNameIndex")
+                    .HasDatabaseName("RoleNameIndex")
                     .IsUnique()
                     .HasFilter("([NormalizedName] IS NOT NULL)");
 
@@ -118,10 +119,10 @@ namespace Kurzusok.Data
             modelBuilder.Entity<AspNetUsers>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
+                    .HasDatabaseName("EmailIndex");
 
                 entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
+                    .HasDatabaseName("UserNameIndex")
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
@@ -136,8 +137,10 @@ namespace Kurzusok.Data
 
             modelBuilder.Entity<Courses>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.HasKey(e => e.CourseId)
+                    .HasName("PK_COURSES");
+
+                entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.Classroom)
                     .HasColumnName("classroom")
@@ -156,7 +159,6 @@ namespace Kurzusok.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.CourseType)
-                    .IsRequired()
                     .HasColumnName("course_type")
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -179,37 +181,47 @@ namespace Kurzusok.Data
                     .HasForeignKey(d => d.SubjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Courses_fk0");
+
+                entity.HasMany(x => x.TeachersLink)
+                .WithMany(x => x.CoursesLink)
+                .UsingEntity<CoursesTeachers>(
+                    x => x.HasOne(x => x.Teacher)
+                    .WithMany().HasForeignKey(x => x.TeacherId),
+                    x => x.HasOne(x => x.Course)
+                   .WithMany().HasForeignKey(x => x.CourseId));
             });
 
             modelBuilder.Entity<CoursesTeachers>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(x => new { x.CourseId, x.TeacherId });
 
                 entity.ToTable("courses_teachers");
 
-                entity.Property(e => e.CoursesId).HasColumnName("courses_id");
+                entity.Property(e => e.CourseId).HasColumnName("course_id");
 
-                entity.Property(e => e.Load).HasColumnName("load");
+                entity.Property(e => e.Loads).HasColumnName("loads");
 
-                entity.Property(e => e.TeachersId).HasColumnName("teachers_id");
+                entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
-                entity.HasOne(d => d.Courses)
+                entity.HasOne(d => d.Course)
                     .WithMany()
-                    .HasForeignKey(d => d.CoursesId)
+                    .HasForeignKey(d => d.CourseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("courses_teachers_fk0");
 
-                entity.HasOne(d => d.Teachers)
+                entity.HasOne(d => d.Teacher)
                     .WithMany()
-                    .HasForeignKey(d => d.TeachersId)
+                    .HasForeignKey(d => d.TeacherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("courses_teachers_fk1");
             });
 
             modelBuilder.Entity<Programmes>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.HasKey(e => e.ProgrammeId)
+                    .HasName("PK_SZAKOK");
+
+                entity.Property(e => e.ProgrammeId).HasColumnName("programme_id");
 
                 entity.Property(e => e.Levels)
                     .IsRequired()
@@ -234,8 +246,7 @@ namespace Kurzusok.Data
 
             modelBuilder.Entity<Semester>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Date)
                     .IsRequired()
@@ -244,33 +255,35 @@ namespace Kurzusok.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<SubjectProgramme>(entity =>
+            modelBuilder.Entity<SubjectProgrammes>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(x => new { x.SubjectId, x.ProgrammeId });
 
-                entity.ToTable("subject_programme");
+                entity.ToTable("subject_programmes");
 
-                entity.Property(e => e.SubjectsId).HasColumnName("subjects_id");
+                entity.Property(e => e.ProgrammeId).HasColumnName("programme_id");
 
-                entity.Property(e => e.SzakokId).HasColumnName("szakok_id");
+                entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
-                entity.HasOne(d => d.Subjects)
+                entity.HasOne(d => d.Programme)
                     .WithMany()
-                    .HasForeignKey(d => d.SubjectsId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("subject_szakok_fk0");
-
-                entity.HasOne(d => d.Szakok)
-                    .WithMany()
-                    .HasForeignKey(d => d.SzakokId)
+                    .HasForeignKey(d => d.ProgrammeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("subject_szakok_fk1");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany()
+                    .HasForeignKey(d => d.SubjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("subject_szakok_fk0");
             });
 
             modelBuilder.Entity<Subjects>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.HasKey(e => e.SubjectId)
+                    .HasName("PK_SUBJECTS");
+
+                entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
                 entity.Property(e => e.EHours).HasColumnName("e_hours");
 
@@ -295,12 +308,24 @@ namespace Kurzusok.Data
                     .HasForeignKey(d => d.SemesterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subjects_fk0");
+
+                entity.HasMany(x => x.ProgrammesLink)
+                      .WithMany(x => x.SubjectLink)
+                      .UsingEntity<SubjectProgrammes>( x => x
+                            .HasOne(x => x.Programme)
+                            .WithMany()
+                            .HasForeignKey(x => x.ProgrammeId),x => x
+                                    .HasOne(x => x.Subject)
+                                    .WithMany()
+                                    .HasForeignKey(x => x.SubjectId));
             });
 
             modelBuilder.Entity<Teachers>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.HasKey(e => e.TeacherId)
+                    .HasName("PK_TEACHERS");
+
+                entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
                 entity.Property(e => e.Hoursperweek)
                     .HasColumnName("hoursperweek")

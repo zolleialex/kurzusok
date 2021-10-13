@@ -9,10 +9,11 @@ namespace Kurzusok.Models
 {
     public partial class Programmes
     {
-        public int Id { get; set; }
+        public int ProgrammeId { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
         public string Training { get; set; }
         public string Levels { get; set; }
+        public virtual ICollection<Subjects> SubjectLink { get; set; }
     }
 }
