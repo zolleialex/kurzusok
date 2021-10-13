@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "C6MiMFo4rEg3rbyR5lTyy6CAV9xmugUeiMRf12chRhEsro3TGR3oXj4RI4Ja9vX4cAPZMBIP7N52rE2PMjzxHQ==",
+  "dgSpecHash": "GYH45am+45CCbQqD7YyFFEHN3+OIAe25NoHDpJXDuG3T6vHFJRNfRUIUYmSLuCHo72zlxN/OV4VmMBmka3b1uw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\zolle\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+  "projectFilePath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zolle\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\zolle\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.10\\microsoft.aspnetcore.cryptography.internal.3.1.10.nupkg.sha512",
