@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+#nullable disable
 
 namespace Kurzusok.Models
 {
@@ -11,8 +9,10 @@ namespace Kurzusok.Models
     {
         public int SubjectId { get; set; }
         public int ProgrammeId { get; set; }
+        public bool Obligatory { get; set; }
+        public string EducationType { get; set; }
 
-        public  Programmes Programme { get; private set; }
-        public Subjects Subject { get; private set; }
+        public virtual Programmes Programme { get; set; }
+        public virtual Subjects Subject { get; set; }
     }
 }

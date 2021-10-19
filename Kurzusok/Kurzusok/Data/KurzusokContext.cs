@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Kurzusok.Models;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+#nullable disable
 
 namespace Kurzusok.Data
 {
@@ -37,9 +35,11 @@ namespace Kurzusok.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("Relational:Collation", "Hungarian_CI_AS");
+
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
-                entity.HasIndex(e => e.RoleId);
+                entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
 
                 entity.Property(e => e.RoleId).IsRequired();
 
@@ -50,8 +50,7 @@ namespace Kurzusok.Data
 
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
-                entity.HasIndex(e => e.NormalizedName)
-                    .HasDatabaseName("RoleNameIndex")
+                entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
                     .IsUnique()
                     .HasFilter("([NormalizedName] IS NOT NULL)");
 
@@ -62,7 +61,7 @@ namespace Kurzusok.Data
 
             modelBuilder.Entity<AspNetUserClaims>(entity =>
             {
-                entity.HasIndex(e => e.UserId);
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
 
                 entity.Property(e => e.UserId).IsRequired();
 
@@ -75,7 +74,7 @@ namespace Kurzusok.Data
             {
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
-                entity.HasIndex(e => e.UserId);
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
 
                 entity.Property(e => e.LoginProvider).HasMaxLength(128);
 
@@ -92,7 +91,7 @@ namespace Kurzusok.Data
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId });
 
-                entity.HasIndex(e => e.RoleId);
+                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.AspNetUserRoles)
@@ -118,11 +117,9 @@ namespace Kurzusok.Data
 
             modelBuilder.Entity<AspNetUsers>(entity =>
             {
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasDatabaseName("EmailIndex");
+                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasDatabaseName("UserNameIndex")
+                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
                     .IsUnique()
                     .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
@@ -143,25 +140,25 @@ namespace Kurzusok.Data
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.Classroom)
-                    .HasColumnName("classroom")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("classroom");
 
                 entity.Property(e => e.Comment)
-                    .HasColumnName("comment")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("comment");
 
                 entity.Property(e => e.CourseCode)
                     .IsRequired()
-                    .HasColumnName("course_code")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("course_code");
 
                 entity.Property(e => e.CourseType)
-                    .HasColumnName("course_type")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("course_type");
 
                 entity.Property(e => e.Hours).HasColumnName("hours");
 
@@ -169,10 +166,10 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.NeptunOk).HasColumnName("neptun_ok");
 
-                entity.Property(e => e.Softvware)
-                    .HasColumnName("softvware")
+                entity.Property(e => e.Software)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("software");
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
@@ -183,12 +180,12 @@ namespace Kurzusok.Data
                     .HasConstraintName("Courses_fk0");
 
                 entity.HasMany(x => x.TeachersLink)
-                .WithMany(x => x.CoursesLink)
-                .UsingEntity<CoursesTeachers>(
-                    x => x.HasOne(x => x.Teacher)
+                    .WithMany(x => x.CoursesLink)
+                    .UsingEntity<CoursesTeachers>(
+                     x => x.HasOne(x => x.Teacher)
                     .WithMany().HasForeignKey(x => x.TeacherId),
-                    x => x.HasOne(x => x.Course)
-                   .WithMany().HasForeignKey(x => x.CourseId));
+                     x => x.HasOne(x => x.Course)
+                    .WithMany().HasForeignKey(x => x.CourseId));
             });
 
             modelBuilder.Entity<CoursesTeachers>(entity =>
@@ -225,23 +222,21 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Levels)
                     .IsRequired()
-                    .HasColumnName("levels")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("levels");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnName("name")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("name");
 
                 entity.Property(e => e.Training)
                     .IsRequired()
-                    .HasColumnName("training")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Year).HasColumnName("year");
+                    .IsUnicode(false)
+                    .HasColumnName("training");
             });
 
             modelBuilder.Entity<Semester>(entity =>
@@ -250,9 +245,11 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Date)
                     .IsRequired()
-                    .HasColumnName("date")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("date");
+
+                entity.Property(e => e.Weeks).HasColumnName("weeks");
             });
 
             modelBuilder.Entity<SubjectProgrammes>(entity =>
@@ -260,6 +257,14 @@ namespace Kurzusok.Data
                 entity.HasKey(x => new { x.SubjectId, x.ProgrammeId });
 
                 entity.ToTable("subject_programmes");
+
+                entity.Property(e => e.EducationType)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("education_type");
+
+                entity.Property(e => e.Obligatory).HasColumnName("obligatory");
 
                 entity.Property(e => e.ProgrammeId).HasColumnName("programme_id");
 
@@ -291,33 +296,32 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnName("name")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("name");
 
                 entity.Property(e => e.SemesterId).HasColumnName("semester_id");
 
                 entity.Property(e => e.SubjectCode)
                     .IsRequired()
-                    .HasColumnName("subject_code")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("subject_code");
 
                 entity.HasOne(d => d.Semester)
                     .WithMany(p => p.Subjects)
                     .HasForeignKey(d => d.SemesterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subjects_fk0");
-
                 entity.HasMany(x => x.ProgrammesLink)
-                      .WithMany(x => x.SubjectLink)
-                      .UsingEntity<SubjectProgrammes>( x => x
-                            .HasOne(x => x.Programme)
-                            .WithMany()
-                            .HasForeignKey(x => x.ProgrammeId),x => x
-                                    .HasOne(x => x.Subject)
-                                    .WithMany()
-                                    .HasForeignKey(x => x.SubjectId));
+                    .WithMany(x => x.SubjectLink)
+                    .UsingEntity<SubjectProgrammes>(x => x
+                    .HasOne(x => x.Programme)
+                    .WithMany()
+                    .HasForeignKey(x => x.ProgrammeId), x => x
+                    .HasOne(x => x.Subject)
+                    .WithMany()
+                    .HasForeignKey(x => x.SubjectId));
             });
 
             modelBuilder.Entity<Teachers>(entity =>
@@ -333,9 +337,9 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnName("name")
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasColumnName("name");
             });
 
             OnModelCreatingPartial(modelBuilder);
