@@ -5,15 +5,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" runat="server"  />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" runat="server" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" runat="server" />
 </head>
 <body>
-    <header>        
+    <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark bg-dark border-bottom box-shadow mb-3 px-6">
             <div class="container-fluid">
                 <div class="navbar-collapse collapse d-sm-inline-flex">
-                   
+
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kurzusok</a>
@@ -44,21 +44,11 @@
     </header>
     @if (IsSectionDefined("SideBar"))
     {
-        <div class="container-fluid">
-            <div class="row">
-                @RenderSection("SideBar")
-                <div class="col-sm-12 main">
-                    @RenderBody()
-                </div>
-            </div>
-        </div>
+        @RenderSection("SideBar")
     }
-    else
-    {
-        <div class="col-sm-12 main">
-            @RenderBody()
-        </div>
-    }
+    <div class="col-sm-12 main" id="main">
+        @RenderBody()
+    </div>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

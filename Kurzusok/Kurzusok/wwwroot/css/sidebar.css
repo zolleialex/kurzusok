@@ -6,16 +6,18 @@
     .sidebar {
         position: fixed;
         top: 70px;
-        bottom: 0;
         left: 0;
-        z-index: 1000;
+        z-index: 1;
         display: block;
-        padding: 20px;
+        padding: 0;
         overflow-x: hidden;
-        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        overflow-y: auto;
         background-color: #ecf0f1;
         border-right: 1px solid #eee;
-        width: 200px;
+        /*width: 200px;*/
+        width: 60px;
+        transition: 0.5s;
+        height: 100%; /* 100% Full-height */
     }
 }
 
@@ -24,25 +26,26 @@
     margin-right: -21px; /* 20px padding + 1px border */
     margin-bottom: 20px;
     margin-left: -20px;
-    display: inline;
+    display: none;
 }
 
-    .nav-sidebar > li > a {
-        padding-right: 20px;
-        padding-left: 20px;
-    }
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
 
-    .nav-sidebar > .active > a,
-    .nav-sidebar > .active > a:hover,
-    .nav-sidebar > .active > a:focus {
-        color: rgba(0, 0, 0, 0.9);
-        background-color: #cfd9db;
-    }
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: rgba(0, 0, 0, 0.9);
+    background-color: #cfd9db;
+}
 
 @media (min-width: 768px) {
     .main {
         padding-right: 40px;
-        padding-left: 280px;
+        padding-left: 90px;
+        transition: 0.5s;
     }
 }
 
