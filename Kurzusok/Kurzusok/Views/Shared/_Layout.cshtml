@@ -13,16 +13,15 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark bg-dark border-bottom box-shadow mb-3 px-6">
             <div class="container-fluid">
                 <div class="navbar-collapse collapse d-sm-inline-flex">
-
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kurzusok</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Teachers" asp-action="Index">Statisztika</a>
-                        </li>
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Teachers" asp-action="Index">Statisztika</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Administration" asp-action="Index">Adminisztráció</a>
                             </li>

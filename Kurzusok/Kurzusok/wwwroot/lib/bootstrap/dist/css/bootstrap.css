@@ -1860,18 +1860,22 @@ pre {
     .table th,
     .table td {
         padding: 0.75rem;
-        vertical-align: top;
+        vertical-align: middle;
         border-top: 1px solid #dee2e6;
     }
 
-    .table thead th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
-    }
+.newSubject {
+    border-top: 3px solid rgba(44, 62, 80, 0.25) !important;
+}
 
-    .table tbody + tbody {
-        border-top: 2px solid #dee2e6;
-    }
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
 
 .table-sm th,
 .table-sm td {
@@ -11346,7 +11350,8 @@ a.text-dark:hover, a.text-dark:focus {
     .toast .close:not(:disabled):not(.disabled):focus {
         color: #000;
     }
+
 .px-6 {
-    padding-left: 12rem !important;
-    padding-right: 12rem !important;
+    padding-left: 5rem !important;
+    padding-right: 5rem !important;
 }
