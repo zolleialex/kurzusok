@@ -20,7 +20,7 @@ namespace Kurzusok.Views.Shared
         }
         #pragma warning restore 1998
 #nullable restore
-#line 2 "C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\Views\Shared\RedirectToLogin.razor"
+#line 2 "C:\Users\varga\Desktop\Kurzusok\Kurzusok\Views\Shared\RedirectToLogin.razor"
        
     protected override void OnInitialized()
     {

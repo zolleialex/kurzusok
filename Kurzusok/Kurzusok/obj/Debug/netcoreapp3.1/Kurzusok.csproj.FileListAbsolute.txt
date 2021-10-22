@@ -3168,7 +3168,6 @@ C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Ide
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\ResetAuthenticator.cshtml.g.cs
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\ShowRecoveryCodes.cshtml.g.cs
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\TwoFactorAuthentication.cshtml.g.cs
-C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index2.cshtml.g.cs
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\Kurzusok.StaticWebAssets.xml
@@ -3650,3 +3649,5 @@ C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Ku
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.pdb
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.genruntimeconfig.cache
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
+C:\Users\varga\Desktop\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
+C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModelPartial.cshtml.g.cs

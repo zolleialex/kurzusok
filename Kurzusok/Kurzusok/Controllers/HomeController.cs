@@ -94,8 +94,10 @@ namespace Kurzusok.Controllers
         // GET: Subjects/Create
         public IActionResult Create(int? id)
         {
-            ViewBag.SemesterId = id;
-            return View();
+            Console.WriteLine(id);
+            //return View();
+            Subjects sbj = new Subjects();
+            return PartialView("_CourseModelPartial", sbj);
         }
 
         // POST: Subjects/Create        
@@ -105,6 +107,7 @@ namespace Kurzusok.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 _context.Add(subjects);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
