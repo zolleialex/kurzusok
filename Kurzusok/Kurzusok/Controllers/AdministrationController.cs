@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Kurzusok.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
