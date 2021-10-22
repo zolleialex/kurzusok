@@ -22,6 +22,6 @@ namespace Kurzusok.Models
         public virtual Semester Semester { get; set; }
         public virtual ICollection<Courses> Courses { get; set; }
 
-        public ICollection<Programmes> ProgrammesLink { get; set; }
+        public ICollection<SubjectProgrammes> ProgrammesLink { get; set; }
     }
 }

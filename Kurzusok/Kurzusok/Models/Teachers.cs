@@ -10,6 +10,6 @@ namespace Kurzusok.Models
         public int TeacherId { get; set; }
         public string Name { get; set; }
         public int? Hoursperweek { get; set; }
-        public ICollection<Courses> CoursesLink { get; set; }
+        public ICollection<CoursesTeachers> CoursesLink { get; set; }
     }
 }

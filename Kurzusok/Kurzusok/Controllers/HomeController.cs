@@ -53,15 +53,15 @@ namespace Kurzusok.Controllers
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
                 //Egy adott szemeszter lekérdezése tárgynév szűréssel
-                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k=>k.Courses).ThenInclude(b=>b.TeachersLink).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k=>k.Courses).ThenInclude(b=>b.TeachersLink).ThenInclude(b=>b.Teacher).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).ThenInclude(k=>k.Programme).FirstOrDefaultAsync();
             }
             else
             {
                 //Egy adott szemeszter lekérdezése tárgyakkal
-                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                 if (currentSemester == null) //Ha nincs a megadott ID-s szemeszter akkor az utolsót kérdezzük le
                 {
-                    currentSemester = _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+                    currentSemester = _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
                 }
                 else

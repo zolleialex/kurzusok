@@ -11,6 +11,6 @@ namespace Kurzusok.Models
         public string Name { get; set; }
         public string Training { get; set; }
         public string Levels { get; set; }
-        public ICollection<Subjects> SubjectLink { get; set; }
+        public ICollection<SubjectProgrammes> SubjectLink { get; set; }
     }
 }

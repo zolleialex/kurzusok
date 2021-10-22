@@ -60,16 +60,16 @@
                     Létszám
                 </th>
                 <th scope="col">
-                    Terem
+                    Terem, szoftver igény
                 </th>
                 <th scope="col">
                     Megjegyzés
                 </th>
                 <th scope="col">
-                    Szoftver igény
+                    Oktatók
                 </th>
                 <th scope="col">
-                    Oktatók
+                    Terhelés
                 </th>
                 <th scope="col">
                     <a class="btn btn-primary py-0 px-2" asp-action="Create" asp-route-id="@id">Új tárgy felvétele</a>
@@ -103,11 +103,11 @@
                     <td rowspan="@courseCount">
                         @foreach (var programme in item.ProgrammesLink)
                         {
-                            @Html.DisplayFor(modelItem => programme.Name)
+                            @Html.DisplayFor(modelItem => programme.Programme.Name)
                             @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Training)
+                            @Html.DisplayFor(modelItem => programme.Programme.Training)
                             @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Levels)
+                            @Html.DisplayFor(modelItem => programme.Programme.Levels)
                             <br />
                         }
                     </td>
@@ -124,18 +124,35 @@
                             @Html.Raw("fő")
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Classroom)
+                            @if (course.Classroom != null)
+                            {
+                                @Html.DisplayFor(modelItem => course.Classroom)
+                                if (course.Software != null)
+                                {
+                                    @Html.Raw(", ")
+                                    @Html.DisplayFor(modelItem => course.Software)
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => course.Software)
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => course.Comment)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Software)
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                <br />
+                            }
                         </td>
                         <td>
                             @foreach (var teacher in course.TeachersLink)
                             {
-                                @Html.DisplayFor(modelItem => teacher.Name)
+                                @Html.DisplayFor(modelItem => teacher.Loads)
+                                @Html.Raw(" %")
                                 <br />
                             }
                         </td>
@@ -160,18 +177,35 @@
                             @Html.Raw("fő")
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Classroom)
+                            @if (course.Classroom != null)
+                            {
+                                @Html.DisplayFor(modelItem => course.Classroom)
+                                if (course.Software != null)
+                                {
+                                    @Html.Raw(", ")
+                                    @Html.DisplayFor(modelItem => course.Software)
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => course.Software)
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => course.Comment)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Software)
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                <br />
+                            }
                         </td>
                         <td>
                             @foreach (var teacher in course.TeachersLink)
                             {
-                                @Html.DisplayFor(modelItem => teacher.Name)
+                                @Html.DisplayFor(modelItem => teacher.Loads)
+                                @Html.Raw(" %")
                                 <br />
                             }
                         </td>

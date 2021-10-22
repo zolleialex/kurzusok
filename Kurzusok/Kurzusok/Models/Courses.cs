@@ -19,6 +19,6 @@ namespace Kurzusok.Models
         public string CourseCode { get; set; }
 
         public virtual Subjects Subject { get; set; }
-        public ICollection<Teachers> TeachersLink { get; set; }
+        public ICollection<CoursesTeachers> TeachersLink { get; set; }
     }
 }
