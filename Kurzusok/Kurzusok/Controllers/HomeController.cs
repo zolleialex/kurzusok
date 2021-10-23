@@ -91,28 +91,37 @@ namespace Kurzusok.Controllers
             return View(subjects);
         }
 
-        // GET: Subjects/Create
-        public IActionResult Create(int? id)
+        // GET: Create subject
+        public async Task<IActionResult> CreateSubject(int id)
         {
-            Console.WriteLine(id);
-            //return View();
+            Console.WriteLine(id);            
             Subjects sbj = new Subjects();
-            return PartialView("_CourseModelPartial", sbj);
+            sbj.SemesterId = id;
+            var programmes = await _context.Programmes.ToListAsync();
+            ViewBag.programmes = programmes;
+            return PartialView("_CourseModelPartial",sbj);
         }
 
-        // POST: Subjects/Create        
+        // POST:  Create subject       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,EHours,GyHours,SubjectCode,SemesterId")] Subjects subjects)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects)
         {
+            Console.WriteLine("HELOOOOOOOOOOOOOOOOOOOOOOO");
+            int currentSemesterId;
             if (ModelState.IsValid)
-            {
-                
+            {               
                 _context.Add(subjects);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                 currentSemesterId = subjects.SemesterId;
+                return RedirectToAction(nameof(Index), new { currentSemesterId });
             }
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                Console.WriteLine("Nope");
+            }
+             currentSemesterId = currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            return RedirectToAction(nameof(Index), new { currentSemesterId });
         }
         //POST:  Create Semester
         [HttpPost]

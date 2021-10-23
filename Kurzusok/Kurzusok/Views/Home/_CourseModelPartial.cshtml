@@ -1,30 +1,71 @@
 ﻿@model Subjects
+@{ 
+    IList<Programmes> programmes = ViewBag.programmes;
+    SubjectProgrammes sp = new SubjectProgrammes();
+}
 
 <div class="modal fade" id="addSubject" >
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="addSubjectLabel">Kurzus hozzáadása</h4>
-                <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
-            </div>
-            <div class="modal-body" >
-                <form action="Create">
+        <form asp-action="CreateSubjectPost">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addSubjectLabel">Tárgy hozzáadása</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+                </div>
+                <div class="modal-body">
+
                     <div class="form-group">
-                        <label asp-for="SubjectCode"></label>
+                        <input type="hidden" asp-for="SemesterId" class="form-control" value="@Model.SemesterId" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubjectCode">Tantárgy kód</label>
                         <input asp-for="SubjectCode" class="form-control" />
                         <span asp-validation-for="SubjectCode" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Name"></label>
+                        <label asp-for="Name">Megnevezés</label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
+                        <input asp-for="EHours" class="form-control" />
+                        <span asp-validation-for="EHours" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
+                        <input asp-for="GyHours" class="form-control" />
+                        <span asp-validation-for="GyHours" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check">
+                        @foreach (var item in programmes)
+                        {
+                            @Html.DisplayFor(modelItem => item.Name)
+                            @Html.Raw(" ")
+                            @Html.DisplayFor(modelItem => item.Training)
+                            @Html.Raw(" ")
+                            @Html.DisplayFor(modelItem => item.Levels)
+                            <br />
+                            @*string prName = item.Name + " " + item.Training + " " + item.Levels;
+                        Model.ProgrammesLink.Add(sp);
+                        <input asp-for="@Model.ProgrammesLink.Last().ProgrammeId" class="form-check-input" />
+                        <label asp-for="@Model.ProgrammesLink.Last().ProgrammeId" class="form-check-label">
+                            prName
+                        </label>*@
+
+                        }
+                    </div>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <div class="form-group">
+                        <input type="submit" value="Mentés" class="btn btn-primary" />
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Bezárás</button>
-                <button type="button" class="btn btn-primary" data-save="modal">Mentés</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>

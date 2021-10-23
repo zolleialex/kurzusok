@@ -14,9 +14,11 @@ $(function () {
         })
     })
     PlaceHolderElement.on('click', '[data-save="modal"]', function (event) {
-        var form = $(this).parents('.model').find('form');
+        var form = $(this).parents('.modal').find('form');
         var actionUrl = form.attr('action');
         var sendData = form.serialize();
+        console.log(actionUrl);
+        console.log(sendData);
         $.post(actionUrl, sendData).done(function (data) {
             PlaceHolderElement.find('.modal').modal('hide');
         })
