@@ -1,10 +1,9 @@
 ﻿@model Subjects
-@{ 
+@{
     IList<Programmes> programmes = ViewBag.programmes;
-    SubjectProgrammes sp = new SubjectProgrammes();
 }
 
-<div class="modal fade" id="addSubject" >
+<div class="modal fade" id="addSubject">
     <div class="modal-dialog">
         <form asp-action="CreateSubjectPost">
             <div class="modal-content">
@@ -38,25 +37,18 @@
                         <span asp-validation-for="GyHours" class="text-danger"></span>
                     </div>
 
-                    <div class="form-check">
-                        @foreach (var item in programmes)
-                        {
-                            @Html.DisplayFor(modelItem => item.Name)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => item.Training)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => item.Levels)
-                            <br />
-                            @*string prName = item.Name + " " + item.Training + " " + item.Levels;
-                        Model.ProgrammesLink.Add(sp);
-                        <input asp-for="@Model.ProgrammesLink.Last().ProgrammeId" class="form-check-input" />
-                        <label asp-for="@Model.ProgrammesLink.Last().ProgrammeId" class="form-check-label">
-                            prName
-                        </label>*@
 
-                        }
-                    </div>
-                    
+                    @foreach (var item in programmes)
+                    {
+                        <div class="form-check">
+                            @{string prName = item.Name + " " + item.Training + " " + item.Levels;
+                            }
+                            <input name="AreChecked" type="checkbox" value="@item.ProgrammeId" class="form-check-input" />
+                            <label class="form-check-label"> @prName</label>
+                        </div>
+                    }
+
+
 
                 </div>
                 <div class="modal-footer">

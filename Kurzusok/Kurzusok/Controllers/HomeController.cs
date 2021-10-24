@@ -105,14 +105,28 @@ namespace Kurzusok.Controllers
         // POST:  Create subject       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> AreChecked)
         {
             Console.WriteLine("HELOOOOOOOOOOOOOOOOOOOOOOO");
             int currentSemesterId;
+            foreach (var item in AreChecked)
+            {                 
+                SubjectProgrammes pr = new SubjectProgrammes() {
+                    ProgrammeId=item,
+                    EducationType="valami",
+                    Subject = subjects
+                };
+                _context.Add(pr);
+                await _context.SaveChangesAsync();
+                Console.WriteLine(item);
+            }
+            currentSemesterId = subjects.SemesterId;
+            return RedirectToAction(nameof(Index), new { currentSemesterId });
             if (ModelState.IsValid)
             {               
                 _context.Add(subjects);
                 await _context.SaveChangesAsync();
+
                  currentSemesterId = subjects.SemesterId;
                 return RedirectToAction(nameof(Index), new { currentSemesterId });
             }
