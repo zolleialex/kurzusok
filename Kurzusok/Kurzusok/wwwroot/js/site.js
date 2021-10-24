@@ -13,6 +13,7 @@ $(function () {
             PlaceHolderElement.find('.modal').modal('show');
         })
     })
+
     //PlaceHolderElement.on('click', '[data-save="modal"]', function (event) {
     //    var form = $(this).parents('.modal').find('form');
     //    var actionUrl = form.attr('action');

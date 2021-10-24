@@ -106,36 +106,32 @@ namespace Kurzusok.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> AreChecked)
-        {
-            Console.WriteLine("HELOOOOOOOOOOOOOOOOOOOOOOO");
-            int currentSemesterId;
-            foreach (var item in AreChecked)
-            {                 
-                SubjectProgrammes pr = new SubjectProgrammes() {
-                    ProgrammeId=item,
-                    EducationType="valami",
-                    Subject = subjects
-                };
-                _context.Add(pr);
-                await _context.SaveChangesAsync();
-                Console.WriteLine(item);
-            }
-            currentSemesterId = subjects.SemesterId;
-            return RedirectToAction(nameof(Index), new { currentSemesterId });
-            if (ModelState.IsValid)
-            {               
-                _context.Add(subjects);
-                await _context.SaveChangesAsync();
+        {         
 
-                 currentSemesterId = subjects.SemesterId;
+            int currentSemesterId;            
+            if (ModelState.IsValid)
+            {
+                foreach (var item in AreChecked)
+                {
+                    SubjectProgrammes pr = new SubjectProgrammes()
+                    {
+                        ProgrammeId = item,
+                        EducationType = "valami",
+                        Subject = subjects
+                    };
+                    _context.Add(pr);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine(item);
+                }
+                currentSemesterId = subjects.SemesterId;
                 return RedirectToAction(nameof(Index), new { currentSemesterId });
             }
             else
             {
                 Console.WriteLine("Nope");
             }
-             currentSemesterId = currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { currentSemesterId });
+            currentSemesterId = currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            return RedirectToAction(nameof(Index), new { currentSemesterId});
         }
         //POST:  Create Semester
         [HttpPost]
@@ -185,15 +181,25 @@ namespace Kurzusok.Controllers
         // DELETE Semester
         public async Task<IActionResult> SemesterDelete(int id)
         {
-            var subjects = await _context.Subjects.Where(c => c.SemesterId == id).ToListAsync();
-            foreach (var subject in subjects)
-            {
-                _context.Subjects.Remove(subject);
-            }
+            var currentSemester = await _context.Semester.Where(c => c.Id == id).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+            _context.Semester.Remove(currentSemester);
             await _context.SaveChangesAsync();
-            var semester = await _context.Semester.FindAsync(id);
-            _context.Semester.Remove(semester);
-            await _context.SaveChangesAsync();
+
+            //var subjects = await _context.Subjects.Where(c => c.SemesterId == id).ToListAsync();
+            //foreach (var subject in subjects)
+            //{
+            //    //var SubjectProgs = await _context.SubjectProgrammes.Where(a => a.SubjectId == subject.SubjectId).ToListAsync();
+            //    //foreach (var sbPrg in SubjectProgs) {
+            //    //    _context.SubjectProgrammes.Remove(sbPrg);
+            //    //}
+            //    _context.Subjects.Remove(subject);
+            //}
+            //await _context.SaveChangesAsync();
+
+            //var semester = await _context.Semester.FindAsync(id);
+            //_context.Semester.Remove(semester);
+            //await _context.SaveChangesAsync();
+
             HttpContext.Session.SetString("SemesterId", "");
             return RedirectToAction(nameof(Index));
         }

@@ -40,13 +40,29 @@
 
                     @foreach (var item in programmes)
                     {
-                        <div class="form-check">
-                            @{string prName = item.Name + " " + item.Training + " " + item.Levels;
-                            }
-                            <input name="AreChecked" type="checkbox" value="@item.ProgrammeId" class="form-check-input" />
-                            <label class="form-check-label"> @prName</label>
-                        </div>
+                <div class="form-check">
+                    @{string prName = item.Name + " " + item.Training + " " + item.Levels;
                     }
+                    <input name="AreChecked" type="checkbox" value="@item.ProgrammeId" class="form-check-input" />
+                    <label class="form-check-label"> @prName</label>
+                    <select class="custom-select" name="education_type" >
+                        @if (item.Training == "levelezős")
+                        {
+                            <option value="traditional">Hagyományos</option>
+                            <option value="sync">Szinkron</option>
+                        }
+                        else
+                        {
+                            <option value="traditional">Hagyományos</option>
+                            <option value="async">Asszinkron</option>
+                        }
+
+
+
+                    </select>
+                </div>
+                    }
+                    
 
 
 

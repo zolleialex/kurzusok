@@ -41,11 +41,11 @@
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
         <div class="container-fluid border border-dark">
-            <div class="row border alert-dark accordion-toggle align-items-center" style="font-size:20px;" data-toggle="collapse" data-target="#@item.SubjectCode">
+            <div class="row border accordion-toggle align-items-center" style="font-size:20px;" data-toggle="collapse" data-target="#@item.SubjectCode">
                 <div class="col-4 text-center ">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
                 <div class="col-4 text-center"> @Html.DisplayFor(modelItem => item.Name)</div>
                 <div class="col-4 text-left d-flex align-items-end justify-content-end">
-                    <button class="btn btn-danger"><span class="fa fa-times "> Törlés</span></button>
+                    <button class="btn btn-danger"><span class="fa fa-times "></span></button>
                     <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
                 </div>
             </div>
