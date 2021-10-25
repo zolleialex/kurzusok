@@ -40,16 +40,17 @@
 <div class="container-fluid">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-        <div class="container-fluid border border-dark">
-            <div class="row border accordion-toggle align-items-center" style="font-size:20px;" data-toggle="collapse" data-target="#@item.SubjectCode">
-                <div class="col-4 text-center ">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
-                <div class="col-4 text-center"> @Html.DisplayFor(modelItem => item.Name)</div>
-                <div class="col-4 text-left d-flex align-items-end justify-content-end">
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
+            <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
+                <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
+                <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>                
+            </div>
+            <div class="row collapse justify-content-end" id="@item.SubjectCode">
+                <div class="cols-12 ">
                     <button class="btn btn-danger"><span class="fa fa-times "></span></button>
                     <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
                 </div>
             </div>
-
             <div class="row collapse align-items-center justify-content-center flex-grow-1" id="@item.SubjectCode">
                 <div class="col-6 text-center d-flex flex-column container-fluid">
                     <div class="card flex-fill flex-grow-1">
@@ -178,6 +179,7 @@
             </div>
         </div>
     }
+    @*Edit Kurzushoz. Példának van itt, majd törölni kell.*@
     <div class="modal fade" id="editCourse" tabindex="-1" role="dialog" aria-labelledby="editCourse" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
