@@ -18,10 +18,10 @@ namespace Kurzusok.Controllers
     public class HomeController : Controller
     {
         private readonly KurzusokContext _context;
-        private HomeViewModel homeViewModel;
-        public HomeController(KurzusokContext context)
+        private HomeViewModel _homeViewModel;
+        public HomeController(KurzusokContext context, HomeViewModel homeViewModel)
         {
-            homeViewModel = new HomeViewModel();
+            _homeViewModel = homeViewModel;
             _context = context;
         }
         public IActionResult Index()
@@ -47,8 +47,8 @@ namespace Kurzusok.Controllers
         {
             //Összes szemeszter lekérdezése
             var semesters = _context.Semester.ToListAsync();
-            homeViewModel.SemestersList = await semesters;
-            int lastId = homeViewModel.SemestersList.Last().Id;
+            _homeViewModel.SemestersList = await semesters;
+            int lastId = _homeViewModel.SemestersList.Last().Id;
             Task<Semester> currentSemester;
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
@@ -69,8 +69,8 @@ namespace Kurzusok.Controllers
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
                 }
             }
-            homeViewModel.CurrentSemester = await currentSemester;
-            return View(homeViewModel);
+            _homeViewModel.CurrentSemester = await currentSemester;
+            return View(_homeViewModel);
         }
 
         // GET: Subjects/Details/5

@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Kurzusok.ViewModels;
 namespace Kurzusok
 {
     public class Startup
@@ -58,6 +58,7 @@ namespace Kurzusok
 
                 // Register other policies here
             });
+            services.AddSingleton<HomeViewModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
