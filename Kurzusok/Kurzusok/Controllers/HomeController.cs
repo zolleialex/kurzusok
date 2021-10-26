@@ -95,8 +95,8 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> CreateSubject(int id)
         {
             Console.WriteLine(id);            
-            Subjects sbj = new Subjects();
-            sbj.SemesterId = id;
+            Subjects sbj = new Subjects();            
+            sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
             return PartialView("_SubjectModalPartial",sbj);
@@ -106,9 +106,11 @@ namespace Kurzusok.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> AreChecked)
-        {         
+        {
+            Console.WriteLine("Ezazbazdmeg");
+            int currentSemesterId; 
+            Console.WriteLine(subjects.Name);
 
-            int currentSemesterId;            
             if (ModelState.IsValid)
             {
                 foreach (var item in AreChecked)
@@ -123,11 +125,25 @@ namespace Kurzusok.Controllers
                     await _context.SaveChangesAsync();
                     Console.WriteLine(item);
                 }
-                currentSemesterId = subjects.SemesterId;
-                return RedirectToAction(nameof(Index), new { currentSemesterId });
+                Subjects sbj = new Subjects();
+                sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
+                var programmes = await _context.Programmes.ToListAsync();
+                ViewBag.programmes = programmes;
+                return PartialView("_SubjectModalPartial", sbj);
+
+                //currentSemesterId = subjects.SemesterId;
+                //return RedirectToAction(nameof(Index), new { currentSemesterId });
+
             }         
             currentSemesterId  = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
             return RedirectToAction(nameof(Index), new { currentSemesterId});
+        }
+        // GET: Create course
+        public IActionResult CreateCourse()
+        {           
+            Courses crs = new Courses();
+            
+            return PartialView("_CourseModalPartial", crs);
         }
         //POST:  Create Semester
         [HttpPost]

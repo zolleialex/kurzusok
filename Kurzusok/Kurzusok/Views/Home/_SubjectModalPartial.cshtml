@@ -3,9 +3,9 @@
     IList<Programmes> programmes = ViewBag.programmes;
 }
 
-<div class="modal fade" id="addSubject">
+<div class="modal  subjectmodal" id="addSubject">
     <div class="modal-dialog">
-        <form asp-action="CreateSubjectPost">
+        <form asp-action="CreateSubjectPost" onsubmit="return ajaxpost(this);">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="addSubjectLabel">Tárgy hozzáadása</h4>
@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label asp-for="Name">Megnevezés</label>
                         <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                           <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
@@ -62,16 +62,12 @@
                     </select>
                 </div>
                     }
-                    
-
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                     <div class="form-group">
-                        <input type="submit" value="Mentés" class="btn btn-primary" />
-                    </div>
+                        <input type="submit" value="Mentés" class="btn btn-primary"  />
+                    </div>                    
                 </div>
             </div>
         </form>

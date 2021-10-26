@@ -1,0 +1,32 @@
+﻿@model Courses
+
+
+<div class="modal  coursemodal" id="addCourse">
+    <div class="modal-dialog">
+        <form asp-action="CreateSubjectPost">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addSubjectLabel">Kurzus hozzáadása</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        @*<input type="hidden" asp-for="CourseType" class="form-control" value="" />*@
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CourseType">Kurzus típus</label>
+                        <input asp-for="CourseType" class="form-control" />
+                        <span asp-validation-for="CourseType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <div class="form-group">
+                        <input type="submit" value="Mentés" class="btn btn-primary" data-toggle="course-modal" data-target="#addSubject" data-url="@Url.Action("CreateSubject")" />
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
