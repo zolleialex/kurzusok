@@ -40,95 +40,97 @@
 <div class="container-fluid">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
-            <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
-                <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
-                <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>                
+    <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
+        <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
+            <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
+            <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
+        </div>
+    </div>
+    <div class="collapse p-md-3" id="@item.SubjectCode">
+        <div class="row justify-content-end" >
+            <div class="cols-12 ">
+                <button class="btn btn-danger"><span class="fa fa-times "></span></button>
+                <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
             </div>
-            <div class="row collapse justify-content-end" id="@item.SubjectCode">
-                <div class="cols-12 ">
-                    <button class="btn btn-danger"><span class="fa fa-times "></span></button>
-                    <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
-                </div>
-            </div>
-            <div class="row collapse align-items-center justify-content-center flex-grow-1" id="@item.SubjectCode">
-                <div class="col-6 text-center d-flex flex-column container-fluid">
-                    <div class="card flex-fill flex-grow-1">
-                        <div class="card-header">
-                            Heti óraszám
-                        </div>
-                        <div class="card-body">
-                            @if (item.EHours != null)
-                            {
-                                @Html.Raw("Elmélet: ")
-                                @Html.DisplayFor(modelItem => item.EHours)
-                                <br />
-                            }
-                            @if (item.GyHours != null)
-                            {
-                                @Html.Raw("Gyakorlat: ")
-                                @Html.DisplayFor(modelItem => item.GyHours)
-                            }
-                        </div>
+        </div>
+        <div class="row align-items-center justify-content-center flex-grow-1">
+            <div class="col-md-6 text-center d-flex flex-column container-fluid">
+                <div class="card flex-fill flex-grow-1">
+                    <div class="card-header">
+                        Heti óraszám
+                    </div>
+                    <div class="card-body">
+                        @if (item.EHours != null)
+                        {
+                            @Html.Raw("Elmélet: ")
+                            @Html.DisplayFor(modelItem => item.EHours)
+                            <br />
+                        }
+                        @if (item.GyHours != null)
+                        {
+                            @Html.Raw("Gyakorlat: ")
+                            @Html.DisplayFor(modelItem => item.GyHours)
+                        }
                     </div>
                 </div>
-                <div class="col-6 text-center d-flex flex-column container-fluid">
-                    <div class="card flex-fill flex-grow-1">
-                        <div class="card-header">
-                            Szakok
-                        </div>
-                        <div class="card-body">
-                            @foreach (var programme in item.ProgrammesLink)
-                            {
-                                @Html.DisplayFor(modelItem => programme.Programme.Name)
-                                @Html.Raw(" ")
-                                @Html.DisplayFor(modelItem => programme.Programme.Training)
-                                @Html.Raw(" ")
-                                @Html.DisplayFor(modelItem => programme.Programme.Levels)
-                                <br />
-                            }
-                        </div>
+            </div>
+            <div class="col-md-6 text-center d-flex flex-column container-fluid">
+                <div class="card flex-fill flex-grow-1">
+                    <div class="card-header">
+                        Szakok
                     </div>
-
-
+                    <div class="card-body">
+                        @foreach (var programme in item.ProgrammesLink)
+                        {
+                            @Html.DisplayFor(modelItem => programme.Programme.Name)
+                            @Html.Raw(" ")
+                            @Html.DisplayFor(modelItem => programme.Programme.Training)
+                            @Html.Raw(" ")
+                            @Html.DisplayFor(modelItem => programme.Programme.Levels)
+                            <br />
+                        }
+                    </div>
                 </div>
-                <div class="col-12 text-center">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">
-                                        Kurzus típus
-                                    </th>
-                                    <th scope="col">
-                                        Oktató
-                                    </th>
-                                    <th scope="col">
-                                        Terhelés
-                                    </th>
-                                    <th scope="col">
-                                        Kurzus kód
-                                    </th>
-                                    <th scope="col">
-                                        Óraszám
-                                    </th>
-                                    <th scope="col">
-                                        Terem
-                                    </th>
-                                    <th scope="col">
-                                        Szoftver igény
-                                    </th>
-                                    <th scope="col">
-                                        Létszám
-                                    </th>
-                                    <th>
 
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var course in item.Courses)
-                                {
+
+            </div>
+            <div class="col-12 text-center mt-1">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">
+                                    Kurzus típus
+                                </th>
+                                <th scope="col">
+                                    Oktató
+                                </th>
+                                <th scope="col">
+                                    Terhelés
+                                </th>
+                                <th scope="col">
+                                    Kurzus kód
+                                </th>
+                                <th scope="col">
+                                    Óraszám
+                                </th>
+                                <th scope="col">
+                                    Terem
+                                </th>
+                                <th scope="col">
+                                    Szoftver igény
+                                </th>
+                                <th scope="col">
+                                    Létszám
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in item.Courses)
+                            {
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => course.CourseType)
@@ -166,18 +168,18 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-danger"><span class="fa fa-times "></span></button>
-                                        <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal"  data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
+                                        <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
                                     </td>
 
 
                                 </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>  
     }
     @*Edit Kurzushoz. Példának van itt, majd törölni kell.*@
     <div class="modal fade" id="editCourse" tabindex="-1" role="dialog" aria-labelledby="editCourse" aria-hidden="true">

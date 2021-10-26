@@ -99,7 +99,7 @@ namespace Kurzusok.Controllers
             sbj.SemesterId = id;
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
-            return PartialView("_CourseModelPartial",sbj);
+            return PartialView("_SubjectModalPartial",sbj);
         }
 
         // POST:  Create subject       
@@ -125,12 +125,8 @@ namespace Kurzusok.Controllers
                 }
                 currentSemesterId = subjects.SemesterId;
                 return RedirectToAction(nameof(Index), new { currentSemesterId });
-            }
-            else
-            {
-                Console.WriteLine("Nope");
-            }
-            currentSemesterId = currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            }         
+            currentSemesterId  = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
             return RedirectToAction(nameof(Index), new { currentSemesterId});
         }
         //POST:  Create Semester
