@@ -36,146 +36,145 @@
         </div>
     </div>
 </div>
-
-<div class="container-fluid">
+<div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-    <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
-        <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
-            <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
-            <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
-        </div>
-    </div>
-    <div class="collapse p-md-3" id="@item.SubjectCode">
-        <div class="row justify-content-end" >
-            <div class="cols-12 ">
-                <a class="btn btn-danger" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fa fa-times "></span></a>
-                <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
+            <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
+                <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
+                <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
             </div>
         </div>
-        <div class="row align-items-center justify-content-center flex-grow-1">
-            <div class="col-md-6 text-center d-flex flex-column container-fluid">
-                <div class="card flex-fill flex-grow-1">
-                    <div class="card-header">
-                        Heti óraszám
-                    </div>
-                    <div class="card-body">
-                        @if (item.EHours != null)
-                        {
-                            @Html.Raw("Elmélet: ")
-                            @Html.DisplayFor(modelItem => item.EHours)
-                            <br />
-                        }
-                        @if (item.GyHours != null)
-                        {
-                            @Html.Raw("Gyakorlat: ")
-                            @Html.DisplayFor(modelItem => item.GyHours)
-                        }
-                    </div>
+        <div class="collapse p-md-3" id="@item.SubjectCode">
+            <div class="row justify-content-end">
+                <div class="cols-12 ">
+                    <a class="btn btn-danger" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fa fa-times "></span></a>
+                    <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
                 </div>
             </div>
-            <div class="col-md-6 text-center d-flex flex-column container-fluid">
-                <div class="card flex-fill flex-grow-1">
-                    <div class="card-header">
-                        Szakok
-                    </div>
-                    <div class="card-body">
-                        @foreach (var programme in item.ProgrammesLink)
-                        {
-                            @Html.DisplayFor(modelItem => programme.Programme.Name)
-                            <br />
-                        }
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="col-12 text-center mt-1">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">
-                                    Kurzus típus
-                                </th>
-                                <th scope="col">
-                                    Oktató
-                                </th>
-                                <th scope="col">
-                                    Terhelés
-                                </th>
-                                <th scope="col">
-                                    Kurzus kód
-                                </th>
-                                <th scope="col">
-                                    Óraszám
-                                </th>
-                                <th scope="col">
-                                    Terem
-                                </th>
-                                <th scope="col">
-                                    Szoftver igény
-                                </th>
-                                <th scope="col">
-                                    Létszám
-                                </th>
-                                <th>
-
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var course in item.Courses)
+            <div class="row align-items-center justify-content-center flex-grow-1">
+                <div class="col-md-6 text-center d-flex flex-column container-fluid">
+                    <div class="card flex-fill flex-grow-1">
+                        <div class="card-header">
+                            Heti óraszám
+                        </div>
+                        <div class="card-body">
+                            @if (item.EHours != null)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.CourseType)
-                                    </td>
-                                    <td>
-                                        @foreach (var teacher in course.TeachersLink)
-                                        {
-                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
-                                            <br />
-                                        }
-                                    </td>
-                                    <td>
-                                        @foreach (var teacher in course.TeachersLink)
-                                        {
-                                            @Html.DisplayFor(modelItem => teacher.Loads)
-                                            <br />
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.CourseCode)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Hours)
-                                    </td>
-
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Classroom)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Software)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Members)
-                                        @Html.Raw("fő")
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
-                                        <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
-                                    </td>
-
-
-                                </tr>
+                                @Html.Raw("Elmélet: ")
+                                @Html.DisplayFor(modelItem => item.EHours)
+                                <br />
                             }
-                        </tbody>
-                    </table>
+                            @if (item.GyHours != null)
+                            {
+                                @Html.Raw("Gyakorlat: ")
+                                @Html.DisplayFor(modelItem => item.GyHours)
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center d-flex flex-column container-fluid">
+                    <div class="card flex-fill flex-grow-1">
+                        <div class="card-header">
+                            Szakok
+                        </div>
+                        <div class="card-body">
+                            @foreach (var programme in item.ProgrammesLink)
+                            {
+                                @Html.DisplayFor(modelItem => programme.Programme.Name)
+                                <br />
+                            }
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-12 text-center mt-1">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">
+                                        Kurzus típus
+                                    </th>
+                                    <th scope="col">
+                                        Oktató
+                                    </th>
+                                    <th scope="col">
+                                        Terhelés
+                                    </th>
+                                    <th scope="col">
+                                        Kurzus kód
+                                    </th>
+                                    <th scope="col">
+                                        Óraszám
+                                    </th>
+                                    <th scope="col">
+                                        Terem
+                                    </th>
+                                    <th scope="col">
+                                        Szoftver igény
+                                    </th>
+                                    <th scope="col">
+                                        Létszám
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var course in item.Courses)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.CourseType)
+                                        </td>
+                                        <td>
+                                            @foreach (var teacher in course.TeachersLink)
+                                            {
+                                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                                <br />
+                                            }
+                                        </td>
+                                        <td>
+                                            @foreach (var teacher in course.TeachersLink)
+                                            {
+                                                @Html.DisplayFor(modelItem => teacher.Loads)
+                                                <br />
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.CourseCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.Hours)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.Classroom)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.Software)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.Members)
+                                            @Html.Raw("fő")
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
+                                            <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>  
     }
     @*Edit Kurzushoz. Példának van itt, majd törölni kell.*@
     <div class="modal fade" id="editCourse" tabindex="-1" role="dialog" aria-labelledby="editCourse" aria-hidden="true">
@@ -204,7 +203,7 @@
 </div>
 
 
-<div class="table-responsive">
+<div class="table-responsive pt-2" id="excelTable">
     <table class="table">
         <thead class="thead-light">
             <tr>
@@ -387,53 +386,85 @@
 </div>
 
 @section SideBar{
-    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="closeBar()">
-        <ul class="nav nav-sidebar justify-content-center">
-            <li class="nav-item">
-                <form class="navbar-form navbar-right" asp-area="" asp-controller="Home" asp-action="SearchResult">
+    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+        <ul class="nav nav-sidebar justify-content-center" id="opened">
+            <li class="nav-item pb-1 height">
+                <form class="navbar-form d-flex" asp-area="" asp-controller="Home" asp-action="SearchResult">
                     <input type="text" name="SearchPhrase" class="form-control" placeholder="Keresés">
                 </form>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark dropdown-toggle pl-1" id="dropdownMenu1" data-toggle="dropdown">
+            <li class="nav-item pb-1 height">
+                <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenu1" data-toggle="dropdown">
                     @date
                 </a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
                     @foreach (var item in Model.SemestersList)
                     {
                         if (date != item.Date)
                         {
-                            <li role="presentation"><a class="nav-link text-dark" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a></li>
+                            <a class="text-dark nav-link underline" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a>
                         }
                     }
-                </ul>
+                </div>
             </li>
-            <li class="nav-item">
-                <form method="post" class="navbar-form navbar-right" asp-area="" asp-controller="Home" asp-action="CreateSemester">
-                    <button class="btn text-dark pl-1" type="submit" name="lastSemester" value="@lastSemester">Új félév hozzáadása</button>
+            <li class="nav-item pb-1 height">
+                <form method="post" class="navbar-form d-flex" asp-controller="Home" asp-action="CreateSemester">
+                    <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester">Új félév felvétele</button>
                 </form>
+            </li>
+            <li class="nav-item pb-1 pl-1">
+                    <div class="custom-control custom-switch text-nowrap">
+                        <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
+                        <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
+                    </div>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar" id="closed">
+            <li class="nav-item pb-1">
+                <i class="fas fa-search"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-list-ul"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-plus-square"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-table"></i>
             </li>
         </ul>
     </div>
 }
 
 <script type="text/javascript">
+    var timeout = null;
+    function delay() {
+        timeout = setTimeout(closeBar, 1000);
+    }
     function openBar() {
+        clearTimeout(timeout);
         document.getElementById("SideBar").style.width = "200px";
         document.getElementById("SideBar").style.padding = "20px";
         document.getElementById("main").style.paddingLeft = "230px";
-        let listElements = document.getElementsByClassName("nav nav-sidebar justify-content-center");
-        for (i = 0; i < listElements.length; i++) {
-            listElements[i].style.display = "inline";
-        }
+        document.getElementById("opened").style.display = "inline";
+        document.getElementById("closed").style.display = "none";
     }
     function closeBar() {
+        $('.dropdown-toggle').dropdown('hide');
         document.getElementById("SideBar").style.width = "60px";
-        document.getElementById("SideBar").style.padding = "0";
+        document.getElementById("SideBar").style.padding = "20px 0 0 0";
         document.getElementById("main").style.paddingLeft = "90px";
-        let listElements = document.getElementsByClassName("nav nav-sidebar justify-content-center");
-        for (i = 0; i < listElements.length; i++) {
-            listElements[i].style.display = "none";
+        document.getElementById("opened").style.display = "none";
+        document.getElementById("closed").style.display = "inline";
+    }
+    function changeTable() {
+        var checkBox = document.getElementById("tableView");
+        if (checkBox.checked == true) {
+            document.getElementById("excelTable").style.display = "block";
+            document.getElementById("dropdownTable").style.display = "none";
+        } else {
+            document.getElementById("dropdownTable").style.display = "block";
+            document.getElementById("excelTable").style.display = "none";
         }
     }
 </script>
