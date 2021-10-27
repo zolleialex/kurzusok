@@ -41,7 +41,7 @@
                     @foreach (var item in programmes)
                     {
                 <div class="form-check">
-                    @{string prName = item.Name + " " + item.Training + " " + item.Levels;
+                    @{string prName = item.Name + " " + item.Training;
                     }
                     <input name="AreChecked" type="checkbox" value="@item.ProgrammeId" class="form-check-input" />
                     <label class="form-check-label"> @prName</label>

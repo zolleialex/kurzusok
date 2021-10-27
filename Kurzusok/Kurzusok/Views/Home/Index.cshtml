@@ -49,7 +49,7 @@
     <div class="collapse p-md-3" id="@item.SubjectCode">
         <div class="row justify-content-end" >
             <div class="cols-12 ">
-                <button class="btn btn-danger"><span class="fa fa-times "></span></button>
+                <a class="btn btn-danger" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fa fa-times "></span></a>
                 <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
             </div>
         </div>
@@ -83,10 +83,6 @@
                         @foreach (var programme in item.ProgrammesLink)
                         {
                             @Html.DisplayFor(modelItem => programme.Programme.Name)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Programme.Training)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Programme.Levels)
                             <br />
                         }
                     </div>
@@ -167,7 +163,7 @@
                                         @Html.Raw("fő")
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger"><span class="fa fa-times "></span></button>
+                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
                                         <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
                                     </td>
 
@@ -278,10 +274,6 @@
                         @foreach (var programme in item.ProgrammesLink)
                         {
                             @Html.DisplayFor(modelItem => programme.Programme.Name)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Programme.Training)
-                            @Html.Raw(" ")
-                            @Html.DisplayFor(modelItem => programme.Programme.Levels)
                             <br />
                         }
                     </td>
@@ -333,7 +325,7 @@
                     }
                     <td class="newSubject">
                         <a class="text-dark" asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
-                        <a class="text-dark" asp-action="Delete" asp-route-id="@item.SubjectId">Delete</a>
+                        <a class="text-dark" asp-action="SubjectDelete" asp-route-id="@item.SubjectId">Delete</a>
                     </td>
                 </tr>
 
@@ -385,7 +377,7 @@
                         </td>
                         <td>
                             <a class="text-dark" asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
-                            <a class="text-dark" asp-action="Delete" asp-route-id="@item.SubjectId">Delete</a>
+                            <a class="text-dark" asp-action="SubjectDelete" asp-route-id="@item.SubjectId">Delete</a>
                         </td>
                     </tr>
                 }

@@ -12,7 +12,7 @@ namespace Kurzusok.Models
             Courses = new HashSet<Courses>();
         }
 
-        public int SubjectId { get; set; }        
+        public int SubjectId { get; set; }
         public string Name { get; set; }
         public int? EHours { get; set; }
         public int? GyHours { get; set; }
@@ -21,7 +21,6 @@ namespace Kurzusok.Models
 
         public virtual Semester Semester { get; set; }
         public virtual ICollection<Courses> Courses { get; set; }
-
         public ICollection<SubjectProgrammes> ProgrammesLink { get; set; }
     }
 }

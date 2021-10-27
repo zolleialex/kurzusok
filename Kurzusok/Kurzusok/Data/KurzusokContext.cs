@@ -32,7 +32,6 @@ namespace Kurzusok.Data
         public virtual DbSet<SubjectProgrammes> SubjectProgrammes { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
         public virtual DbSet<Teachers> Teachers { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Hungarian_CI_AS");
@@ -173,12 +172,13 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
-                entity.HasOne(d => d.Subject)
-                    .WithMany(p => p.Courses)
-                    .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Courses_fk0");
+                //entity.HasOne(d => d.Subject)
+                //    .WithMany(p => p.Courses)
+                //    .HasForeignKey(d => d.SubjectId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("Courses_fk0");
 
+                entity.HasOne(e => e.Subject).WithMany(e => e.Courses).HasForeignKey(e => e.SubjectId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<CoursesTeachers>(entity =>
@@ -193,17 +193,18 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
-                entity.HasOne(d => d.Course)
-                    .WithMany(b => b.TeachersLink)
-                    .HasForeignKey(d => d.CourseId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("courses_teachers_fk0");
+                //entity.HasOne(d => d.Course)
+                //    .WithMany()
+                //    .HasForeignKey(d => d.CourseId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("courses_teachers_fk0");
 
-                entity.HasOne(d => d.Teacher)
-                    .WithMany(b => b.CoursesLink)
-                    .HasForeignKey(d => d.TeacherId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("courses_teachers_fk1");
+                //entity.HasOne(d => d.Teacher)
+                //    .WithMany()
+                //    .HasForeignKey(d => d.TeacherId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("courses_teachers_fk1");
+                entity.HasOne(e => e.Course).WithMany(e => e.TeachersLink).HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Programmes>(entity =>
@@ -212,12 +213,6 @@ namespace Kurzusok.Data
                     .HasName("PK_SZAKOK");
 
                 entity.Property(e => e.ProgrammeId).HasColumnName("programme_id");
-
-                entity.Property(e => e.Levels)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("levels");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -263,17 +258,18 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.SubjectId).HasColumnName("subject_id");
 
-                entity.HasOne(d => d.Programme)
-                    .WithMany(b => b.SubjectLink)
-                    .HasForeignKey(d => d.ProgrammeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("subject_szakok_fk1");
+                //entity.HasOne(d => d.Programme)
+                //    .WithMany()
+                //    .HasForeignKey(d => d.ProgrammeId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("subject_szakok_fk1");
 
-                entity.HasOne(d => d.Subject)
-                    .WithMany(b => b.ProgrammesLink)
-                    .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("subject_szakok_fk0");
+                //entity.HasOne(d => d.Subject)
+                //    .WithMany()
+                //    .HasForeignKey(d => d.SubjectId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("subject_szakok_fk0");
+                entity.HasOne(e => e.Subject).WithMany(e => e.ProgrammesLink).HasForeignKey(e => e.SubjectId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Subjects>(entity =>
@@ -301,11 +297,12 @@ namespace Kurzusok.Data
                     .IsUnicode(false)
                     .HasColumnName("subject_code");
 
-                entity.HasOne(d => d.Semester)
-                    .WithMany(p => p.Subjects)
-                    .HasForeignKey(d => d.SemesterId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Subjects_fk0");
+                //entity.HasOne(d => d.Semester)
+                //    .WithMany(p => p.Subjects)
+                //    .HasForeignKey(d => d.SemesterId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("Subjects_fk0");
+                entity.HasOne(e => e.Semester).WithMany(e => e.Subjects).HasForeignKey(e => e.SemesterId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Teachers>(entity =>

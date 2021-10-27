@@ -53,7 +53,7 @@ namespace Kurzusok.Controllers
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
                 //Egy adott szemeszter lekérdezése tárgynév szűréssel
-                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k=>k.Courses).ThenInclude(b=>b.TeachersLink).ThenInclude(b=>b.Teacher).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).ThenInclude(k=>k.Programme).FirstOrDefaultAsync();
+                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
             }
             else
             {
@@ -99,7 +99,7 @@ namespace Kurzusok.Controllers
             sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
-            return PartialView("_SubjectModalPartial",sbj);
+            return PartialView("_SubjectModalPartial", sbj);
         }
 
         // POST:  Create subject       
@@ -164,27 +164,92 @@ namespace Kurzusok.Controllers
             {
                 NewSemesterNumbers[i]++;
             }
-            string NewSemester = "";
+            string NewSemesterStr = "";
             int[] CopySemesterNumbers = NewSemesterNumbers; //CopySemester, aminek elemeit le kell másolni az új félévhez
-            string CopySemester = "";
+            string CopySemesterStr = "";
             for (int i = 0; i < NewSemesterNumbers.Length; i++)
             {
                 if (i == 2)
                 {
-                    NewSemester += NewSemesterNumbers[i];
-                    CopySemester += CopySemesterNumbers[i];
+                    NewSemesterStr += NewSemesterNumbers[i];
+                    CopySemesterStr += CopySemesterNumbers[i];
                 }
                 else
                 {
-                    NewSemester += NewSemesterNumbers[i] + "/";
-                    CopySemester += --CopySemesterNumbers[i] + "/";
+                    NewSemesterStr += NewSemesterNumbers[i] + "/";
+                    CopySemesterStr += --CopySemesterNumbers[i] + "/";
                 }
             }
-            Semester semester = new Semester
+            Console.WriteLine(CopySemesterStr);
+            var CopySemesterObject = _context.Semester.Where(c => c.Date == CopySemesterStr).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefault();
+            Semester newSemester = new Semester
             {
-                Date = NewSemester
+                Date = NewSemesterStr,
+                Weeks = 13,
             };
-            _context.Add(semester);
+            List<Subjects> newSubjectList = new List<Subjects>();
+            foreach (var copySubject in CopySemesterObject.Subjects)
+            {
+                Subjects newSubject = new Subjects
+                {
+                    SemesterId = newSemester.Id,
+                    SubjectCode = copySubject.SubjectCode,
+                    EHours = copySubject.EHours,
+                    GyHours = copySubject.GyHours,
+                    Name = copySubject.Name,
+                    Semester = newSemester
+                };
+                List<Courses> newCourseList = new List<Courses>();
+                foreach (var copyCourse in copySubject.Courses)
+                {
+                    Courses newCourse = new Courses
+                    {
+                        Classroom = copyCourse.Classroom,
+                        Comment = copyCourse.Comment,
+                        CourseCode = copyCourse.CourseCode,
+                        CourseType = copyCourse.CourseType,
+                        Hours = copyCourse.Hours,
+                        Members = copyCourse.Members,
+                        Software = copyCourse.Software,
+                        SubjectId = newSubject.SubjectId,
+                        Subject = newSubject
+                    };
+                    List<CoursesTeachers> newCoursesTeachersList = new List<CoursesTeachers>();
+                    foreach (var copyCoursesTeachers in copyCourse.TeachersLink)
+                    {
+                        CoursesTeachers newCoursesTeachers = new CoursesTeachers
+                        {
+                            Teacher = copyCoursesTeachers.Teacher,
+                            TeacherId = copyCoursesTeachers.TeacherId,
+                            Course = newCourse,
+                            CourseId = newCourse.CourseId,
+                            Loads = copyCoursesTeachers.Loads
+                        };
+                        newCoursesTeachersList.Add(newCoursesTeachers);
+                    }
+                    newCourse.TeachersLink = newCoursesTeachersList;
+                    newCourseList.Add(newCourse);
+                }
+                newSubject.Courses = newCourseList;
+                List<SubjectProgrammes> newSubjectProgrammesList = new List<SubjectProgrammes>();
+                foreach (var copySubjectProgrammes in copySubject.ProgrammesLink)
+                {
+                    SubjectProgrammes newSubjectProgrammes = new SubjectProgrammes
+                    {
+                        EducationType = copySubjectProgrammes.EducationType,
+                        Obligatory = copySubjectProgrammes.Obligatory,
+                        Programme = copySubjectProgrammes.Programme,
+                        ProgrammeId = copySubjectProgrammes.ProgrammeId,
+                        Subject = newSubject,
+                        SubjectId = newSubject.SubjectId
+                    };
+                    newSubjectProgrammesList.Add(newSubjectProgrammes);
+                }
+                newSubject.ProgrammesLink = newSubjectProgrammesList;
+                newSubjectList.Add(newSubject);
+            }
+            newSemester.Subjects = newSubjectList;
+            _context.Add(newSemester);
             await _context.SaveChangesAsync();
             HttpContext.Session.SetString("SemesterId", "");
             return RedirectToAction(nameof(Index));
@@ -193,25 +258,27 @@ namespace Kurzusok.Controllers
         // DELETE Semester
         public async Task<IActionResult> SemesterDelete(int id)
         {
-            var currentSemester = await _context.Semester.Where(c => c.Id == id).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
+            var currentSemester = await _context.Semester.Where(c => c.Id == id).FirstOrDefaultAsync();
+            var currentSubjects = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id).ToListAsync();
+            List<List<Courses>> currentCourses = new List<List<Courses>>();
+            List<List<CoursesTeachers>> currentCoursesTeachers = new List<List<CoursesTeachers>>();
+            foreach (var subject in currentSubjects)
+            {
+                var curCourse = _context.Courses.Where(c => c.SubjectId == subject.SubjectId).ToList();
+                currentCourses.Add(curCourse);
+                foreach (var course in curCourse)
+                {
+                    currentCoursesTeachers.Add(_context.CoursesTeachers.Where(c => c.CourseId == course.CourseId).ToList());
+                }
+            }
+
+            List<List<SubjectProgrammes>> currentSubjectProgrammes = new List<List<SubjectProgrammes>>();
+            foreach (var subject in currentSubjects)
+            {
+                currentSubjectProgrammes.Add(_context.SubjectProgrammes.Where(c => c.SubjectId == subject.SubjectId).ToList());
+            }
             _context.Semester.Remove(currentSemester);
             await _context.SaveChangesAsync();
-
-            //var subjects = await _context.Subjects.Where(c => c.SemesterId == id).ToListAsync();
-            //foreach (var subject in subjects)
-            //{
-            //    //var SubjectProgs = await _context.SubjectProgrammes.Where(a => a.SubjectId == subject.SubjectId).ToListAsync();
-            //    //foreach (var sbPrg in SubjectProgs) {
-            //    //    _context.SubjectProgrammes.Remove(sbPrg);
-            //    //}
-            //    _context.Subjects.Remove(subject);
-            //}
-            //await _context.SaveChangesAsync();
-
-            //var semester = await _context.Semester.FindAsync(id);
-            //_context.Semester.Remove(semester);
-            //await _context.SaveChangesAsync();
-
             HttpContext.Session.SetString("SemesterId", "");
             return RedirectToAction(nameof(Index));
         }
@@ -265,38 +332,36 @@ namespace Kurzusok.Controllers
             return View(subjects);
         }
 
-        // GET: Subjects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // POST: Home/SubjectDeleteDelete/5
+        [Route("Home/SubjectDelete/{id?}")]
+        public async Task<IActionResult> SubjectDelete(int id)
         {
-            if (id == null)
+            var currentSubject = await _context.Subjects.Where(c => c.SubjectId == id).FirstAsync();
+            var currentCourses = _context.Courses.Where(c => c.SubjectId == id).ToList();
+            List<List<CoursesTeachers>> currentCoursesTeachers = new List<List<CoursesTeachers>>();
+            foreach (var course in currentCourses)
             {
-                return NotFound();
+                currentCoursesTeachers.Add(_context.CoursesTeachers.Where(c => c.CourseId == course.CourseId).ToList());
             }
-
-            var subjects = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.SubjectId == id);
-            if (subjects == null)
-            {
-                return NotFound();
-            }
-
-            return View(subjects);
-        }
-
-        // POST: Subjects/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var subjects = await _context.Subjects.FindAsync(id);
-            _context.Subjects.Remove(subjects);
+            var currentSubjectProgrammes= await _context.SubjectProgrammes.Where(c => c.SubjectId == id).ToListAsync();
+            _context.Subjects.Remove(currentSubject);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool SubjectsExists(int id)
         {
             return _context.Subjects.Any(e => e.SubjectId == id);
+        }
+
+        // POST: Home/CourseDelete/5
+        [Route("Home/CourseDelete/{id?}")]
+        public async Task<IActionResult> CourseDelete(int id)
+        {
+            var currentCourses = _context.Courses.Where(c => c.CourseId == id).First();
+            var currentCoursesTeachers = _context.CoursesTeachers.Where(c => c.CourseId == id).ToList();
+            _context.Courses.Remove(currentCourses);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Show SearchResult
