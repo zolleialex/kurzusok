@@ -12,7 +12,7 @@
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#applyDelete">
         Félév törlése
     </button>
-    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
 </div>
 <div id="PlaceHolderHere"></div>
 
@@ -39,26 +39,25 @@
 <div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded">
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-75">
             <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
-                <div class="col-6 text-center m-0 h5">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
-                <div class="col-6 text-center m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
+                <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
+                <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
+                <div class="col-1 m-0 h5 border-right p-0" id="options">
+                    <button class="btn btn-default btn-xs py-0 col-6"><span class="far fa-edit"></span></button>
+                    <a class="btn btn-xs py-0 col-6" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fas fa-trash-alt"></span></a>
+                </div>
+                <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
             </div>
         </div>
-        <div class="collapse p-md-3" id="@item.SubjectCode">
-            <div class="row justify-content-end">
-                <div class="cols-12 ">
-                    <a class="btn btn-danger" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fa fa-times "></span></a>
-                    <button class="btn btn-default btn-xs"><span class="fa  fa-cog" aria-hidden="true"></span></button>
-                </div>
-            </div>
-            <div class="row align-items-center justify-content-center flex-grow-1">
-                <div class="col-md-6 text-center d-flex flex-column container-fluid">
-                    <div class="card flex-fill flex-grow-1">
-                        <div class="card-header">
-                            Heti óraszám
+        <div class="collapse pt-0 px-3 pb-3 w-70 m-auto bg-light" id="@item.SubjectCode">
+            <div class="row align-items-center flex-grow-1">
+                <div class="col-md-6 text-center d-flex flex-column">
+                    <div class="align-items-center d-flex text-center m-auto flex-grow-1">
+                        <div class="pr-2">
+                            Heti óraszám: meguntam a kinézettel szopást
                         </div>
-                        <div class="card-body">
+                        <div>
                             @if (item.EHours != null)
                             {
                                 @Html.Raw("Elmélet: ")
@@ -73,12 +72,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-center d-flex flex-column container-fluid">
-                    <div class="card flex-fill flex-grow-1">
-                        <div class="card-header">
-                            Szakok
+                <div class="col-md-6 text-center d-flex flex-column">
+                    <div class="align-items-center h-100 d-flex text-center m-auto flex-grow-1">
+                        <div class="pr-2">
+                            Szakok:
                         </div>
-                        <div class="card-body">
+                        <div>
                             @foreach (var programme in item.ProgrammesLink)
                             {
                                 @Html.DisplayFor(modelItem => programme.Programme.Name)
@@ -86,13 +85,12 @@
                             }
                         </div>
                     </div>
-
-
                 </div>
+
                 <div class="col-12 text-center mt-1">
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead class="thead-light">
+                        <table class="table bg-light">
+                            <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">
                                         Kurzus típus
@@ -249,7 +247,7 @@
             @foreach (var item in Model.CurrentSemester.Subjects)
             {
                 int courseCount = item.Courses.Count();
-                <tr class="newSubject">
+                <tr class="newSubject border-bottom">
                     <td rowspan="@courseCount">
                         @Html.DisplayFor(modelItem => item.SubjectCode)
                     </td>
@@ -278,7 +276,7 @@
                     </td>
                     @foreach (var course in item.Courses.Take(1))
                     {
-                        <td>
+                        <td class="border-left">
                             @Html.DisplayFor(modelItem => course.CourseCode)
                         </td>
                         <td>
@@ -330,8 +328,8 @@
 
                 @foreach (var course in item.Courses.Skip(1))
                 {
-                    <tr>
-                        <td>
+                    <tr class="border-bottom">
+                        <td class="border-left">
                             @Html.DisplayFor(modelItem => course.CourseCode)
                         </td>
                         <td>
@@ -413,10 +411,10 @@
                 </form>
             </li>
             <li class="nav-item pb-1 pl-1">
-                    <div class="custom-control custom-switch text-nowrap">
-                        <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
-                        <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
-                    </div>
+                <div class="custom-control custom-switch text-nowrap">
+                    <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
+                    <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
+                </div>
             </li>
         </ul>
         <ul class="nav nav-sidebar" id="closed">
@@ -436,7 +434,7 @@
     </div>
 }
 
-<script type="text/javascript">
+<script>
     var timeout = null;
     function delay() {
         timeout = setTimeout(closeBar, 1000);
@@ -458,14 +456,26 @@
         document.getElementById("closed").style.display = "inline";
     }
     function changeTable() {
-        var checkBox = document.getElementById("tableView");
+        let checkBox = document.getElementById("tableView");
         if (checkBox.checked == true) {
             document.getElementById("excelTable").style.display = "block";
             document.getElementById("dropdownTable").style.display = "none";
+            document.getElementById("createsubject").setAttribute("type", "hidden");
+            document.getElementById("createsubject").setAttribute("hidden", "hidden");
         } else {
             document.getElementById("dropdownTable").style.display = "block";
             document.getElementById("excelTable").style.display = "none";
+            document.getElementById("createsubject").removeAttribute("hidden");
+            document.getElementById("createsubject").setAttribute("type", "button");
         }
     }
+    $(".collapse").on('show.bs.collapse', function (e) {
+        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
+        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
+    });
+    $(".collapse").on('hide.bs.collapse', function (e) {
+        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
+        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
+    });
 </script>
 

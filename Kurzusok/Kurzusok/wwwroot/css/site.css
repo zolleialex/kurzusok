@@ -1,0 +1,28 @@
+﻿
+#excelTable {
+    display: none;
+}
+
+#dropdownTable {
+    display: block;
+}
+body {
+    padding-top: 100px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 90px;
+        transition: 0.5s;
+    }
+}
+@media (min-width: 1200px) {
+    #dropdownTable #options {
+        display:flex;
+    }
+}
+@media (max-width: 1199px) {
+    #dropdownTable #options {
+        display: block;
+    }
+}

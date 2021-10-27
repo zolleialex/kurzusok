@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" runat="server" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" runat="server" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" runat="server" />
 </head>
 <body>
     <header>
@@ -42,6 +43,10 @@
             </div>
         </nav>
     </header>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
     @if (IsSectionDefined("SideBar"))
     {
         @RenderSection("SideBar")
@@ -49,9 +54,5 @@
     <div class="col-sm-12 main" id="main">
         @RenderBody()
     </div>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
 </body>
 </html>

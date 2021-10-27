@@ -57,35 +57,6 @@
     .nav-sidebar > .nav-item > a {
         cursor: pointer;
     }
-
-@media (min-width: 768px) {
-    .main {
-        padding-right: 40px;
-        padding-left: 90px;
-        transition: 0.5s;
-    }
-}
-
-body {
-    padding-top: 100px;
-}
-
 .sidebar .fas {
     color: #7b8a8b !important;
-}
-.left-checkbox label {
-    text-align: right;
-    float: right;
-    font-weight: bold;
-}
-
-.left-checkbox input[type=checkbox] {
-    margin-left: 0;
-}
-
-#excelTable{
-    display:none;
-}
-#dropdownTable {
-    display:block;
 }
