@@ -8,6 +8,7 @@ var PlaceHolderElement = $('#PlaceHolderHere');
 $('button[data-toggle="subject-modal"]').click(function (event) {
     var url = $(this).data('url');
     var id = $(this).data('id');
+    console.log(url);
     $.get(url, { id: id }).done(function (data) {
         PlaceHolderElement.html(data);
         console.log(url);

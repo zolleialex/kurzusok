@@ -120,120 +120,67 @@
                                 </th>
                                 <th>
                                     <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
-                                        <span class="fa  fa-plus" ></span>
+                                        <span class="fa  fa-plus"></span>
                                     </button>
 
                                 </th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @foreach (var course in item.Courses)
                             {
                                 <tr>
-                                    <th scope="col">
-                                        Kurzus típus
-                                    </th>
-                                    <th scope="col">
-                                        Oktató
-                                    </th>
-                                    <th scope="col">
-                                        Terhelés
-                                    </th>
-                                    <th scope="col">
-                                        Kurzus kód
-                                    </th>
-                                    <th scope="col">
-                                        Óraszám
-                                    </th>
-                                    <th scope="col">
-                                        Terem
-                                    </th>
-                                    <th scope="col">
-                                        Szoftver igény
-                                    </th>
-                                    <th scope="col">
-                                        Létszám
-                                    </th>
-                                    <th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseType)
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Loads)
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Hours)
+                                    </td>
 
-                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Classroom)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Software)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Members)
+                                        @Html.Raw("fő")
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
+                                        <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
+                                    </td>
+
+
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var course in item.Courses)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.CourseType)
-                                        </td>
-                                        <td>
-                                            @foreach (var teacher in course.TeachersLink)
-                                            {
-                                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
-                                                <br />
-                                            }
-                                        </td>
-                                        <td>
-                                            @foreach (var teacher in course.TeachersLink)
-                                            {
-                                                @Html.DisplayFor(modelItem => teacher.Loads)
-                                                <br />
-                                            }
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.CourseCode)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.Hours)
-                                        </td>
-
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.Classroom)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.Software)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.Members)
-                                            @Html.Raw("fő")
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
-                                            <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
-                                        </td>
-
-
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+
     }
-    @*Edit Kurzushoz. Példának van itt, majd törölni kell.*@
-    <div class="modal fade" id="editCourse" tabindex="-1" role="dialog" aria-labelledby="editCourse" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="applyDeleteLabel">Szemeszter törlése</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Eljutottál a kurzus szerkesztéséig
-                    <input type="text" name="bookId" id="bookId" value="" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                    <a class="btn btn-danger">Félév törlése</a>
 
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 </div>
