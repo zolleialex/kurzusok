@@ -5,7 +5,7 @@
 
 <div class="modal  subjectmodal" id="addSubject">
     <div class="modal-dialog">
-        <form asp-action="CreateSubjectPost" onsubmit="return ajaxpost(this);">
+        <form asp-action="CreateSubjectPost" onsubmit="return ajaxpostBasic(this);">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="addSubjectLabel">Tárgy hozzáadása</h4>
@@ -66,7 +66,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                     <div class="form-group">
-                        <input type="submit" value="Mentés" class="btn btn-primary"  />
+                        <input type="submit" value="Mentés és tovább" class="btn btn-primary"  />
                     </div>                    
                 </div>
             </div>

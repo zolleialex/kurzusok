@@ -108,13 +108,11 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> AreChecked)
         {
             Console.WriteLine("Ezazbazdmeg");
-            int currentSemesterId; 
-            Console.WriteLine(subjects.Name);
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && AreChecked.Count() > 0)
             {
                 foreach (var item in AreChecked)
                 {
+                    Console.WriteLine(item); ;
                     SubjectProgrammes pr = new SubjectProgrammes()
                     {
                         ProgrammeId = item,
@@ -125,25 +123,34 @@ namespace Kurzusok.Controllers
                     await _context.SaveChangesAsync();
                     Console.WriteLine(item);
                 }
-                Subjects sbj = new Subjects();
-                sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
-                var programmes = await _context.Programmes.ToListAsync();
-                ViewBag.programmes = programmes;
-                return PartialView("_SubjectModalPartial", sbj);
-
-                //currentSemesterId = subjects.SemesterId;
-                //return RedirectToAction(nameof(Index), new { currentSemesterId });
-
-            }         
-            currentSemesterId  = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { currentSemesterId});
+                string subjectId = Convert.ToString(subjects.SubjectId);
+                return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
+            }
+            return Json(new { isvalid = false, responseText = "Helytelen adatokat adtál meg." });
+         
         }
-        // GET: Create course
-        public IActionResult CreateCourse()
+        // GET: Create Course
+        public async Task<IActionResult> CreateCourse(int id)
         {           
             Courses crs = new Courses();
-            
+            crs.SubjectId = id;
+            var teachers = await _context.Teachers.ToListAsync();//Tanárok listája viewbagbe
+            ViewBag.teachers = teachers;
             return PartialView("_CourseModalPartial", crs);
+        }
+        //POST: Create Course
+        public /*async Task<IActionResult>*/ ActionResult CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers) {
+            if (ModelState.IsValid)
+            {
+                foreach (var item in Teachers)
+                {
+                    Console.WriteLine(item);
+                }
+                string subjectId = Convert.ToString(course.SubjectId);
+                return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
+            }
+
+            return Json(new { isvalid = true, responseText = "Rossz adatok." });
         }
         //POST:  Create Semester
         [HttpPost]

@@ -4140,3 +4140,5 @@ C:\Users\zolle\Desktop\Kurzusok2\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzu
 C:\Users\zolle\Desktop\Kurzusok2\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.genruntimeconfig.cache
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalPartial.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalPartial.cshtml.g.cs
+C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalPartial.cshtml.g.cs
+C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalPartial.cshtml.g.cs

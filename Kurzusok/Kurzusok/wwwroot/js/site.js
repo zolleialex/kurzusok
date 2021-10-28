@@ -4,28 +4,33 @@
 // Write your JavaScript code.
 
 
-    var PlaceHolderElement = $('#PlaceHolderHere');
-    $('button[data-toggle="subject-modal"]').click(function (event) {
-        var url = $(this).data('url');
-        var id = $(this).data('id');
-        $.get(url, {id: id}).done(function (data) {
-            PlaceHolderElement.html(data);
-            PlaceHolderElement.find('.subjectmodal').modal('show');
-        })
-    })
-    PlaceHolderElement.on('click', '[data-toggle="course-modal"]', function (event) {        
+var PlaceHolderElement = $('#PlaceHolderHere');
+$('button[data-toggle="subject-modal"]').click(function (event) {
+    var url = $(this).data('url');
+    var id = $(this).data('id');
+    $.get(url, { id: id }).done(function (data) {
+        PlaceHolderElement.html(data);
         console.log(url);
-        var url = $(this).data('url');
-        var id = 11;
-        PlaceHolderElement.find('.subjectmodal').modal('hide');
-        $.get(url).done(function (data) {
-            PlaceHolderElement.html(data);
+        if (url=="/Home/CreateSubject") {
+            PlaceHolderElement.find('.subjectmodal').modal('show');
+        }
+        else {
             PlaceHolderElement.find('.coursemodal').modal('show');
-        })
-    })
-    
 
-ajaxpost = form => {
+        }
+    })
+})
+PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
+    location.reload();
+})
+
+function addTeacherSelect() {
+    console.log("ELJUTOTTUNK A TANÁR HOZZÁADÁSÁIG");
+    var $el = $('.TeacherClass:first').clone();
+    $('#moreTeacher').append($el);
+    
+}
+ajaxpostBasic = form => {
     try {
         $.ajax({
             type: 'POST',
@@ -33,13 +38,19 @@ ajaxpost = form => {
             data: new FormData(form),
             contentType: false,
             processData: false,
-            success: function () {
-                PlaceHolderElement.find('.subjectmodal').modal('hide');               
-                $.get("Home/CreateCourse").done(function (data) {
-                    PlaceHolderElement.html(data);
-                    console.log("Eljutott 2");
-                    PlaceHolderElement.find('.coursemodal').modal('show');
-                })                
+            success: function (response) {
+                console.log(response.isvalid)
+                if (response.isvalid) {// Ha a válasz visszajött helyesen meghívjuk a kurzus getet
+                    
+                    PlaceHolderElement.find('.subjectmodal').modal('hide');
+                    $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
+                        PlaceHolderElement.html(data);
+                        console.log("Eljutott 2");
+                        PlaceHolderElement.find('.coursemodal').modal('show');
+                    })
+                } else {
+                    alert("rosszak");
+                }                
             },
             error: function (err) {
                 consol.log(err);
@@ -48,10 +59,6 @@ ajaxpost = form => {
     } catch (e) {
         console.log(e);
     }
-
-
-
-    //to prevent def sub event
-
+    //A default event megelőzése miatt
     return false;
 }

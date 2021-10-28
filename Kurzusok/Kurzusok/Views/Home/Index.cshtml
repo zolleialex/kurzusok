@@ -87,10 +87,48 @@
                     </div>
                 </div>
 
-                <div class="col-12 text-center mt-1">
-                    <div class="table-responsive">
-                        <table class="table bg-light">
-                            <thead class="thead-dark">
+
+            </div>
+            <div class="col-12 text-center mt-1">
+                <div class="table-responsive">
+                    <table class="table bg-light">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">
+                                    Kurzus típus
+                                </th>
+                                <th scope="col">
+                                    Oktató
+                                </th>
+                                <th scope="col">
+                                    Terhelés
+                                </th>
+                                <th scope="col">
+                                    Kurzus kód
+                                </th>
+                                <th scope="col">
+                                    Óraszám
+                                </th>
+                                <th scope="col">
+                                    Terem
+                                </th>
+                                <th scope="col">
+                                    Szoftver igény
+                                </th>
+                                <th scope="col">
+                                    Létszám
+                                </th>
+                                <th>
+                                    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
+                                        <span class="fa  fa-plus" ></span>
+                                    </button>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in item.Courses)
+                            {
                                 <tr>
                                     <th scope="col">
                                         Kurzus típus
