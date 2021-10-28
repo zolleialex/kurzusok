@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 
-var PlaceHolderElement = $('#PlaceHolderHere');
+const PlaceHolderElement = $('#PlaceHolderHere');
 $('button[data-toggle="subject-modal"]').click(function (event) {
     var url = $(this).data('url');
     var id = $(this).data('id');

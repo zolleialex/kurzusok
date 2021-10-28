@@ -7,7 +7,7 @@
     string lastSemester = Model.SemestersList.Last().Date;
 }
 
-<div class="container-fluid">
+<div class="container-fluid" onload="onLoadTableCheck()" >
     <h1>@date félév</h1>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#applyDelete">
         Félév törlése
@@ -166,8 +166,9 @@
                                         @Html.Raw("fő")
                                     </td>
                                     <td>
-                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fa fa-times "></span></a>
                                         <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
+
+                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fas fa-trash-alt"></span></a>
                                     </td>
 
 
@@ -224,7 +225,8 @@
                     Terhelés
                 </th>
                 <th scope="col">
-                    <a class="btn btn-primary py-0 px-2" asp-action="Create" asp-route-id="@id">Új tárgy felvétele</a>
+                    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+
                 </th>
             </tr>
         </thead>
@@ -421,6 +423,7 @@
 
 <script>
     var timeout = null;
+    
     function delay() {
         timeout = setTimeout(closeBar, 1000);
     }
@@ -439,21 +442,53 @@
         document.getElementById("main").style.paddingLeft = "90px";
         document.getElementById("opened").style.display = "none";
         document.getElementById("closed").style.display = "inline";
-    }
+    } 
+
+
+    window.addEventListener("load", function () {
+        let checkBox = document.getElementById("tableView");
+        let chtblId = localStorage.getItem("tableViewStore");
+        console.log(checkBox.id);
+        if (chtblId === null) {
+            chtblId = "1";
+            localStorage.setItem("tableViewStore", chtblId);
+        }
+        if (chtblId == "0") {
+            checkBox.checked = true;
+            //checkBox.setAttribute("checked");
+        }
+        else {
+            checkBox.checked = false;
+
+            //checkBox.removeAttribute("checked");
+        }
+        changeTable();
+
+
+    })
+    
+
     function changeTable() {
         let checkBox = document.getElementById("tableView");
+        console.log(checkBox.id);
+
         if (checkBox.checked == true) {
+
+            localStorage.setItem("tableViewStore", "0");
             document.getElementById("excelTable").style.display = "block";
             document.getElementById("dropdownTable").style.display = "none";
             document.getElementById("createsubject").setAttribute("type", "hidden");
             document.getElementById("createsubject").setAttribute("hidden", "hidden");
         } else {
+            localStorage.setItem("tableViewStore", "1");
             document.getElementById("dropdownTable").style.display = "block";
             document.getElementById("excelTable").style.display = "none";
             document.getElementById("createsubject").removeAttribute("hidden");
             document.getElementById("createsubject").setAttribute("type", "button");
         }
     }
+   
+
     $(".collapse").on('show.bs.collapse', function (e) {
         e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
         e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
@@ -462,5 +497,6 @@
         e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
         e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
     });
+
 </script>
 

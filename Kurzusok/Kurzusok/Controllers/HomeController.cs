@@ -139,13 +139,24 @@ namespace Kurzusok.Controllers
             return PartialView("_CourseModalPartial", crs);
         }
         //POST: Create Course
-        public /*async Task<IActionResult>*/ ActionResult CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers) {
-            if (ModelState.IsValid)
+        public async Task<IActionResult> /*ActionResult*/ CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList) {
+            if (ModelState.IsValid&&Teachers.Count()>0&&Teachers.Count()== LoadList.Count())
             {
-                foreach (var item in Teachers)
+                List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
+                for (int i = 0; i < Teachers.Count(); i++)
                 {
-                    Console.WriteLine(item);
+                    CoursesTeachers CourseTeacher = new CoursesTeachers()
+                    {
+                        TeacherId = Teachers[i],
+                        Loads = LoadList[i]
+                    };
+                    CourseTeachers.Add(CourseTeacher);
+                    Console.WriteLine(Teachers[i] + "tanárnak a terheltsége:" + LoadList[i]);
                 }
+                course.TeachersLink = CourseTeachers;
+
+                _context.Courses.Add(course);
+                await _context.SaveChangesAsync();
                 string subjectId = Convert.ToString(course.SubjectId);
                 return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
             }
