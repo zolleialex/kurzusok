@@ -25,10 +25,9 @@ PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
     location.reload();
 })
 
-function addTeacherSelect() {
-    console.log("ELJUTOTTUNK A TANÁR HOZZÁADÁSÁIG");
-    var $el = $('.TeacherClass:first').clone();
-    $('#moreTeacher').append($el);
+function copyDivContent() {
+    var $el = $('.copyThisDiv:first').clone();
+    $('#toCopy').append($el);
     
 }
 ajaxpostBasic = form => {

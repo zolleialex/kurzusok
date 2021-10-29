@@ -105,23 +105,30 @@ namespace Kurzusok.Controllers
         // POST:  Create subject       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> AreChecked)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
         {
             Console.WriteLine("Ezazbazdmeg");
-            if (ModelState.IsValid && AreChecked.Count() > 0)
+            if (ModelState.IsValid && Programmes.Count() > 0)
             {
-                foreach (var item in AreChecked)
+                for (int i = 0; i < Programmes.Count(); i++)
                 {
-                    Console.WriteLine(item); ;
                     SubjectProgrammes pr = new SubjectProgrammes()
                     {
-                        ProgrammeId = item,
-                        EducationType = "valami",
+                        ProgrammeId = Programmes[i],
+                        EducationType = educationType[i],
                         Subject = subjects
                     };
+                    if (Obligatory[i]==1)
+                    {
+                        pr.Obligatory = true;
+                    }
+                    else
+                    {
+                        pr.Obligatory = false;
+
+                    }
                     _context.Add(pr);
                     await _context.SaveChangesAsync();
-                    Console.WriteLine(item);
                 }
                 string subjectId = Convert.ToString(subjects.SubjectId);
                 return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });

@@ -56,23 +56,27 @@
                         <span asp-validation-for="Comment  " class="text-danger"></span>
                     </div>
                     <div class="teacherSelect">   
-                        <div class="form-group TeacherClass">
-                            <label>Oktató</label>
-                            <select class="custom-select" name="Teachers">
-                                @foreach (var item in teachers)
-                                {
-                                    <option value="@item.TeacherId">@item.Name</option>
+                        <div class="row form-group copyThisDiv">
+                            <div  class="col-6">
+                                <label>Oktató</label>
+                                <select class="custom-select" name="Teachers">
+                                    @foreach (var item in teachers)
+                                    {
+                                        <option value="@item.TeacherId">@item.Name</option>
 
-                                }
-                            </select>
-                            <label>Terhelés</label>
-                            <input type="number" name="LoadList" min="1" max="100" class="form-control" />
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label>Terhelés</label>
+                                <input type="number" name="LoadList" min="1" max="100" class="form-control" />
+                            </div>
                         </div>
                     </div>
-                    <div class="teacherMoreSelect" id="moreTeacher">
+                    <div class="teacherMoreSelect" id="toCopy">
 
                     </div>
-                    <button type="button" class="btn btn-secondary" onclick = "addTeacherSelect();">Új tanár hozzáadása</button>
+                    <button type="button" class="btn btn-secondary" onclick = "copyDivContent();">Új tanár hozzáadása</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>

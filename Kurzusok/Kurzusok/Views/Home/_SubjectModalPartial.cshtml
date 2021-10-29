@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label asp-for="Name">Megnevezés</label>
                         <input asp-for="Name" class="form-control" />
-                           <span asp-validation-for="Name" class="text-danger"></span>
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
@@ -36,38 +36,44 @@
                         <input asp-for="GyHours" class="form-control" />
                         <span asp-validation-for="GyHours" class="text-danger"></span>
                     </div>
+                    <div class="teacherSelect">
+                        <div class="row form-group copyThisDiv">
+                            <div class="col-5 p-1">
+                                <label>Képzés</label>
+                                <select class="custom-select" name="Programmes">
+                                    @foreach (var item in programmes)
+                                    {
+                                        string prName = item.Name + " " + item.Training;
+                                        <option value="@item.ProgrammeId">@prName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-4 p-1">
+                                <label>Képzési forma</label>
+                                <select class="custom-select" name="educationType">
+                                    <option value="traditional">Hagyományos</option>
+                                    <option value="sync">Szinkron</option>
+                                    <option value="async">Asszinkron</option>
+                                </select>
+                            </div>
+                            <div class="col-3 p-1">
+                                <label>Tárgy típus</label>
+                                <select class="custom-select" name="Obligatory">
+                                    <option value="1">Kötelező</option>
+                                    <option value="0">Választható</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="teacherMoreSelect" id="toCopy"></div>
+                    <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Hozzárendelés másik képzéshez</button>
 
-
-                    @foreach (var item in programmes)
-                    {
-                <div class="form-check">
-                    @{string prName = item.Name + " " + item.Training;
-                    }
-                    <input name="AreChecked" type="checkbox" value="@item.ProgrammeId" class="form-check-input" />
-                    <label class="form-check-label"> @prName</label>
-                    <select class="custom-select" name="education_type" >
-                        @if (item.Training == "levelezős")
-                        {
-                            <option value="traditional">Hagyományos</option>
-                            <option value="sync">Szinkron</option>
-                        }
-                        else
-                        {
-                            <option value="traditional">Hagyományos</option>
-                            <option value="async">Asszinkron</option>
-                        }
-
-
-
-                    </select>
-                </div>
-                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                     <div class="form-group">
-                        <input type="submit" value="Mentés és tovább" class="btn btn-primary"  />
-                    </div>                    
+                        <input type="submit" value="Mentés és tovább" class="btn btn-primary" />
+                    </div>
                 </div>
             </div>
         </form>

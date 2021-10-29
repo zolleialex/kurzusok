@@ -81,6 +81,16 @@
                             @foreach (var programme in item.ProgrammesLink)
                             {
                                 @Html.DisplayFor(modelItem => programme.Programme.Name)
+                                @Html.Raw("    Típus: ")
+                                @Html.DisplayFor(modelItem => programme.EducationType)
+                                if (programme.Obligatory == true)
+                                {
+                                    @Html.Raw("Kötelező")
+                                }
+                                else
+                                {
+                                    @Html.Raw("Választható")
+                                }
                                 <br />
                             }
                         </div>
@@ -119,7 +129,7 @@
                                     Létszám
                                 </th>
                                 <th>
-                                    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
+                                    <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
                                         <span class="fa  fa-plus"></span>
                                     </button>
 
@@ -455,12 +465,9 @@
         }
         if (chtblId == "0") {
             checkBox.checked = true;
-            //checkBox.setAttribute("checked");
         }
         else {
             checkBox.checked = false;
-
-            //checkBox.removeAttribute("checked");
         }
         changeTable();
 
