@@ -20,20 +20,6 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
     })
 })
 
-$('a[data-toggle="subject-delete-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    let route = "/Home/SubjectDelete/" + id;
-    $('#sdel').attr("href", route)
-    $('#applySubjectDelete').modal('show');
-})
-
-$('a[data-toggle="course-delete-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    let route = "/Home/CourseDelete/"+id;
-    $('#cdel').attr("href", route)
-    $('#applyCourseDelete').modal('show');
-})
-
 PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
     location.reload();
 })
@@ -41,15 +27,7 @@ PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
 function copyDivContent() {
     var $el = $('.copyThisDiv:first').clone();
     $('#toCopy').append($el);
-    
-$(".collapse").on('show.bs.collapse', function (e) {
-    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
-    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
-});
-$(".collapse").on('hide.bs.collapse', function (e) {
-    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
-    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
-});
+}
 
 function addTeacherSelect() {
     var $el = $('.TeacherClass:first').clone();
@@ -141,3 +119,26 @@ function changeTable() {
         document.getElementById("excelTable").style.display = "none";
     }
 }
+
+$('a[data-toggle="subject-delete-modal"]').click(function (event) {
+    let id = $(this).data('id');
+    let route = "/Home/SubjectDelete/" + id;
+    $('#sdel').attr("href", route)
+    $('#applySubjectDelete').modal('show');
+})
+
+$('a[data-toggle="course-delete-modal"]').click(function (event) {
+    let id = $(this).data('id');
+    let route = "/Home/CourseDelete/" + id;
+    $('#cdel').attr("href", route)
+    $('#applyCourseDelete').modal('show');
+})
+
+$(".collapse").on('show.bs.collapse', function (e) {
+    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
+    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
+});
+$(".collapse").on('hide.bs.collapse', function (e) {
+    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
+    e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
+});
