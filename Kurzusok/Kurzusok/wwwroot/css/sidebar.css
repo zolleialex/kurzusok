@@ -22,7 +22,7 @@
     display: none;
 }
 
-    #opened > height, #closed > * {
+    #opened > .height, #closed > * {
         height: 40px;
         line-height: 40px;
     }

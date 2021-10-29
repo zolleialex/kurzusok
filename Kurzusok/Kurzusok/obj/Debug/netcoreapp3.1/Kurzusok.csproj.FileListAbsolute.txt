@@ -3651,7 +3651,6 @@ C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Ku
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
-C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModelPartial.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModelPartial.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalPartial.cshtml.g.cs

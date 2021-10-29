@@ -73,25 +73,8 @@ namespace Kurzusok.Controllers
             return View(_homeViewModel);
         }
 
-        // GET: Subjects/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var subjects = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.SubjectId == id);
-            if (subjects == null)
-            {
-                return NotFound();
-            }
-
-            return View(subjects);
-        }
-
         // GET: Create subject
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSubject(int id)
         {
             Console.WriteLine(id);            
@@ -102,12 +85,12 @@ namespace Kurzusok.Controllers
             return PartialView("_SubjectModalPartial", sbj);
         }
 
-        // POST:  Create subject       
+        // POST:  Create subject
+        [Authorize(Roles = "Admin")]       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
         {
-            Console.WriteLine("Ezazbazdmeg");
             if (ModelState.IsValid && Programmes.Count() > 0)
             {
                 for (int i = 0; i < Programmes.Count(); i++)
@@ -137,6 +120,7 @@ namespace Kurzusok.Controllers
          
         }
         // GET: Create Course
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourse(int id)
         {           
             Courses crs = new Courses();
@@ -146,6 +130,7 @@ namespace Kurzusok.Controllers
             return PartialView("_CourseModalPartial", crs);
         }
         //POST: Create Course
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> /*ActionResult*/ CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList) {
             if (ModelState.IsValid&&Teachers.Count()>0&&Teachers.Count()== LoadList.Count())
             {
@@ -173,6 +158,7 @@ namespace Kurzusok.Controllers
         //POST:  Create Semester
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSemester(string LastSemester)
         {
             int[] NewSemesterNumbers = LastSemester.Split('/').Select(int.Parse).ToArray();
@@ -205,7 +191,6 @@ namespace Kurzusok.Controllers
                     CopySemesterStr += --CopySemesterNumbers[i] + "/";
                 }
             }
-            Console.WriteLine(CopySemesterStr);
             var CopySemesterObject = _context.Semester.Where(c => c.Date == CopySemesterStr).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefault();
             Semester newSemester = new Semester
             {
@@ -281,6 +266,7 @@ namespace Kurzusok.Controllers
 
         }
         // DELETE Semester
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SemesterDelete(int id)
         {
             var currentSemester = await _context.Semester.Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -309,6 +295,7 @@ namespace Kurzusok.Controllers
         }
 
         // GET: Subjects/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -325,6 +312,7 @@ namespace Kurzusok.Controllers
         }
 
         // POST: Subjects/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
@@ -358,6 +346,7 @@ namespace Kurzusok.Controllers
         }
 
         // POST: Home/SubjectDeleteDelete/5
+        [Authorize(Roles = "Admin")]
         [Route("Home/SubjectDelete/{id?}")]
         public async Task<IActionResult> SubjectDelete(int id)
         {
@@ -379,6 +368,7 @@ namespace Kurzusok.Controllers
         }
 
         // POST: Home/CourseDelete/5
+        [Authorize(Roles = "Admin")]
         [Route("Home/CourseDelete/{id?}")]
         public async Task<IActionResult> CourseDelete(int id)
         {

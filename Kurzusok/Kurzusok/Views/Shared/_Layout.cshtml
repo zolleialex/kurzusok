@@ -43,9 +43,6 @@
             </div>
         </nav>
     </header>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    @RenderSection("Scripts", required: false)
     @if (IsSectionDefined("SideBar"))
     {
         @RenderSection("SideBar")
@@ -53,7 +50,9 @@
     <div class="col-sm-12 main" id="main">
         @RenderBody()
     </div>
-
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -26,3 +26,20 @@ body {
         display: block;
     }
 }
+#subjectdropdownMenu {
+    color: #7b8a8b !important;
+    cursor: pointer;
+}
+    #subjectdropdownMenu:hover {
+        text-decoration: none !important;
+        color:black !important; 
+    }
+.newSubject .dropdown-menu > a:hover {
+    text-decoration: underline !important;
+}
+.w-85{
+    width:85% !important;
+}
+.w-80 {
+    width: 80% !important;
+}

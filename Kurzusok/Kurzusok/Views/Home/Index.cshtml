@@ -7,26 +7,49 @@
     string lastSemester = Model.SemestersList.Last().Date;
 }
 
-<div class="container-fluid" onload="onLoadTableCheck()" >
+<div class="container-fluid">
     <h1>@date félév</h1>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#applyDelete">
-        Félév törlése
-    </button>
-    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
+        <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+    }
 </div>
 <div id="PlaceHolderHere"></div>
 
-<div class="modal fade" id="applyDelete" tabindex="-1" role="dialog" aria-labelledby="applyDelete" aria-hidden="true">
+@*Course delete*@
+<div class="modal fade  course-delete-modal" id="applyCourseDelete" tabindex="-1" role="dialog" aria-labelledby="applyCourseDelete" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="applyDeleteLabel">Szemeszter törlése</h5>
+                <h5 class="modal-title" id="applyCourseDeleteLabel">Kurzus törlése</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Biztosan törlni szeretnéd ezt a szemesztert?
+                Biztosan törölni szeretnéd ezt a kurzust?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                <a class="btn btn-danger" id="cdel" asp-action="CourseDelete">Kurzus törlése</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Semester delete*@
+<div class="modal fade" id="applySemesterDelete" tabindex="-1" role="dialog" aria-labelledby="applySemesterDelete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applySemesterDeleteLabel">Szemeszter törlése</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Biztosan törölni szeretnéd ezt a szemesztert?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
@@ -36,21 +59,53 @@
         </div>
     </div>
 </div>
+
+@*Subject delete*@
+<div class="modal fade subject-delete-modal" id="applySubjectDelete" tabindex="-1" role="dialog" aria-labelledby="applySubjectDelete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applySubjectDeleteLabel">Tárgy törlése</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Biztosan törölni szeretnéd ezt a tárgyat?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                <a class="btn btn-danger" id="sdel" asp-action="SubjectDelete">Tárgy törlése</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Collapse table*@
 <div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-75">
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-85">
             <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
                 <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
-                <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
-                <div class="col-1 m-0 h5 border-right p-0" id="options">
-                    <button class="btn btn-default btn-xs py-0 col-6"><span class="far fa-edit"></span></button>
-                    <a class="btn btn-xs py-0 col-6" asp-action="SubjectDelete" asp-route-id="@item.SubjectId"><span class="fas fa-trash-alt"></span></a>
-                </div>
-                <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div class="col-1 m-0 h5 border-right p-0" id="options">
+                        <button class="btn btn-default btn-xs py-0 col-6"><span class="far fa-edit"></span></button>
+                        <a class="btn btn-xs py-0 col-6" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
+                    </div>
+                    <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
+                }
+                else
+                {
+                    <div class="col-6 m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div class="col-1 m-0 h5 p-0" id="options"></div>
+                    <div class="col-1 text-center m-0 h5 border-left"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
+                }
             </div>
         </div>
-        <div class="collapse pt-0 px-3 pb-3 w-70 m-auto bg-light" id="@item.SubjectCode">
+        <div class="collapse pt-0 px-3 pb-3 w-80 m-auto bg-light" id="@item.SubjectCode">
             <div class="row align-items-center flex-grow-1">
                 <div class="col-md-6 text-center d-flex flex-column">
                     <div class="align-items-center d-flex text-center m-auto flex-grow-1">
@@ -96,8 +151,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div class="col-12 text-center mt-1">
                 <div class="table-responsive">
@@ -128,12 +181,15 @@
                                 <th scope="col">
                                     Létszám
                                 </th>
-                                <th>
-                                    <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
-                                        <span class="fa  fa-plus"></span>
-                                    </button>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <th>
+                                        <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
+                                            <span class="fa  fa-plus"></span>
+                                        </button>
 
-                                </th>
+                                    </th>
+                                }
                             </tr>
                         </thead>
 
@@ -175,13 +231,13 @@
                                         @Html.DisplayFor(modelItem => course.Members)
                                         @Html.Raw("fő")
                                     </td>
-                                    <td>
-                                        <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="fa  fa-cog" aria-hidden="true"></span></button>
-
-                                        <a class="btn btn-danger" asp-action="CourseDelete" asp-route-id="@course.CourseId"><span class="fas fa-trash-alt"></span></a>
-                                    </td>
-
-
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td>
+                                            <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="far fa-edit" aria-hidden="true"></span></button>
+                                            <a class="btn btn-danger" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>
@@ -189,18 +245,18 @@
                 </div>
             </div>
         </div>
-
     }
-
-
-
 </div>
 
-
-<div class="table-responsive pt-2" id="excelTable">
+@*Normal table*@
+<div class="table-responsive pt-3" id="excelTable">
     <table class="table">
         <thead class="thead-light">
             <tr>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th scope="col"></th>
+                }
                 <th scope="col">
                     Tárgy kód
                 </th>
@@ -234,10 +290,12 @@
                 <th scope="col">
                     Terhelés
                 </th>
-                <th scope="col">
-                    <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
-
-                </th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th scope="col">
+                        Kurzusok kezelés
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -245,6 +303,19 @@
             {
                 int courseCount = item.Courses.Count();
                 <tr class="newSubject border-bottom">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td rowspan="@courseCount">
+                            <a class="dropdown-toggle" id="subjectdropdownMenu" data-toggle="dropdown">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                                <a class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</a><br />
+                                <a class="open_editCourse btn btn-xs" data-toggle="modal" data-target="#editCourse"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</a> <br />
+                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
+                            </div>
+                        </td>
+                    }
                     <td rowspan="@courseCount">
                         @Html.DisplayFor(modelItem => item.SubjectCode)
                     </td>
@@ -316,11 +387,14 @@
                                 <br />
                             }
                         </td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+                                <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="far fa-edit" aria-hidden="true"></span></button>
+                                <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                        }
                     }
-                    <td class="newSubject">
-                        <a class="text-dark" asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
-                        <a class="text-dark" asp-action="SubjectDelete" asp-route-id="@item.SubjectId">Delete</a>
-                    </td>
                 </tr>
 
                 @foreach (var course in item.Courses.Skip(1))
@@ -369,11 +443,15 @@
                                 <br />
                             }
                         </td>
-                        <td>
-                            <a class="text-dark" asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
-                            <a class="text-dark" asp-action="SubjectDelete" asp-route-id="@item.SubjectId">Delete</a>
-                        </td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+                                <button class="open_editCourse btn btn-default btn-xs" data-toggle="modal" data-target="#editCourse"><span class="far fa-edit" aria-hidden="true"></span></button>
+                                <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                            </td>
+                        }
                     </tr>
+
                 }
             }
         </tbody>
@@ -397,17 +475,20 @@
                     {
                         if (date != item.Date)
                         {
-                            <a class="text-dark nav-link underline" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a>
+                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a>
                         }
                     }
                 </div>
             </li>
-            <li class="nav-item pb-1 height">
-                <form method="post" class="navbar-form d-flex" asp-controller="Home" asp-action="CreateSemester">
-                    <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester">Új félév felvétele</button>
-                </form>
-            </li>
-            <li class="nav-item pb-1 pl-1">
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1 height">
+                    <form method="post" class="navbar-form d-flex" asp-controller="Home" asp-action="CreateSemester">
+                        <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester">Új félév felvétele</button>
+                    </form>
+                </li>
+            }
+            <li class="nav-item pt-1 pl-1">
                 <div class="custom-control custom-switch text-nowrap">
                     <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
                     <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
@@ -421,89 +502,15 @@
             <li class="nav-item pb-1">
                 <i class="fas fa-list-ul"></i>
             </li>
-            <li class="nav-item pb-1">
-                <i class="fas fa-plus-square"></i>
-            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1">
+                    <i class="fas fa-plus-square"></i>
+                </li>
+            }
             <li class="nav-item pb-1">
                 <i class="fas fa-table"></i>
             </li>
         </ul>
     </div>
 }
-
-<script>
-    var timeout = null;
-    
-    function delay() {
-        timeout = setTimeout(closeBar, 1000);
-    }
-    function openBar() {
-        clearTimeout(timeout);
-        document.getElementById("SideBar").style.width = "200px";
-        document.getElementById("SideBar").style.padding = "20px";
-        document.getElementById("main").style.paddingLeft = "230px";
-        document.getElementById("opened").style.display = "inline";
-        document.getElementById("closed").style.display = "none";
-    }
-    function closeBar() {
-        $('.dropdown-toggle').dropdown('hide');
-        document.getElementById("SideBar").style.width = "60px";
-        document.getElementById("SideBar").style.padding = "20px 0 0 0";
-        document.getElementById("main").style.paddingLeft = "90px";
-        document.getElementById("opened").style.display = "none";
-        document.getElementById("closed").style.display = "inline";
-    } 
-
-
-    window.addEventListener("load", function () {
-        let checkBox = document.getElementById("tableView");
-        let chtblId = localStorage.getItem("tableViewStore");
-        console.log(checkBox.id);
-        if (chtblId === null) {
-            chtblId = "1";
-            localStorage.setItem("tableViewStore", chtblId);
-        }
-        if (chtblId == "0") {
-            checkBox.checked = true;
-        }
-        else {
-            checkBox.checked = false;
-        }
-        changeTable();
-
-
-    })
-    
-
-    function changeTable() {
-        let checkBox = document.getElementById("tableView");
-        console.log(checkBox.id);
-
-        if (checkBox.checked == true) {
-
-            localStorage.setItem("tableViewStore", "0");
-            document.getElementById("excelTable").style.display = "block";
-            document.getElementById("dropdownTable").style.display = "none";
-            document.getElementById("createsubject").setAttribute("type", "hidden");
-            document.getElementById("createsubject").setAttribute("hidden", "hidden");
-        } else {
-            localStorage.setItem("tableViewStore", "1");
-            document.getElementById("dropdownTable").style.display = "block";
-            document.getElementById("excelTable").style.display = "none";
-            document.getElementById("createsubject").removeAttribute("hidden");
-            document.getElementById("createsubject").setAttribute("type", "button");
-        }
-    }
-   
-
-    $(".collapse").on('show.bs.collapse', function (e) {
-        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
-        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
-    });
-    $(".collapse").on('hide.bs.collapse', function (e) {
-        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
-        e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
-    });
-
-</script>
-
