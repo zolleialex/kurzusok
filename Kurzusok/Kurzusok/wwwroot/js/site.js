@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 
-const PlaceHolderElement = $('#PlaceHolderHere');
+const PlaceHolderElement = $('#PlaceHolderHere');//GET függvények meghívása
 $('button[data-toggle="subject-modal"]').click(function (event) {
     var url = $(this).data('url');
     var id = $(this).data('id');
@@ -24,7 +24,7 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
     })
 })
 
-PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
+PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {// Oldal újratöltése 
     location.reload();
 })
 
@@ -39,11 +39,11 @@ function addTeacherSelect() { //div másolása formhoz
 }
 
 
-PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {
+PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {//Formból eltávolítás
     event.preventDefault();
     console.log("Történik valami");
     var copydivCount = $("div[class*='copyThisDiv']").length;
-    if (copydivCount > 1) {
+    if (copydivCount > 1) { // Kivéve ha már csak egy van, hülyebiztosítás
         var _t = $(this);
         _t.parents('.copyThisDiv').remove();
     }
@@ -52,7 +52,7 @@ PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {
 
 
 
-ajaxpostBasic = form => {
+ajaxpostBasic = form => {// Form Postolása
     try {
         $.ajax({
             type: 'POST',
@@ -61,27 +61,28 @@ ajaxpostBasic = form => {
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.isvalid) {// Ha a válasz visszajött helyesen meghívjuk a kurzus getet
-
-                    PlaceHolderElement.find('.subjectmodal').modal('hide');
-                    if (response.createCourse) {
+                if (response.isvalid) {// Ha a sikeresen véghezment minden
+                    PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltüntetése
+                    if (response.createCourse) { // Új kurzus felvételre irányítás
                         $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
                             PlaceHolderElement.html(data);
                             PlaceHolderElement.find('.coursemodal').modal('show');
                         })
-                    } else {
+                    } else {// Vagy az oldal frissítése
                         location.reload();
                     }
-
                 } else {
+                    $('#errorAlert').show();
                     alert("Rossz adatok");
                 }
             },
             error: function (err) {
+                $('#errorAlert').show();
                 consol.log(err);
             }
         })
     } catch (e) {
+        $('#errorAlert').show();
         console.log(e);
     }
     //A default event megelőzése miatt
@@ -109,7 +110,7 @@ function closeBar() {
 }
 
 
-window.addEventListener("load", function () {
+window.addEventListener("load", function () {// Táblázat nézet megtartása Local Storage-val.
     let checkBox = document.getElementById("tableView");
     let chtblId = localStorage.getItem("tableViewStore");
     console.log(checkBox.id);

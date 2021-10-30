@@ -150,7 +150,7 @@ namespace Kurzusok.Controllers
                     await _context.SaveChangesAsync();
                 }
                 string subjectId = Convert.ToString(subjects.SubjectId);
-                return Json(new { isvalid = true, createCourse = true, responseText = "Jó adatok.", subjectid = subjectId });
+                return Json(new { isvalid = true, createCourse = true, subjectid = subjectId });
             }
             return Json(new { isvalid = false, responseText = "Helytelen adatokat adtál meg." });
 

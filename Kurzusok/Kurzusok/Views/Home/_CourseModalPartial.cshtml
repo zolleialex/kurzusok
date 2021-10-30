@@ -12,6 +12,10 @@
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
                 </div>
                 <div class="modal-body">
+                    <div id="errorAlert" class="alert alert-danger collapse">
+                        <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
+                        <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
+                    </div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
                     </div>
@@ -55,9 +59,9 @@
                         <input asp-for="Comment" class="form-control" />
                         <span asp-validation-for="Comment  " class="text-danger"></span>
                     </div>
-                    <div class="teacherSelect">   
+                    <div class="teacherSelect">
                         <div class="row form-group copyThisDiv">
-                            <div  class="col-6">
+                            <div class="col-6">
                                 <label>Oktató</label>
                                 <select class="custom-select" name="Teachers">
                                     @foreach (var item in teachers)
@@ -76,7 +80,7 @@
                     <div class="teacherMoreSelect" id="toCopy">
 
                     </div>
-                    <button type="button" class="btn btn-secondary" onclick = "copyDivContent();">Új tanár hozzáadása</button>
+                    <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Új tanár hozzáadása</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
