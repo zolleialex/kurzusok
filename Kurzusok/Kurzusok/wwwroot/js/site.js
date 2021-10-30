@@ -13,6 +13,10 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         if (url == "/Home/CreateSubject") {
             PlaceHolderElement.find('.subjectmodal').modal('show');
         }
+        else if (url == "/Home/EditSubject") {
+            PlaceHolderElement.find('.editsubjectmodal').modal('show');
+
+        }
         else {
             PlaceHolderElement.find('.coursemodal').modal('show');
 
@@ -24,16 +28,30 @@ PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {
     location.reload();
 })
 
-function copyDivContent() {
+function copyDivContent() { //div másolása formhoz
     var $el = $('.copyThisDiv:first').clone();
     $('#toCopy').append($el);
 }
 
-function addTeacherSelect() {
+function addTeacherSelect() { //div másolása formhoz
     var $el = $('.TeacherClass:first').clone();
     $('#moreTeacher').append($el);
-
 }
+
+
+PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {
+    event.preventDefault();
+    console.log("Történik valami");
+    var copydivCount = $("div[class*='copyThisDiv']").length;
+    if (copydivCount > 1) {
+        var _t = $(this);
+        _t.parents('.copyThisDiv').remove();
+    }
+
+})
+
+
+
 ajaxpostBasic = form => {
     try {
         $.ajax({
@@ -46,12 +64,17 @@ ajaxpostBasic = form => {
                 if (response.isvalid) {// Ha a válasz visszajött helyesen meghívjuk a kurzus getet
 
                     PlaceHolderElement.find('.subjectmodal').modal('hide');
-                    $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
-                        PlaceHolderElement.html(data);
-                        PlaceHolderElement.find('.coursemodal').modal('show');
-                    })
+                    if (response.createCourse) {
+                        $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
+                            PlaceHolderElement.html(data);
+                            PlaceHolderElement.find('.coursemodal').modal('show');
+                        })
+                    } else {
+                        location.reload();
+                    }
+
                 } else {
-                    alert("rosszak");
+                    alert("Rossz adatok");
                 }
             },
             error: function (err) {
@@ -101,8 +124,6 @@ window.addEventListener("load", function () {
         checkBox.checked = false;
     }
     changeTable();
-
-
 })
 
 

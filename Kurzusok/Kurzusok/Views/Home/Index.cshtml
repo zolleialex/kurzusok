@@ -92,7 +92,9 @@
                 {
                     <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
                     <div class="col-1 m-0 h5 border-right p-0" id="options">
-                        <button class="btn btn-default btn-xs py-0 col-6"><span class="far fa-edit"></span></button>
+                        <button type="button" class="btn btn-default btn-xs py-0 col-6" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId">
+                            <span class="far fa-edit"></span>
+                        </button>
                         <a class="btn btn-xs py-0 col-6" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
                     </div>
                     <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>

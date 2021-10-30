@@ -113,8 +113,8 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSubject(int id)
         {
-            Console.WriteLine(id);            
-            Subjects sbj = new Subjects();            
+            Console.WriteLine(id);
+            Subjects sbj = new Subjects();
             sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
@@ -122,7 +122,7 @@ namespace Kurzusok.Controllers
         }
 
         // POST:  Create subject
-        [Authorize(Roles = "Admin")]       
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
@@ -137,7 +137,7 @@ namespace Kurzusok.Controllers
                         EducationType = educationType[i],
                         Subject = subjects
                     };
-                    if (Obligatory[i]==1)
+                    if (Obligatory[i] == 1)
                     {
                         pr.Obligatory = true;
                     }
@@ -150,15 +150,15 @@ namespace Kurzusok.Controllers
                     await _context.SaveChangesAsync();
                 }
                 string subjectId = Convert.ToString(subjects.SubjectId);
-                return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
+                return Json(new { isvalid = true, createCourse = true, responseText = "Jó adatok.", subjectid = subjectId });
             }
             return Json(new { isvalid = false, responseText = "Helytelen adatokat adtál meg." });
-         
+
         }
         // GET: Create Course
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourse(int id)
-        {           
+        {
             Courses crs = new Courses();
             crs.SubjectId = id;
             var teachers = await _context.Teachers.ToListAsync();//Tanárok listája viewbagbe
@@ -167,8 +167,9 @@ namespace Kurzusok.Controllers
         }
         //POST: Create Course
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> /*ActionResult*/ CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList) {
-            if (ModelState.IsValid&&Teachers.Count()>0&&Teachers.Count()== LoadList.Count())
+        public async Task<IActionResult> /*ActionResult*/ CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList)
+        {
+            if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
                 List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
                 for (int i = 0; i < Teachers.Count(); i++)
@@ -330,36 +331,63 @@ namespace Kurzusok.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Subjects/Edit/5
+        // GET: Home/EditSubject/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> EditSubject(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            int subjectid = (int)id;
 
-            var subjects = await _context.Subjects.FindAsync(id);
-            if (subjects == null)
+            var sbj = await _context.Subjects.Where(c => c.SubjectId == subjectid).Include(a => a.ProgrammesLink).FirstOrDefaultAsync();
+
+            if (sbj == null)
             {
                 return NotFound();
             }
-            return View(subjects);
+            var programmes = await _context.Programmes.ToListAsync();
+            ViewBag.programmes = programmes;
+            return PartialView("_SubjectModalEditPartial", sbj);
         }
 
-        // POST: Subjects/Edit/5
+        // POST: Home/EditSubjectPost
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,EHours,GyHours,SubjectCode")] Subjects subjects)
+        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
         {
-            if (id != subjects.SubjectId)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && Programmes.Count() > 0)
             {
+                var sbj_prgs = await _context.SubjectProgrammes.Where(c => c.SubjectId == subjects.SubjectId).ToListAsync();
+                foreach (var sbj_prg in sbj_prgs)
+                {
+                    _context.SubjectProgrammes.Remove(sbj_prg);
+                }
+                List<SubjectProgrammes> subjectProgrammes = new List<SubjectProgrammes>();
+                for (int i = 0; i < Programmes.Count(); i++)
+                {
+                    SubjectProgrammes subjectProgramme = new SubjectProgrammes()//Egy subjectprogramme beállítása
+                    {
+                        ProgrammeId = Programmes[i],
+                        EducationType = educationType[i]
+                    };
+                    if (Obligatory[i] == 1)
+                    {
+                        subjectProgramme.Obligatory = true;
+                    }
+                    else
+                    {
+                        subjectProgramme.Obligatory = false;
+
+                    }
+                    subjectProgrammes.Add(subjectProgramme);//Listába 
+                }
+                subjects.ProgrammesLink = subjectProgrammes;
+
+
                 try
                 {
                     _context.Update(subjects);
@@ -376,9 +404,10 @@ namespace Kurzusok.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjects.SubjectId });
             }
-            return View(subjects);
+            return Json(new { isvalid = false, responseText = "Rossz adatok." });
+
         }
 
         // POST: Home/SubjectDeleteDelete/5
@@ -393,7 +422,7 @@ namespace Kurzusok.Controllers
             {
                 currentCoursesTeachers.Add(_context.CoursesTeachers.Where(c => c.CourseId == course.CourseId).ToList());
             }
-            var currentSubjectProgrammes= await _context.SubjectProgrammes.Where(c => c.SubjectId == id).ToListAsync();
+            var currentSubjectProgrammes = await _context.SubjectProgrammes.Where(c => c.SubjectId == id).ToListAsync();
             _context.Subjects.Remove(currentSubject);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
