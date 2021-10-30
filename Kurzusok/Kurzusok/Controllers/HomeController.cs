@@ -55,32 +55,39 @@ namespace Kurzusok.Controllers
             if (!string.IsNullOrEmpty(anysearch))
             {
                 currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).FirstOrDefaultAsync();
+                List<Subjects> currentSemesterSubjects = new List<Subjects>();
                 var searchedTeacher = await _context.Teachers.Where(c => c.Name.Contains(anysearch)).Select(d => d.TeacherId).ToListAsync();
-                List<Subjects> currentSubjectwTeacher;
+                List<Subjects> searchedSubjectwTeacher;
                 if (searchedTeacher.Count!=0)
                 {
-                    currentSubjectwTeacher = await _context.Subjects.Where(c=>c.SemesterId==currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
-                    currentSemester.Subjects = currentSubjectwTeacher;
+                    searchedSubjectwTeacher = await _context.Subjects.Where(c=>c.SemesterId==currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
+                    currentSemesterSubjects = searchedSubjectwTeacher;
                 }
                 var searchedProgramme = await _context.Programmes.Where(c => c.Name.Contains(anysearch)).Select(d => d.ProgrammeId).ToListAsync();
-                List<Subjects> currentSubjectwProgramme;
+                List<Subjects> searchedSubjectwProgramme;
                 if (searchedProgramme.Count != 0)
                 {
-                   currentSubjectwProgramme = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => searchedProgramme.Contains(b.ProgrammeId))).Include(k=>k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                    searchedSubjectwProgramme = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => searchedProgramme.Contains(b.ProgrammeId))).Include(k=>k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
                     if (searchedTeacher.Count != 0)
                     {
-                        currentSubjectwProgramme.RemoveAll(item => currentSemester.Subjects.Contains(item));
+                        searchedSubjectwProgramme.RemoveAll(item => currentSemester.Subjects.Contains(item));
                     }
-                    currentSemester.Subjects = currentSubjectwProgramme;
-                }
-                var currentSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
-                if (currentSubject.Count!=0)
-                {
-                    if (searchedProgramme.Count != 0 && searchedTeacher.Count != 0)
+                    foreach (var item in searchedSubjectwProgramme)
                     {
-                        currentSubject.RemoveAll(item => currentSemester.Subjects.Contains(item));
+                        currentSemesterSubjects.Add(item);
+                    }      
+                }
+                var searchedSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                if (searchedSubject.Count!=0)
+                {
+                    if (searchedProgramme.Count != 0 || searchedTeacher.Count != 0)
+                    {
+                        searchedSubject.RemoveAll(item => currentSemester.Subjects.Contains(item));
                     }
-                    currentSemester.Subjects = currentSubject;
+                    foreach (var item in searchedSubject)
+                    {
+                        currentSemesterSubjects.Add(item);
+                    }
                 }
                 //currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink.Where(d=>searchedTeacher.Contains(d.TeacherId))).ThenInclude(b => b.Teacher).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.ProgrammesLink.Where(d => searchedProgramme.Contains(d.ProgrammeId))).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
             }
