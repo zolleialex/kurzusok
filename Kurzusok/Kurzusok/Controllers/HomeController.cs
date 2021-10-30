@@ -42,26 +42,55 @@ namespace Kurzusok.Controllers
 
         // GET: Home/{semester}
         [Authorize]
-        [Route("{currentSemesterId}/{SearchPrase?}")]
-        public async Task<IActionResult> Index(int currentSemesterId, string SearchPhrase)
+        [Route("{currentSemesterId}")]
+        public async Task<IActionResult> Index(int currentSemesterId, string anysearch)
         {
             //Összes szemeszter lekérdezése
+            Console.WriteLine(_homeViewModel.counter);
+            _homeViewModel.counter++;
             var semesters = _context.Semester.ToListAsync();
             _homeViewModel.SemestersList = await semesters;
             int lastId = _homeViewModel.SemestersList.Last().Id;
-            Task<Semester> currentSemester;
-            if (!string.IsNullOrEmpty(SearchPhrase))
+            Semester currentSemester;
+            if (!string.IsNullOrEmpty(anysearch))
             {
-                //Egy adott szemeszter lekérdezése tárgynév szűréssel
-                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects.Where(d => d.Name.Contains(SearchPhrase))).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
+                currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).FirstOrDefaultAsync();
+                var searchedTeacher = await _context.Teachers.Where(c => c.Name.Contains(anysearch)).Select(d => d.TeacherId).ToListAsync();
+                List<Subjects> currentSubjectwTeacher;
+                if (searchedTeacher.Count!=0)
+                {
+                    currentSubjectwTeacher = await _context.Subjects.Where(c=>c.SemesterId==currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
+                    currentSemester.Subjects = currentSubjectwTeacher;
+                }
+                var searchedProgramme = await _context.Programmes.Where(c => c.Name.Contains(anysearch)).Select(d => d.ProgrammeId).ToListAsync();
+                List<Subjects> currentSubjectwProgramme;
+                if (searchedProgramme.Count != 0)
+                {
+                   currentSubjectwProgramme = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => searchedProgramme.Contains(b.ProgrammeId))).Include(k=>k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                    if (searchedTeacher.Count != 0)
+                    {
+                        currentSubjectwProgramme.RemoveAll(item => currentSemester.Subjects.Contains(item));
+                    }
+                    currentSemester.Subjects = currentSubjectwProgramme;
+                }
+                var currentSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                if (currentSubject.Count!=0)
+                {
+                    if (searchedProgramme.Count != 0 && searchedTeacher.Count != 0)
+                    {
+                        currentSubject.RemoveAll(item => currentSemester.Subjects.Contains(item));
+                    }
+                    currentSemester.Subjects = currentSubject;
+                }
+                //currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink.Where(d=>searchedTeacher.Contains(d.TeacherId))).ThenInclude(b => b.Teacher).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.ProgrammesLink.Where(d => searchedProgramme.Contains(d.ProgrammeId))).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
             }
             else
             {
                 //Egy adott szemeszter lekérdezése tárgyakkal
-                currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
+                currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                 if (currentSemester == null) //Ha nincs a megadott ID-s szemeszter akkor az utolsót kérdezzük le
                 {
-                    currentSemester = _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
+                    currentSemester = await _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
                 }
                 else
@@ -69,7 +98,7 @@ namespace Kurzusok.Controllers
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
                 }
             }
-            _homeViewModel.CurrentSemester = await currentSemester;
+            _homeViewModel.CurrentSemester = currentSemester;
             return View(_homeViewModel);
         }
 
@@ -379,12 +408,11 @@ namespace Kurzusok.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Show SearchResult
         [Authorize]
-        public IActionResult SearchResult(string SearchPhrase)
+        public IActionResult AnySearch(string anysearch)
         {
             int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { currentSemesterId, SearchPhrase });
+            return RedirectToAction(nameof(Index), new { currentSemesterId, anysearch });
         }
     }
 }

@@ -20,6 +20,9 @@ namespace Kurzusok
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseKestrel();
+                    webBuilder.UseIIS();
+                    webBuilder.UseUrls("https://localhost:5000", "https://localhost:5001", "https://192.168.0.100:5000", "https://192.168.0.100:5001");
                     webBuilder.UseStartup<Startup>();
                 });
     }

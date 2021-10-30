@@ -10,6 +10,7 @@ namespace Kurzusok.ViewModels
     {
         public IList<Semester> SemestersList { get; set; }
         public Semester CurrentSemester { get; set; }
+        public int counter=0;
         //public IList<Teachers> Teachers { get; set; }
         //public IList<Programmes> Programmes { get; set; }
     }
