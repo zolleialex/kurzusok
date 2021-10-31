@@ -170,7 +170,8 @@ namespace Kurzusok.Controllers
         }
         //POST: Create Course
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> /*ActionResult*/ CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList)
+        public async Task<IActionResult> CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, 
+            List<int> Teachers, List<int> LoadList)
         {
             if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
@@ -192,8 +193,7 @@ namespace Kurzusok.Controllers
                 string subjectId = Convert.ToString(course.SubjectId);
                 return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
             }
-
-            return Json(new { isvalid = true, responseText = "Rossz adatok." });
+            return Json(new { isvalid = false, responseText = "Rossz adatok." });
         }
         //POST:  Create Semester
         [HttpPost]
@@ -390,7 +390,6 @@ namespace Kurzusok.Controllers
                 }
                 subjects.ProgrammesLink = subjectProgrammes;
 
-
                 try
                 {
                     _context.Update(subjects);
@@ -412,7 +411,72 @@ namespace Kurzusok.Controllers
             return Json(new { isvalid = false, responseText = "Rossz adatok." });
 
         }
+        // GET: Home/EditCourse/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditCourse(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            int courseid = (int)id;
+            Console.WriteLine(courseid);
+            var crs = await _context.Courses.Where(c => c.CourseId == courseid).Include(a => a.TeachersLink).FirstOrDefaultAsync();
+            if (crs == null)
+            {
+                return NotFound();
+            }
+            var teachers = await _context.Teachers.ToListAsync();
+            ViewBag.teachers = teachers;
+            return PartialView("_CourseModalEditPartial", crs);
+        }
+        //POST: Edit Course
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditCoursePost([Bind("CourseId,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course,
+            List<int> Teachers, List<int> LoadList)
+        {
+            if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
+            {
+                var crs_tchrs = await _context.CoursesTeachers.Where(c => c.CourseId == course.CourseId).ToListAsync();
+                foreach (var crs_tchr in crs_tchrs)
+                {
+                    _context.CoursesTeachers.Remove(crs_tchr);
+                }
 
+                List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
+                for (int i = 0; i < Teachers.Count(); i++)
+                {
+                    CoursesTeachers CourseTeacher = new CoursesTeachers()
+                    {
+                        TeacherId = Teachers[i],
+                        Loads = LoadList[i]
+                    };
+                    CourseTeachers.Add(CourseTeacher);
+                    Console.WriteLine(Teachers[i] + "tanárnak a terheltsége:" + LoadList[i]);
+                }
+                course.TeachersLink = CourseTeachers;
+
+                try
+                {
+                    _context.Update(course);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SubjectsExists(course.CourseId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nem igazán sikerült updatelni");
+                        throw;
+                    }
+                }
+                return Json(new { isvalid = true, responseText = "Jó adatok."});
+            }
+            return Json(new { isvalid = false, responseText = "Rossz adatok." });
+        }
         // POST: Home/SubjectDeleteDelete/5
         [Authorize(Roles = "Admin")]
         [Route("Home/SubjectDelete/{id?}")]

@@ -5,6 +5,7 @@
 
 
 const PlaceHolderElement = $('#PlaceHolderHere');//GET függvények meghívása
+var SubmitValue = "asd";
 $('button[data-toggle="subject-modal"]').click(function (event) {
     var url = $(this).data('url');
     var id = $(this).data('id');
@@ -15,7 +16,9 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         }
         else if (url == "/Home/EditSubject") {
             PlaceHolderElement.find('.editsubjectmodal').modal('show');
-
+        }
+        else if (url == "/Home/EditCourse") {
+            PlaceHolderElement.find('.editcoursemodal').modal('show');
         }
         else {
             PlaceHolderElement.find('.coursemodal').modal('show');
@@ -37,11 +40,15 @@ function addTeacherSelect() { //div másolása formhoz
     var $el = $('.TeacherClass:first').clone();
     $('#moreTeacher').append($el);
 }
-
+PlaceHolderElement.on('click', "#save", function (event) {    
+    SubmitValue = "save";
+})
+PlaceHolderElement.on('click', "#saveandnext", function (event) {
+    SubmitValue = "saveandnext";
+})
 
 PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {//Formból eltávolítás
     event.preventDefault();
-    console.log("Történik valami");
     var copydivCount = $("div[class*='copyThisDiv']").length;
     if (copydivCount > 1) { // Kivéve ha már csak egy van, hülyebiztosítás
         var _t = $(this);
@@ -63,7 +70,7 @@ ajaxpostBasic = form => {// Form Postolása
             success: function (response) {
                 if (response.isvalid) {// Ha a sikeresen véghezment minden
                     PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltüntetése
-                    if (response.createCourse) { // Új kurzus felvételre irányítás
+                    if (response.createCourse || SubmitValue == "saveandnext") { // Új kurzus felvételre irányítás
                         $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
                             PlaceHolderElement.html(data);
                             PlaceHolderElement.find('.coursemodal').modal('show');
@@ -73,7 +80,6 @@ ajaxpostBasic = form => {// Form Postolása
                     }
                 } else {
                     $('#errorAlert').show();
-                    alert("Rossz adatok");
                 }
             },
             error: function (err) {
@@ -113,7 +119,6 @@ function closeBar() {
 window.addEventListener("load", function () {// Táblázat nézet megtartása Local Storage-val.
     let checkBox = document.getElementById("tableView");
     let chtblId = localStorage.getItem("tableViewStore");
-    console.log(checkBox.id);
     if (chtblId === null) {
         chtblId = "1";
         localStorage.setItem("tableViewStore", chtblId);

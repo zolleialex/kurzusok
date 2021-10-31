@@ -3,12 +3,12 @@
     IList<Teachers> teachers = ViewBag.teachers;
 }
 
-<div class="modal  coursemodal" id="addCourse">
+<div class="modal  editcoursemodal" id="editCourse">
     <div class="modal-dialog">
-        <form asp-action="CreateCoursePost" onsubmit="return ajaxpostBasic(this);">
+        <form asp-action="EditCoursePost" onsubmit="return ajaxpostBasic(this);">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="addCourseLabel">Kurzus hozzáadása</h4>
+                    <h4 class="modal-title" id="addCourseLabel">Kurzus szerkesztése</h4>
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
                 </div>
                 <div class="modal-body">
@@ -16,7 +16,9 @@
                         <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
                         <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
                     </div>
+
                     <div class="form-group">
+                        <input type="hidden" asp-for="CourseId" class="form-control" value="@Model.CourseId" />
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
                     </div>
                     <div class="form-group">
@@ -57,29 +59,42 @@
                     <div class="form-group">
                         <label asp-for="Comment">Komment</label>
                         <textarea asp-for="Comment" class="form-control" rows="4">
+
                         </textarea>
                         <span asp-validation-for="Comment  " class="text-danger"></span>
                     </div>
-                    <div class="teacherSelect">
-                        <div class="row form-group copyThisDiv">
-                            <div class="col-6">
-                                <label>Oktató</label>
-                                <select class="custom-select" name="Teachers">
-                                    @foreach (var item in teachers)
-                                    {
-                                        <option value="@item.TeacherId">@item.Name</option>
+                    @foreach (var item in Model.TeachersLink)
+                    {
+                        <div class="teacherSelect">
+                            <div class="row form-group copyThisDiv">
+                                <div class="col-6">
+                                    <label>Oktató</label>
+                                    <select class="custom-select" name="Teachers">
 
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label>Terhelés</label>
-                                <input type="number" name="LoadList" min="1" max="100" class="form-control" />
+                                        @foreach (var teacher in teachers)
+                                        {
+                                            if (item.TeacherId == teacher.TeacherId)
+                                            {
+                                                <option value="@teacher.TeacherId" selected>@teacher.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.TeacherId">@teacher.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label>Terhelés</label>
+                                    <input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />
+                                </div>
+                                <div class="col-1 p-0">
+                                    <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                     <div class="teacherMoreSelect" id="toCopy">
-
                     </div>
                     <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Új tanár hozzáadása</button>
                 </div>
@@ -87,7 +102,6 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                     <div class="form-group">
                         <input type="submit" id="save" value="Mentés" class="btn btn-primary" />
-                        <input type="submit" id="saveandnext" value="Mentés és tovább" class="btn btn-primary" />
                     </div>
                 </div>
             </div>
