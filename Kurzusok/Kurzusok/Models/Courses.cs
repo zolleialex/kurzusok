@@ -15,8 +15,8 @@ namespace Kurzusok.Models
         public string Comment { get; set; }
         public bool NeptunOk { get; set; }
         public string Software { get; set; }
-        public int? Hours { get; set; }
-        public string CourseCode { get; set; }
+        public int Hours { get; set; }
+        public int CourseCode { get; set; }
 
         public virtual Subjects Subject { get; set; }
         public ICollection<CoursesTeachers> TeachersLink { get; set; }

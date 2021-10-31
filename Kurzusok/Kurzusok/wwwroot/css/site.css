@@ -6,40 +6,49 @@
 #dropdownTable {
     display: block;
 }
+
 body {
     padding-top: 100px;
 }
-@media (min-width: 768px) {
+
+@media (min-width: 288px) {
     .main {
         padding-right: 40px;
         padding-left: 90px;
         transition: 0.5s;
     }
 }
+
 @media (min-width: 1200px) {
     #dropdownTable #options {
-        display:flex;
+        display: flex;
     }
 }
-@media (max-width: 1199px) {
+
+@media (max-width: 1199.98px) {
     #dropdownTable #options {
         display: block;
     }
 }
+
 #subjectdropdownMenu {
     color: #7b8a8b !important;
     cursor: pointer;
 }
+
     #subjectdropdownMenu:hover {
         text-decoration: none !important;
-        color:black !important; 
+        color: black !important;
     }
+
 .newSubject .dropdown-menu > a:hover {
     text-decoration: underline !important;
 }
-.w-85{
-    width:85% !important;
+
+.w-85 {
+    width: 85% !important;
 }
+
 .w-80 {
     width: 80% !important;
 }

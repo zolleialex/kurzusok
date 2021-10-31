@@ -58,7 +58,7 @@ namespace Kurzusok
 
                 // Register other policies here
             });
-            services.AddSingleton<HomeViewModel>();
+            //services.AddSingleton<HomeViewModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

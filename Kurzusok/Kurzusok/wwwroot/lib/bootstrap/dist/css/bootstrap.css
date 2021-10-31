@@ -4598,15 +4598,14 @@ input[type="button"].btn-block {
     overflow-y: auto;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 287.98px) {
     .navbar-expand-sm > .container,
     .navbar-expand-sm > .container-fluid, .navbar-expand-sm > .container-sm, .navbar-expand-sm > .container-md, .navbar-expand-sm > .container-lg, .navbar-expand-sm > .container-xl {
-        padding-right: 0;
-        padding-left: 0;
+        padding: 0;
     }
 }
 
-@media (min-width: 576px) {
+@media (min-width: 288px) {
     .navbar-expand-sm {
         -ms-flex-flow: row nowrap;
         flex-flow: row nowrap;

@@ -26,6 +26,9 @@
         height: 40px;
         line-height: 40px;
     }
+        #opened > .height > .dropdown-menu {
+            line-height: 20px;
+        }
 
 #closed {
     display: inline;

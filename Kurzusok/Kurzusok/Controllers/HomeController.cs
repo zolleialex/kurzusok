@@ -19,9 +19,10 @@ namespace Kurzusok.Controllers
     {
         private readonly KurzusokContext _context;
         private HomeViewModel _homeViewModel;
-        public HomeController(KurzusokContext context, HomeViewModel homeViewModel)
+        public HomeController(KurzusokContext context/*, HomeViewModel homeViewModel*/)
         {
-            _homeViewModel = homeViewModel;
+            //_homeViewModel = homeViewModel;
+            _homeViewModel = new HomeViewModel();
             _context = context;
         }
         public IActionResult Index()
@@ -46,8 +47,6 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> Index(int currentSemesterId, string anysearch)
         {
             //Összes szemeszter lekérdezése
-            Console.WriteLine(_homeViewModel.counter);
-            _homeViewModel.counter++;
             var semesters = _context.Semester.ToListAsync();
             _homeViewModel.SemestersList = await semesters;
             int lastId = _homeViewModel.SemestersList.Last().Id;
@@ -114,8 +113,10 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> CreateSubject(int id)
         {
             Console.WriteLine(id);
-            Subjects sbj = new Subjects();
-            sbj.SemesterId = _homeViewModel.CurrentSemester.Id;
+            Subjects sbj = new Subjects
+            {
+                SemesterId = int.Parse(HttpContext.Session.GetString("SemesterId"))
+            };
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
             return PartialView("_SubjectModalPartial", sbj);
@@ -159,8 +160,10 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourse(int id)
         {
-            Courses crs = new Courses();
-            crs.SubjectId = id;
+            Courses crs = new Courses
+            {
+                SubjectId = id
+            };
             var teachers = await _context.Teachers.ToListAsync();//Tanárok listája viewbagbe
             ViewBag.teachers = teachers;
             return PartialView("_CourseModalPartial", crs);
