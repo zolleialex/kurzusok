@@ -5,6 +5,7 @@
     string date = Model.CurrentSemester.Date;
     string id = Model.CurrentSemester.Id.ToString();
     string lastSemester = Model.SemestersList.Last().Date;
+    int colthespan = 6;
 }
 
 <div class="container-fluid">
@@ -77,6 +78,30 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                 <a class="btn btn-danger" id="sdel" asp-action="SubjectDelete">Tárgy törlése</a>
             </div>
+        </div>
+    </div>
+</div>
+
+@*Insert komment*@
+<div class="modal fade add-comment-modal" id="applyComment" tabindex="-1" role="dialog" aria-labelledby="applyComment" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyCommentLabel">Megjegyzés hozzáadása</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-action="AddComment" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="text" placeholder="Írjon megjegyzést a kurzushoz" autofocus name="comment" class="w-100" />
+                    <input type="hidden" id="courseId" name="courseId" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <button type="submit" class="btn btn-danger" id="addcomment">Mentés</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -156,7 +181,7 @@
             </div>
             <div class="col-12 text-center mt-1">
                 <div class="table-responsive">
-                    <table class="table bg-light">
+                    <table class="table bg-white">
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">
@@ -175,10 +200,7 @@
                                     Óraszám
                                 </th>
                                 <th scope="col">
-                                    Terem
-                                </th>
-                                <th scope="col">
-                                    Szoftver igény
+                                    Terem, szoftver igény
                                 </th>
                                 <th scope="col">
                                     Létszám
@@ -224,10 +246,19 @@
                                     </td>
 
                                     <td>
-                                        @Html.DisplayFor(modelItem => course.Classroom)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Software)
+                                        @if (course.Classroom != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => course.Classroom)
+                                            if (course.Software != null)
+                                            {
+                                                @Html.Raw(", ")
+                                                @Html.DisplayFor(modelItem => course.Software)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => course.Software)
+                                        }
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => course.Members)
@@ -242,6 +273,16 @@
                                             <a class="btn btn-danger" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
                                         </td>
                                     }
+                                </tr>
+                                <tr>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        colthespan = 7;
+                                    }
+                                    <td colspan="@colthespan" class="text-left">Megjegyzések: @Html.DisplayFor(modelItem => course.Comment)</td>
+                                    <td>
+                                        <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -294,12 +335,9 @@
                 <th scope="col">
                     Terhelés
                 </th>
-                @if (User.IsInRole("Admin"))
-                {
-                    <th scope="col">
-                        Kurzusok kezelés
-                    </th>
-                }
+                <th scope="col">
+                    Kurzusok kezelés
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -392,15 +430,17 @@
                                 <br />
                             }
                         </td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <td>
+                        <td>
+                            <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                            @if (User.IsInRole("Admin"))
+                            {
                                 <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
-                            </td>
-                        }
+                            }
+                        </td>
+
                     }
                 </tr>
 
@@ -450,15 +490,17 @@
                                 <br />
                             }
                         </td>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <td>
+                        <td>
+                            <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                            @if (User.IsInRole("Admin"))
+                            {
                                 <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
-                            </td>
-                        }
+                            }
+                        </td>
+
                     </tr>
 
                 }

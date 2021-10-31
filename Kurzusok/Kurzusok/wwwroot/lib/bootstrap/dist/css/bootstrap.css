@@ -1883,12 +1883,12 @@ pre {
 }
 
 .table-bordered {
-    border: 1px solid #dee2e6;
+    border: 1px solid #7b8a8b;
 }
 
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #dee2e6;
+        border: 1px solid #7b8a8b;
     }
 
     .table-bordered thead th,

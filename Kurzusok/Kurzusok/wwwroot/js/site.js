@@ -160,7 +160,11 @@ $('a[data-toggle="course-delete-modal"]').click(function (event) {
     $('#cdel').attr("href", route)
     $('#applyCourseDelete').modal('show');
 })
-
+$('a[data-toggle="add-comment-modal"]').click(function (event) {
+    let id = $(this).data('id');
+    $('#courseId').attr("value", id)
+    $('#applyComment').modal('show');
+})
 $(".collapse").on('show.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");

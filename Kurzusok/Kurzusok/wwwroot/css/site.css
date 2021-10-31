@@ -52,3 +52,6 @@ body {
 .w-80 {
     width: 80% !important;
 }
+.dark-border {
+    border:1px solid #7b8a8b !important;
+}

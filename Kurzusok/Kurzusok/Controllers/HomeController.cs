@@ -517,5 +517,26 @@ namespace Kurzusok.Controllers
             int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
             return RedirectToAction(nameof(Index), new { currentSemesterId, anysearch });
         }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddComment([FromForm] int courseId, [FromForm] string comment)
+        {
+            var currentCourse= await _context.Courses.Where(b => b.CourseId == courseId).FirstOrDefaultAsync();
+            string currentComment = currentCourse.Comment;
+            string newComment;
+            if (currentComment != null)
+            {
+                newComment = currentComment + "; " + comment;
+            }
+            else
+            {
+                newComment = comment;
+            }
+            currentCourse.Comment = newComment;
+            _context.Courses.Update(currentCourse);
+            await _context.SaveChangesAsync();
+            int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
+            return RedirectToAction(nameof(Index), new { currentSemesterId });
+        }
     }
 }
