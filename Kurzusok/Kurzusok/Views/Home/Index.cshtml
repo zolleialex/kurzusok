@@ -449,7 +449,43 @@
                             }
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Comment)
+                            <table>
+                                <tr>
+                                    <td class="border-0 py-0 maxwidth">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                <div>
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline" style="word-wrap:break-word;" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                @if (displayComment != null)
+                                {
+                                    <tr>
+                                        <td class="border-0 py-0">
+                                            <p class="smaller m-0">Utoljára szerkesztette: @whoCommented.Last()</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
                         </td>
                         <td>
                             @foreach (var teacher in course.TeachersLink)
@@ -509,7 +545,43 @@
                             }
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => course.Comment)
+                            <table>
+                                <tr>
+                                    <td class="border-0 py-0 maxwidth">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                <div>
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline" style="word-wrap:break-word;" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                @if (displayComment != null)
+                                {
+                                    <tr>
+                                        <td class="border-0 py-0">
+                                            <p class="smaller m-0">Utoljára szerkesztette: @whoCommented.Last()</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
                         </td>
                         <td>
                             @foreach (var teacher in course.TeachersLink)
