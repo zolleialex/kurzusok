@@ -144,7 +144,6 @@ namespace Kurzusok.Data
                     .HasColumnName("classroom");
 
                 entity.Property(e => e.Comment)
-                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("comment");
 

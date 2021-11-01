@@ -59,9 +59,8 @@
                     <div class="form-group">
                         <label asp-for="Comment">Komment</label>
                         <textarea asp-for="Comment" class="form-control" rows="4">
-
                         </textarea>
-                        <span asp-validation-for="Comment  " class="text-danger"></span>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
                     </div>
                     @foreach (var item in Model.TeachersLink)
                     {

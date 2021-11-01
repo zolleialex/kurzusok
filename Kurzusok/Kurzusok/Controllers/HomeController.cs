@@ -10,6 +10,7 @@ using Kurzusok.Models;
 using Microsoft.AspNetCore.Authorization;
 using Kurzusok.ViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Kurzusok.Controllers
@@ -18,10 +19,14 @@ namespace Kurzusok.Controllers
     public class HomeController : Controller
     {
         private readonly KurzusokContext _context;
+#pragma warning disable IDE0044 // Add readonly modifier
         private HomeViewModel _homeViewModel;
-        public HomeController(KurzusokContext context/*, HomeViewModel homeViewModel*/)
+#pragma warning restore IDE0044 // Add readonly modifier
+        private readonly UserManager<IdentityUser> _userManager;
+        public HomeController(KurzusokContext context, UserManager<IdentityUser> userManager/*, HomeViewModel homeViewModel*/)
         {
             //_homeViewModel = homeViewModel;
+            _userManager = userManager;
             _homeViewModel = new HomeViewModel();
             _context = context;
         }
@@ -526,11 +531,11 @@ namespace Kurzusok.Controllers
             string newComment;
             if (currentComment != null)
             {
-                newComment = currentComment + "; " + comment;
+                newComment =$"[[${User.Identity.Name}$]]{currentComment};ß {comment}";
             }
             else
             {
-                newComment = comment;
+                newComment = $"[[${User.Identity.Name}$]]{comment}";
             }
             currentCourse.Comment = newComment;
             _context.Courses.Update(currentCourse);

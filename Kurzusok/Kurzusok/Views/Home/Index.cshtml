@@ -6,6 +6,8 @@
     string id = Model.CurrentSemester.Id.ToString();
     string lastSemester = Model.SemestersList.Last().Date;
     int colthespan = 6;
+    List<string> whoCommented = new List<string>();
+    string commentHelper, displayComment;
 }
 
 <div class="container-fluid">
@@ -279,9 +281,43 @@
                                     {
                                         colthespan = 7;
                                     }
-                                    <td colspan="@colthespan" class="text-left">Megjegyzések: @Html.DisplayFor(modelItem => course.Comment)</td>
+                                    <td colspan="@colthespan" class="text-left">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                @Html.Raw("Megjegyzések:")
+                                                <div class="d-inline-block">
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline-block" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("Megjegyzések:")
+                                            }
+                                        }
+                                    </td>
                                     <td>
                                         <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                                        @if (displayComment != null)
+                                        {
+                                            <p class="h6 small mb-0">Utoljára szerkesztette:</p>
+                                            <p class="h6 small">@whoCommented.Last()</p>
+                                        }
                                     </td>
                                 </tr>
                             }
