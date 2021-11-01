@@ -58,6 +58,15 @@ namespace Kurzusok
 
                 // Register other policies here
             });
+            services.Configure<IdentityOptions>(options =>
+            {                
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzÈ·˚ı˙ˆ¸ÛÌABCDEFGHIJKLMNOPQRSTUVWXYZ…¡€’⁄÷Õ‹” ";
+                options.User.RequireUniqueEmail = true;
+
+            });
             //services.AddSingleton<HomeViewModel>();
         }
 

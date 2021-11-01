@@ -23,8 +23,7 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> Index()
         {            
             var roles = roleManager.Roles.ToList();
-            var model = new List<RolesViewModel>();
-
+            var model = new List<RolesViewModel>();           
 
             foreach (var role in roles)
             {

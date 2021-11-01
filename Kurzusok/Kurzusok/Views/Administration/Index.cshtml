@@ -15,7 +15,7 @@
             <div class="card-body">
                 @foreach (var userName in item.Users)
                 {
-                <p>@userName</p>
+                    <p>@userName</p>
                 }
             </div>
             <div class="card-footer">
@@ -29,3 +29,7 @@ else
 {
     <p>Nincsenek felhasználói szintek!</p>
 }
+
+<p>
+    <a asp-area="Identity"  asp-page="/Account/Register" >Új felhasználó hozzáadása ehhez a szarhoz. </a>
+</p>

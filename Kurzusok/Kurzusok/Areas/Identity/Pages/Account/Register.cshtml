@@ -1,7 +1,7 @@
 ﻿@page "/Register"
 @model RegisterModel
 @{
-    Layout = "/Views/Shared/_SignInLayout.cshtml";
+    
     ViewData["Title"] = "Regisztrálás";
 }
 
@@ -10,6 +10,11 @@
     <h4>Új fiók létrehozása.</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Input.UserName">Felhasználó név</label>
+        <input asp-for="Input.UserName" class="form-control" />
+        <span asp-validation-for="Input.UserName" class="text-danger"></span>
+    </div>
     <div class="form-group">
         <label asp-for="Input.Email">Email cím</label>
         <input asp-for="Input.Email" class="form-control" />
