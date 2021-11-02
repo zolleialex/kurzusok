@@ -113,16 +113,16 @@
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
         <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-85">
-            <div class="row accordion-toggle border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
+            <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
                 <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
                 @if (User.IsInRole("Admin"))
                 {
                     <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
-                    <div class="col-1 m-0 h5 border-right p-0" id="options">
-                        <button type="button" class="btn btn-default btn-xs py-0 col-6" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId">
+                    <div class="col-1 m-0 h5 border-right p-0 no-collapsable" id="options">
+                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId">
                             <span class="far fa-edit"></span>
                         </button>
-                        <a class="btn btn-xs py-0 col-6" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
+                        <a class="btn btn-xs py-0 col-6 no-collapsable" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
                     </div>
                     <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
                 }

@@ -3106,10 +3106,6 @@ C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\EditUserRole.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\Index.cshtml.g.cs
-C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Create.cshtml.g.cs
-C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Delete.cshtml.g.cs
-C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Details.cshtml.g.cs
-C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Edit.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
@@ -3640,7 +3636,6 @@ C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\li
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\libman.json
-C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModelPartial.cshtml.g.cs
 C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalPartial.cshtml.g.cs
 C:\Users\zolle\Desktop\Kurzusok2\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\zolle\Desktop\Kurzusok2\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\appsettings.json
@@ -4139,3 +4134,7 @@ C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalEditPartial.cshtml.g.cs
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalEditPartial.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalEditPartial.cshtml.g.cs
+C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalEditPartial.cshtml.g.cs
+C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalPartial.cshtml.g.cs
+C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalEditPartial.cshtml.g.cs
+C:\Users\zolle\Documents\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\_AdminLayout.cshtml.g.cs

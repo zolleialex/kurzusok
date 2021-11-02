@@ -1,9 +1,6 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
-
-
 const PlaceHolderElement = $('#PlaceHolderHere');//GET függvények meghívása
 var SubmitValue = "asd";
 $('button[data-toggle="subject-modal"]').click(function (event) {
@@ -40,7 +37,7 @@ function addTeacherSelect() { //div másolása formhoz
     var $el = $('.TeacherClass:first').clone();
     $('#moreTeacher').append($el);
 }
-PlaceHolderElement.on('click', "#save", function (event) {    
+PlaceHolderElement.on('click', "#save", function (event) {
     SubmitValue = "save";
 })
 PlaceHolderElement.on('click', "#saveandnext", function (event) {
@@ -94,7 +91,8 @@ ajaxpostBasic = form => {// Form Postolása
     //A default event megelőzése miatt
     return false;
 }
-var timeout = null;
+let timeout = null;
+let collapsedTables = [];
 function delay() {
     timeout = setTimeout(closeBar, 1000);
 }
@@ -123,13 +121,22 @@ window.addEventListener("load", function () {// Táblázat nézet megtartása Lo
         chtblId = "1";
         localStorage.setItem("tableViewStore", chtblId);
     }
-    if (chtblId == "0") {
-        checkBox.checked = true;
-    }
     else {
-        checkBox.checked = false;
+        if (chtblId == "0") {
+            checkBox.checked = true;
+        }
+        else {
+            checkBox.checked = false;
+            let collaps = JSON.parse(localStorage.getItem("collapsedTable"));
+            if (collaps != null) {
+                for (let i of collaps) {
+                    console.log(i);
+                    document.getElementById(i).classList.add("show");
+                }
+            }
+        }
+        changeTable();
     }
-    changeTable();
 })
 
 
@@ -168,8 +175,17 @@ $('a[data-toggle="add-comment-modal"]').click(function (event) {
 $(".collapse").on('show.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
+    collapsedTables.push(e.target.id);
+
+    localStorage.setItem("collapsedTable", JSON.stringify(collapsedTables));
 });
 $(".collapse").on('hide.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
+    collapsedTables.splice(collapsedTables.indexOf(e.target.id),0);
+    localStorage.setItem("collapsedTable", JSON.stringify(collapsedTables));
+});
+//Prevent collapse on button clicks
+$('.no-collapsable').on('click', function (e) {
+    e.stopPropagation();
 });
