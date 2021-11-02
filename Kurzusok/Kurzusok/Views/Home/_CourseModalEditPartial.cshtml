@@ -26,10 +26,41 @@
                         <input asp-for="NeptunOk" class="form-control" />
                         <span asp-validation-for="NeptunOk" class="text-danger"></span>
                     </div>
+                    
                     <div class="form-group">
                         <label asp-for="CourseType">Kurzus típus</label>
-                        <input asp-for="CourseType" class="form-control" />
-                        <span asp-validation-for="CourseType" class="text-danger"></span>
+                        <select class="custom-select" name="CourseType">
+                            @if (Model.CourseType == "Elmélet")
+                            {
+                                <option value="Elmélet" selected>Elmélet</option>
+                                <option value="Gyakorlat">Gyakorlat</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+
+                            }
+                            else if (Model.CourseType == "Gyakorlat")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat" selected>Gyakorlat</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                            }
+                            else if (Model.CourseType == "Csak Vizsga")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat" >Gyakorlat</option>
+                                <option value="Csak Vizsga" selected>Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                            }
+                            else if (Model.CourseType == "Egyéni felkészülés")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat" >Gyakorlat</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés" selected>Egyéni felkészülés</option>
+                            }
+
+                        </select>
                     </div>
                     <div class="form-group">
                         <label asp-for="Hours">Óraszám</label>
@@ -57,11 +88,13 @@
                         <span asp-validation-for="Software  " class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Comment">Komment</label>
-                        <textarea asp-for="Comment" class="form-control" rows="4">
-                        </textarea>
-                        <span asp-validation-for="Comment" class="text-danger"></span>
+                        <input type="hidden" asp-for="Comment" class="form-control" rows="4" />
                     </div>
+                    <div class="form-group">
+                        <label>Törli az összes kommentet?</label>
+                        <input type="checkbox" id="DeleteComment" name="DeleteComments" value="1" />
+                    </div>
+
                     @foreach (var item in Model.TeachersLink)
                     {
                         <div class="teacherSelect">

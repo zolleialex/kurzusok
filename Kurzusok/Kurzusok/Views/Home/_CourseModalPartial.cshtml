@@ -26,8 +26,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="CourseType">Kurzus típus</label>
-                        <input asp-for="CourseType" class="form-control" />
-                        <span asp-validation-for="CourseType" class="text-danger"></span>
+                        <select class="custom-select" name="CourseType">
+                            <option value="Elmélet">Elmélet</option>
+                            <option value="Gyakorlat">Gyakorlat</option>
+                            <option value="Csak Vizsga">Csak Vizsga</option>
+                            <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label asp-for="Hours">Óraszám</label>
@@ -56,8 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Comment">Komment</label>
-                        <textarea asp-for="Comment" class="form-control" rows="4">
-                        </textarea>
+                        <input asp-for="Comment" class="form-control" />
                         <span asp-validation-for="Comment  " class="text-danger"></span>
                     </div>
                     <div class="teacherSelect">

@@ -2151,9 +2151,6 @@ C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\RazorDeclaratio
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Kurzusok.RazorComponent.output.cache
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\RazorDeclaration\Kurzusok.dll
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\RedirectToLogin.razor.g.cs
-C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Create.cshtml.g.cs
-C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Delete.cshtml.g.cs
-C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Edit.cshtml.g.cs
 C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\DeletePersonalData.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\DownloadPersonalData.cshtml.g.cs

@@ -62,16 +62,16 @@ namespace Kurzusok.Controllers
                 List<Subjects> currentSemesterSubjects = new List<Subjects>();
                 var searchedTeacher = await _context.Teachers.Where(c => c.Name.Contains(anysearch)).Select(d => d.TeacherId).ToListAsync();
                 List<Subjects> searchedSubjectwTeacher;
-                if (searchedTeacher.Count!=0)
+                if (searchedTeacher.Count != 0)
                 {
-                    searchedSubjectwTeacher = await _context.Subjects.Where(c=>c.SemesterId==currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
+                    searchedSubjectwTeacher = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
                     currentSemesterSubjects = searchedSubjectwTeacher;
                 }
                 var searchedProgramme = await _context.Programmes.Where(c => c.Name.Contains(anysearch)).Select(d => d.ProgrammeId).ToListAsync();
                 List<Subjects> searchedSubjectwProgramme;
                 if (searchedProgramme.Count != 0)
                 {
-                    searchedSubjectwProgramme = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => searchedProgramme.Contains(b.ProgrammeId))).Include(k=>k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                    searchedSubjectwProgramme = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => searchedProgramme.Contains(b.ProgrammeId))).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
                     if (searchedTeacher.Count != 0)
                     {
                         searchedSubjectwProgramme.RemoveAll(item => currentSemester.Subjects.Contains(item));
@@ -79,10 +79,10 @@ namespace Kurzusok.Controllers
                     foreach (var item in searchedSubjectwProgramme)
                     {
                         currentSemesterSubjects.Add(item);
-                    }      
+                    }
                 }
                 var searchedSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
-                if (searchedSubject.Count!=0)
+                if (searchedSubject.Count != 0)
                 {
                     if (searchedProgramme.Count != 0 || searchedTeacher.Count != 0)
                     {
@@ -175,11 +175,12 @@ namespace Kurzusok.Controllers
         }
         //POST: Create Course
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, 
-            List<int> Teachers, List<int> LoadList)
+        [HttpPost]
+        public async Task<IActionResult> CreateCoursePost([Bind("Id,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, List<int> Teachers, List<int> LoadList)
         {
             if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
+
                 List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
                 for (int i = 0; i < Teachers.Count(); i++)
                 {
@@ -192,7 +193,8 @@ namespace Kurzusok.Controllers
                     Console.WriteLine(Teachers[i] + "tanárnak a terheltsége:" + LoadList[i]);
                 }
                 course.TeachersLink = CourseTeachers;
-
+                string newComment = $"[[${User.Identity.Name}$]]{course.Comment}";
+                course.Comment = newComment;
                 _context.Courses.Add(course);
                 await _context.SaveChangesAsync();
                 string subjectId = Convert.ToString(course.SubjectId);
@@ -437,11 +439,14 @@ namespace Kurzusok.Controllers
         }
         //POST: Edit Course
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditCoursePost([Bind("CourseId,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course,
-            List<int> Teachers, List<int> LoadList)
+        public async Task<IActionResult> EditCoursePost([Bind("CourseId,SubjectId,NeptunOk,CourseType,Hours,CourseCode,Members,Classroom,Software,Comment")] Courses course, int DeleteComments, List<int> Teachers, List<int> LoadList)
         {
             if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
+                if (DeleteComments == 1)
+                {
+                    course.Comment = null;
+                }
                 var crs_tchrs = await _context.CoursesTeachers.Where(c => c.CourseId == course.CourseId).ToListAsync();
                 foreach (var crs_tchr in crs_tchrs)
                 {
@@ -478,7 +483,7 @@ namespace Kurzusok.Controllers
                         throw;
                     }
                 }
-                return Json(new { isvalid = true, responseText = "Jó adatok."});
+                return Json(new { isvalid = true, responseText = "Jó adatok." });
             }
             return Json(new { isvalid = false, responseText = "Rossz adatok." });
         }
@@ -526,12 +531,12 @@ namespace Kurzusok.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment([FromForm] int courseId, [FromForm] string comment)
         {
-            var currentCourse= await _context.Courses.Where(b => b.CourseId == courseId).FirstOrDefaultAsync();
+            var currentCourse = await _context.Courses.Where(b => b.CourseId == courseId).FirstOrDefaultAsync();
             string currentComment = currentCourse.Comment;
             string newComment;
             if (currentComment != null)
             {
-                newComment =$"[[${User.Identity.Name}$]]{currentComment};ß {comment}";
+                newComment = $"[[${User.Identity.Name}$]]{currentComment};ß {comment}";
             }
             else
             {
