@@ -112,7 +112,7 @@
 <div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects)
     {
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-85">
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-85 w-d1">
             <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
                 <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
                 @if (User.IsInRole("Admin"))
@@ -134,50 +134,70 @@
                 }
             </div>
         </div>
-        <div class="collapse pt-0 px-3 pb-3 w-80 m-auto bg-light" id="@item.SubjectCode">
-            <div class="row align-items-center flex-grow-1">
-                <div class="col-md-6 text-center d-flex flex-column">
-                    <div class="align-items-center d-flex text-center m-auto flex-grow-1">
-                        <div class="pr-2">
-                            Heti óraszám: meguntam a kinézettel szopást
-                        </div>
-                        <div>
+        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2" id="@item.SubjectCode" >
+            <div class="row align-items-center flex-grow-1 p-2">
+                <div class="col-md-5 text-center d-flex flex-column">
+                    <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
+
+                        <div class="text-right">
                             @if (item.EHours != null)
                             {
-                                @Html.Raw("Elmélet: ")
+                                <strong>Elmélet: </strong>
                                 @Html.DisplayFor(modelItem => item.EHours)
                                 <br />
                             }
                             @if (item.GyHours != null)
                             {
-                                @Html.Raw("Gyakorlat: ")
+                                <strong>Gyakorlat:</strong>
                                 @Html.DisplayFor(modelItem => item.GyHours)
                             }
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-center d-flex flex-column">
-                    <div class="align-items-center h-100 d-flex text-center m-auto flex-grow-1">
-                        <div class="pr-2">
-                            Szakok:
+                <div class="col-md-7 text-center d-flex flex-column">
+                    <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
+                        <div class="pr-lg-2">
+                            <strong>Szakok:</strong>
                         </div>
-                        <div>
+
+                        <ul class="m-0">
                             @foreach (var programme in item.ProgrammesLink)
                             {
-                                @Html.DisplayFor(modelItem => programme.Programme.Name)
-                                @Html.Raw("    Típus: ")
-                                @Html.DisplayFor(modelItem => programme.EducationType)
-                                if (programme.Obligatory == true)
-                                {
-                                    @Html.Raw("Kötelező")
-                                }
-                                else
-                                {
-                                    @Html.Raw("Választható")
-                                }
-                                <br />
+                                <li class="text-left">
+                                    <i>@programme.Programme.Name</i>
+                                    @if (programme.EducationType == "traditional")
+                                    {
+                                        @Html.Raw(", ")
+
+                                        <u>hagyományos</u>
+                                        @Html.Raw("oktatással")
+                                    }
+                                    else if (programme.EducationType == "sync")
+                                    {
+                                        @Html.Raw("Szinkron oktatással")
+
+                                    }
+                                    else if (programme.EducationType == "async")
+                                    {
+                                        @Html.Raw("Asszinkron oktatással")
+
+                                    }
+                                    @if (programme.Obligatory == true)
+                                    {
+                                        @Html.Raw(", ")
+                                        <u>választható</u>
+                                    }
+                                    else
+                                    {
+
+                                        @Html.Raw(", ")
+                                        <u>kötelező</u>
+                                    }
+                                    <br />
+                                </li>
                             }
-                        </div>
+                        </ul>
+
                     </div>
                 </div>
             </div>
