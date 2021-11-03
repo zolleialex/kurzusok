@@ -9073,11 +9073,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\zolle\\Documents\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+      "projectUniqueName": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
       "projectName": "Kurzusok",
-      "projectPath": "C:\\Users\\zolle\\Documents\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+      "projectPath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
       "packagesPath": "C:\\Users\\zolle\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\zolle\\Documents\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\obj\\",
+      "outputPath": "C:\\Users\\zolle\\OneDrive\\Dokumentumok\\GitHub\\kurzusok\\Kurzusok\\Kurzusok\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\zolle\\AppData\\Roaming\\NuGet\\NuGet.Config",

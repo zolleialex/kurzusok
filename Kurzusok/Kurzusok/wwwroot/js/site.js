@@ -1,4 +1,4 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
 const PlaceHolderElement = $('#PlaceHolderHere');//GET függvények meghívása
@@ -130,8 +130,13 @@ window.addEventListener("load", function () {// Táblázat nézet megtartása Lo
             let collaps = JSON.parse(localStorage.getItem("collapsedTable"));
             if (collaps != null) {
                 for (let i of collaps) {
-                    console.log(i);
-                    document.getElementById(i).classList.add("show");
+                    let oneCollapse = document.getElementById(i);
+                    oneCollapse.classList.add("show");
+                    oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
+                    oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
+                    if (collapsedTables.includes(i) == false) {
+                        collapsedTables.push(i);
+                    }
                 }
             }
         }
