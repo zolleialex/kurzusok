@@ -672,7 +672,7 @@
                     {
                         if (date != item.Date)
                         {
-                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id">@item.Date</a>
+                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" onclick="clearCollapse()">@item.Date</a>
                         }
                     }
                 </div>
@@ -681,7 +681,7 @@
             {
                 <li class="nav-item pb-1 height">
                     <form method="post" class="navbar-form d-flex" asp-controller="Home" asp-action="CreateSemester">
-                        <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester">Új félév felvétele</button>
+                        <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester" onclick="clearCollapse()">Új félév felvétele</button>
                     </form>
                 </li>
             }

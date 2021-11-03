@@ -42,12 +42,14 @@ namespace Kurzusok.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "A felhasználó név megadása kötelező!")]
             [DataType(DataType.Text)]
+            [Display(Name = "Felhasználó név")]
             public string UserName { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "A jelszó megadása kötelező!")]
             [DataType(DataType.Password)]
+            [Display(Name = "Jelszó")]
             public string Password { get; set; }
 
             [Display(Name = "Emlékezz rám!")]
@@ -97,7 +99,7 @@ namespace Kurzusok.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Sikertelen belépés.");
                     return Page();
                 }
             }

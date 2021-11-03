@@ -2,13 +2,15 @@
 @model List<RoleEditViewModel>
 @{
     var roleId = ViewBag.roleId;
+    var roleName = ViewBag.roleName;
+    ViewData["Title"] = roleName+" szint";
 }
 
 <form method="post">
 
-    <div class="card">
+    <div class="card w-50 m-auto">
         <div class="card-header">
-            <p>Felhasználó eltávolítása, vagy törlése</p>
+            <p>@roleName hozzáadása, vagy törlése</p>
         </div>
         <div class="card-body">
             @for (int i = 0; i < Model.Count; i++)
@@ -24,8 +26,8 @@
             }
 
 
-            <input type="submit" class="btn btn-primary" value="Mentés" />
-            <a asp-controller="Administration" asp-action="Index" asp-route-roleId="@roleId" class="btn btn-primary">Mégse</a>
+            <input type="submit" class="btn btn-primary mt-3" value="Mentés" />
+            <a asp-controller="Administration" asp-action="Index" asp-route-roleId="@roleId" class="btn btn-primary  mt-3">Mégse</a>
 
         </div>
     </div>

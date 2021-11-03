@@ -187,10 +187,14 @@ $(".collapse").on('show.bs.collapse', function (e) {
 $(".collapse").on('hide.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
-    collapsedTables.splice(collapsedTables.indexOf(e.target.id),0);
+    collapsedTables.splice(collapsedTables.indexOf(e.target.id), 1);
     localStorage.setItem("collapsedTable", JSON.stringify(collapsedTables));
 });
 //Prevent collapse on button clicks
 $('.no-collapsable').on('click', function (e) {
     e.stopPropagation();
 });
+//Új félév megnyitásakor a collapse localStorage törlése
+function clearCollapse() {
+    localStorage.removeItem("collapsedTable");
+}

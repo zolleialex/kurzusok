@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -11,11 +12,12 @@ namespace Kurzusok.Models
         {
             Courses = new HashSet<Courses>();
         }
-
         public int SubjectId { get; set; }
+        [Required(ErrorMessage = "A tárgy név megadása kötelező!")]
         public string Name { get; set; }
         public int? EHours { get; set; }
         public int? GyHours { get; set; }
+        [Required(ErrorMessage = "A tárgy kódjának megadása kötelező!")]
         public string SubjectCode { get; set; }
         public int SemesterId { get; set; }
 

@@ -53,7 +53,8 @@ namespace Kurzusok.Controllers
         public async Task<IActionResult> EditUserRole(string roleId)
         {
             ViewBag.roleId = roleId;
-            var role = await roleManager.FindByIdAsync(roleId);           
+            var role = await roleManager.FindByIdAsync(roleId);
+            ViewBag.roleName = role.Name;
             var model = new List<RoleEditViewModel>();
             foreach (var user in userManager.Users.ToList())
             {
