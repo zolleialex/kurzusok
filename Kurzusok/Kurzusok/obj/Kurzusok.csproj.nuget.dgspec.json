@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\varga\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {}
+    "C:\\Users\\varga\\Desktop\\Projektmunka\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {}
   },
   "projects": {
-    "C:\\Users\\varga\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {
+    "C:\\Users\\varga\\Desktop\\Projektmunka\\Kurzusok\\Kurzusok\\Kurzusok.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\varga\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+        "projectUniqueName": "C:\\Users\\varga\\Desktop\\Projektmunka\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
         "projectName": "Kurzusok",
-        "projectPath": "C:\\Users\\varga\\Desktop\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
+        "projectPath": "C:\\Users\\varga\\Desktop\\Projektmunka\\Kurzusok\\Kurzusok\\Kurzusok.csproj",
         "packagesPath": "C:\\Users\\varga\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\varga\\Desktop\\Kurzusok\\Kurzusok\\obj\\",
+        "outputPath": "C:\\Users\\varga\\Desktop\\Projektmunka\\Kurzusok\\Kurzusok\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
