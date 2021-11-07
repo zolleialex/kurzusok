@@ -17,5 +17,6 @@ namespace Kurzusok.Models
         public string Training { get; set; }
 
         public virtual ICollection<ProgrammeDetails> ProgrammeDetails { get; set; }
+        public ICollection<SubjectProgrammes> SubjectLink { get; set; }
     }
 }
