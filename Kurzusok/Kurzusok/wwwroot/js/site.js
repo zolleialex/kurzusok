@@ -73,15 +73,17 @@ ajaxpostBasic = form => {// Form Postolása
                             PlaceHolderElement.find('.coursemodal').modal('show');
                         })
                     } else {// Vagy az oldal frissítése
-                        location.reload();
+                        //location.reload();
                     }
                 } else {
                     $('#errorAlert').show();
+                    $('#errormessage').html(response.responseText);
                 }
             },
             error: function (err) {
                 $('#errorAlert').show();
-                consol.log(err);
+                $('#errormessage').html("Minden adatot helyesen t�lts ki!");
+                console.log(err);
             }
         })
     } catch (e) {

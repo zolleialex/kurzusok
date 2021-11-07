@@ -131,27 +131,34 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> programmes)
         {
-            if (ModelState.IsValid && Programmes.Count() > 0)
+            if (ModelState.IsValid && programmes.Count() > 0)
             {
-                for (int i = 0; i < Programmes.Count(); i++)
+                List<ProgrammeDetails> prgDetails = new List<ProgrammeDetails>();
+                for (int i = 0; i < programmes.Count(); i++)//Leelenőrizni, hogy van-e ilyen a mintatantervbe
+                {
+                    int id = programmes[i];
+                    var prSubject = await _context.ProgrammeDetails.Where(c => c.ProgrammeId == programmes[i] && c.Name == subjects.Name && c.SubjectCode == subjects.SubjectCode ).FirstOrDefaultAsync();//Megkeresi a tantrágyat
+                    if (prSubject == null)//Ha nincs, akkor hibával visszatér
+                    {
+                        var prog = await _context.Programmes.Where(c => c.ProgrammeId == programmes[i]).FirstOrDefaultAsync();
+                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
+                        Console.WriteLine(responseText);
+                        return Json(new { isvalid = false, responseText = responseText });
+                    }
+                    else {// Ha van, akkor hozzáadja a listához, később kelleni fog
+                        prgDetails.Add(prSubject);
+                    }
+                }
+                for (int i = 0; i < programmes.Count(); i++)
                 {
                     SubjectProgrammes pr = new SubjectProgrammes()
                     {
-                        ProgrammeId = Programmes[i],
-                        EducationType = educationType[i],
+                        ProgrammeId = programmes[i],
+                        Obligatory = prgDetails[i].Obligatory,// Hozzáadja a mintatantervből, hogy kötelező-e
                         Subject = subjects
-                    };
-                    if (Obligatory[i] == 1)
-                    {
-                        pr.Obligatory = true;
-                    }
-                    else
-                    {
-                        pr.Obligatory = false;
-
-                    }
+                    };                   
                     _context.Add(pr);
                     await _context.SaveChangesAsync();
                 }
@@ -181,6 +188,7 @@ namespace Kurzusok.Controllers
             if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
 
+
                 List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
                 for (int i = 0; i < Teachers.Count(); i++)
                 {
@@ -200,7 +208,7 @@ namespace Kurzusok.Controllers
                 string subjectId = Convert.ToString(course.SubjectId);
                 return Json(new { isvalid = true, responseText = "Jó adatok.", subjectid = subjectId });
             }
-            return Json(new { isvalid = false, responseText = "Rossz adatok." });
+            return Json(new { isvalid = false, responseText = "Hibás adatok." });
         }
         //POST:  Create Semester
         [HttpPost]
@@ -254,6 +262,7 @@ namespace Kurzusok.Controllers
                     EHours = copySubject.EHours,
                     GyHours = copySubject.GyHours,
                     Name = copySubject.Name,
+                    EducationType = copySubject.EducationType,
                     Semester = newSemester
                 };
                 List<Courses> newCourseList = new List<Courses>();
@@ -293,7 +302,6 @@ namespace Kurzusok.Controllers
                 {
                     SubjectProgrammes newSubjectProgrammes = new SubjectProgrammes
                     {
-                        EducationType = copySubjectProgrammes.EducationType,
                         Obligatory = copySubjectProgrammes.Obligatory,
                         Programme = copySubjectProgrammes.Programme,
                         ProgrammeId = copySubjectProgrammes.ProgrammeId,
@@ -366,12 +374,31 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours")] Subjects subjects, List<int> Programmes, List<string> educationType, List<int> Obligatory)
+        public async Task<IActionResult> EditSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
 
             if (ModelState.IsValid && Programmes.Count() > 0)
             {
-                var sbj_prgs = await _context.SubjectProgrammes.Where(c => c.SubjectId == subjects.SubjectId).ToListAsync();
+                List<ProgrammeDetails> prgDetails = new List<ProgrammeDetails>();
+                for (int i = 0; i < Programmes.Count(); i++)//Leelenőrizni, hogy van-e ilyen a mintatantervbe
+                {
+                    int id = Programmes[i];
+                    var prSubject = await _context.ProgrammeDetails.Where(c => c.ProgrammeId == Programmes[i] && c.Name == subjects.Name && c.SubjectCode == subjects.SubjectCode).FirstOrDefaultAsync();//Megkeresi a tantrágyat
+                    if (prSubject == null)//Ha nincs, akkor hibával visszatér
+                    {
+                        var prog = await _context.Programmes.Where(c => c.ProgrammeId == Programmes[i]).FirstOrDefaultAsync();
+                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
+                        Console.WriteLine(responseText);
+                        return Json(new { isvalid = false, responseText = responseText });
+                    }
+                    else
+                    {// Ha van, akkor hozzáadja a listához, később kelleni fog
+                        prgDetails.Add(prSubject);
+                    }
+                }
+
+
+                var sbj_prgs = await _context.SubjectProgrammes.Where(c => c.SubjectId == subjects.SubjectId).ToListAsync(); //Régi kapcsolótábla törlése
                 foreach (var sbj_prg in sbj_prgs)
                 {
                     _context.SubjectProgrammes.Remove(sbj_prg);
@@ -382,24 +409,16 @@ namespace Kurzusok.Controllers
                     SubjectProgrammes subjectProgramme = new SubjectProgrammes()//Egy subjectprogramme beállítása
                     {
                         ProgrammeId = Programmes[i],
-                        EducationType = educationType[i]
+                        Obligatory = prgDetails[i].Obligatory
                     };
-                    if (Obligatory[i] == 1)
-                    {
-                        subjectProgramme.Obligatory = true;
-                    }
-                    else
-                    {
-                        subjectProgramme.Obligatory = false;
-
-                    }
+                   
                     subjectProgrammes.Add(subjectProgramme);//Listába 
                 }
                 subjects.ProgrammesLink = subjectProgrammes;
 
                 try
                 {
-                    _context.Update(subjects);
+                    _context.Subjects.Update(subjects);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

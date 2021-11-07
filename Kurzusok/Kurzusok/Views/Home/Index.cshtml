@@ -134,7 +134,7 @@
                 }
             </div>
         </div>
-        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2" id="@item.SubjectCode" >
+        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2" id="@item.SubjectCode">
             <div class="row align-items-center flex-grow-1 p-2">
                 <div class="col-md-5 text-center d-flex flex-column">
                     <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
@@ -165,19 +165,19 @@
                             {
                                 <li class="text-left">
                                     <i>@programme.Programme.Name</i>
-                                    @if (programme.EducationType == "traditional")
+                                    @if (item.EducationType == "traditional")
                                     {
                                         @Html.Raw(", ")
 
                                         <u>hagyományos</u>
                                         @Html.Raw("oktatással")
                                     }
-                                    else if (programme.EducationType == "sync")
+                                    else if (item.EducationType == "sync")
                                     {
                                         @Html.Raw("Szinkron oktatással")
 
                                     }
-                                    else if (programme.EducationType == "async")
+                                    else if (item.EducationType == "async")
                                     {
                                         @Html.Raw("Asszinkron oktatással")
 
@@ -185,13 +185,13 @@
                                     @if (programme.Obligatory == true)
                                     {
                                         @Html.Raw(", ")
-                                        <u>választható</u>
+                                        <u>kötelező</u>
+
                                     }
                                     else
                                     {
-
                                         @Html.Raw(", ")
-                                        <u>kötelező</u>
+                                        <u>választható</u>
                                     }
                                     <br />
                                 </li>

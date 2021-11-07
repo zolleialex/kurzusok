@@ -13,8 +13,8 @@
                 </div>
                 <div class="modal-body">
                     <div id="errorAlert" class="alert alert-danger collapse">
-                        <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
-                        <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
+                        <strong> Hiba! </strong>
+                        <div id="errormessage"></div>
                     </div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
@@ -40,11 +40,34 @@
                         <input asp-for="GyHours" class="form-control" />
                         <span asp-validation-for="GyHours" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="EducationType" class="control-label">Képzési forma</label>
+                        <select class="custom-select" asp-for="EducationType">
+                            @if (Model.EducationType == "traditional")
+                            {
+                                <option value="traditional" selected>Hagyományos</option>
+                                <option value="sync">Szinkron</option>
+                                <option value="async">Asszinkron</option>
+                            }
+                            else if (Model.EducationType == "sync")
+                            {
+                                <option value="traditional">Hagyományos</option>
+                                <option value="sync" selected>Szinkron</option>
+                                <option value="async">Asszinkron</option>
+                            }
+                            else
+                            {
+                                <option value="traditional">Hagyományos</option>
+                                <option value="sync">Szinkron</option>
+                                <option value="async" selected>Asszinkron</option>
+                            }
+                        </select>
+                    </div>
                     @foreach (var item in Model.ProgrammesLink)
                     {
                         <div class=" Formselect">
                             <div class="row form-group copyThisDiv">
-                                <div class="col-4 p-1">
+                                <div class="col-10 p-1">
                                     <label>Képzés</label>
                                     <select class="custom-select" name="Programmes">
                                         @foreach (var programme in programmes)
@@ -61,49 +84,8 @@
                                         }
                                     </select>
                                 </div>
-                                <div class="col-4 p-1">
-                                    <label>Képzési forma</label>
-                                    <select class="custom-select" name="educationType">
-                                        @if (item.EducationType == "traditional")
-                                        {
-                                            <option value="traditional" selected>Hagyományos</option>
-                                            <option value="sync">Szinkron</option>
-                                            <option value="async">Asszinkron</option>
-                                        }
-                                        else if (item.EducationType == "sync")
-                                        {
-                                            <option value="traditional">Hagyományos</option>
-                                            <option value="sync" selected>Szinkron</option>
-                                            <option value="async">Asszinkron</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="traditional">Hagyományos</option>
-                                            <option value="sync">Szinkron</option>
-                                            <option value="async" selected>Asszinkron</option>
-                                        }
-
-                                    </select>
-                                </div>
-                                <div class="col-3 p-1">
-                                    <label>Tárgy típus</label>
-                                    <select class="custom-select" name="Obligatory">
-                                        @if (item.Obligatory)
-                                        {
-                                            <option value="1" selected>Kötelező</option>
-                                            <option value="0">Választható</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="1">Kötelező</option>
-                                            <option value="0" selected>Választható</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="col-1 p-0">
-
+                                <div class="col-2 p-0">
                                     <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
-
                                 </div>
                             </div>
 

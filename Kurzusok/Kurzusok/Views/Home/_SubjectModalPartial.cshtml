@@ -15,8 +15,9 @@
                 </div>
                 <div class="modal-body">
                     <div id="errorAlert" class="alert alert-danger collapse">
-                        <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
-                        <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
+                        
+                        <strong> Hiba! </strong>
+                        <div id="errormessage"></div>
                     </div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SemesterId" class="form-control" value="@Model.SemesterId" />
@@ -41,6 +42,14 @@
                         <input asp-for="GyHours" class="form-control" />
                         <span asp-validation-for="GyHours" class="text-danger"></span>
                     </div>
+                    <div class="form-group">
+                        <label asp-for="EducationType" class="control-label">Képzési forma</label>
+                        <select class="custom-select" asp-for="EducationType">
+                            <option value="traditional">Hagyományos</option>
+                            <option value="sync">Szinkron</option>
+                            <option value="async">Asszinkron</option>
+                        </select>
+                    </div>
                     <div class="teacherSelect">
                         <div class="row form-group copyThisDiv">
                             <div class="col-5 p-1">
@@ -51,21 +60,6 @@
                                         string prName = item.Name + " " + item.Training;
                                         <option value="@item.ProgrammeId">@prName</option>
                                     }
-                                </select>
-                            </div>
-                            <div class="col-4 p-1">
-                                <label>Képzési forma</label>
-                                <select class="custom-select" name="educationType">
-                                    <option value="traditional">Hagyományos</option>
-                                    <option value="sync">Szinkron</option>
-                                    <option value="async">Asszinkron</option>
-                                </select>
-                            </div>
-                            <div class="col-3 p-1">
-                                <label>Tárgy típus</label>
-                                <select class="custom-select" name="Obligatory">
-                                    <option value="1">Kötelező</option>
-                                    <option value="0">Választható</option>
                                 </select>
                             </div>
                         </div>
