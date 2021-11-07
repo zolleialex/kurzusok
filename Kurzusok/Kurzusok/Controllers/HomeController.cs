@@ -144,7 +144,6 @@ namespace Kurzusok.Controllers
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == programmes[i]).FirstOrDefaultAsync();
                         string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
-                        Console.WriteLine(responseText);
                         return Json(new { isvalid = false, responseText = responseText });
                     }
                     else {// Ha van, akkor hozzáadja a listához, később kelleni fog
@@ -374,7 +373,7 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> Programmes)
+        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
 
             if (ModelState.IsValid && Programmes.Count() > 0)
@@ -388,7 +387,6 @@ namespace Kurzusok.Controllers
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == Programmes[i]).FirstOrDefaultAsync();
                         string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
-                        Console.WriteLine(responseText);
                         return Json(new { isvalid = false, responseText = responseText });
                     }
                     else

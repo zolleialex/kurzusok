@@ -73,7 +73,7 @@ ajaxpostBasic = form => {// Form Postolása
                             PlaceHolderElement.find('.coursemodal').modal('show');
                         })
                     } else {// Vagy az oldal frissítése
-                        //location.reload();
+                        location.reload();
                     }
                 } else {
                     $('#errorAlert').show();
