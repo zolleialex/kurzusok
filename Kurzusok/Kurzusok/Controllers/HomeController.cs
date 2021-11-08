@@ -131,7 +131,7 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> programmes)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,EducationType")] Subjects subjects, List<int> programmes)
         {
             if (ModelState.IsValid && programmes.Count() > 0)
             {
@@ -143,7 +143,7 @@ namespace Kurzusok.Controllers
                     if (prSubject == null)//Ha nincs, akkor hibával visszatér
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == programmes[i]).FirstOrDefaultAsync();
-                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
+                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel vagy kóddal.";
                         return Json(new { isvalid = false, responseText = responseText });
                     }
                     else {// Ha van, akkor hozzáadja a listához, később kelleni fog
@@ -164,7 +164,7 @@ namespace Kurzusok.Controllers
                 string subjectId = Convert.ToString(subjects.SubjectId);
                 return Json(new { isvalid = true, createCourse = true, subjectid = subjectId });
             }
-            return Json(new { isvalid = false, responseText = "Helytelen adatokat adtál meg." });
+            return Json(new { isvalid = false});
 
         }
         // GET: Create Course
@@ -373,7 +373,7 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,EducationType")] Subjects subjects, List<int> Programmes)
+        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
 
             if (ModelState.IsValid && Programmes.Count() > 0)

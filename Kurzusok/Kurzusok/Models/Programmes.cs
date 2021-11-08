@@ -11,7 +11,6 @@ namespace Kurzusok.Models
         {
             ProgrammeDetails = new HashSet<ProgrammeDetails>();
         }
-
         public int ProgrammeId { get; set; }
         public string Name { get; set; }
         public string Training { get; set; }

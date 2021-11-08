@@ -148,7 +148,7 @@ namespace Kurzusok.Data
                     .IsUnicode(false)
                     .HasColumnName("comment");
 
-                entity.Property(e => e.CourseCode).HasColumnName("course_code");
+                entity.Property(e => e.CourseCode).IsRequired().HasColumnName("course_code");
 
                 entity.Property(e => e.CourseType)
                     .IsRequired()
@@ -156,9 +156,9 @@ namespace Kurzusok.Data
                     .IsUnicode(false)
                     .HasColumnName("course_type");
 
-                entity.Property(e => e.Hours).HasColumnName("hours");
+                entity.Property(e => e.Hours).IsRequired().HasColumnName("hours");
 
-                entity.Property(e => e.Members).HasColumnName("members");
+                entity.Property(e => e.Members).IsRequired().HasColumnName("members");
 
                 entity.Property(e => e.NeptunOk).HasColumnName("neptun_ok");
 
@@ -191,7 +191,7 @@ namespace Kurzusok.Data
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Creadit).HasColumnName("creadit");
+                entity.Property(e => e.Credit).HasColumnName("credit");
 
                 entity.Property(e => e.EHours).HasColumnName("e_hours");
 
@@ -288,6 +288,8 @@ namespace Kurzusok.Data
                     .HasColumnName("education_type");
 
                 entity.Property(e => e.GyHours).HasColumnName("gy_hours");
+
+                entity.Property(e => e.LHours).HasColumnName("l_hours");
 
                 entity.Property(e => e.Name)
                     .IsRequired()

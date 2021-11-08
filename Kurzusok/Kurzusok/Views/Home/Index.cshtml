@@ -16,6 +16,11 @@
     {
         <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
         <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+        <div class="btn-group float-right" role="group" id="opencloseButtons">
+            <button type="button" class="btn btn-primary" id="allopen">Táblák nyitása</button>
+            <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
+            <button type="button" class="btn btn-primary" id="allclose">Táblák zárása</button>
+        </div>     
     }
 </div>
 <div id="PlaceHolderHere"></div>
@@ -134,7 +139,7 @@
                 }
             </div>
         </div>
-        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2" id="@item.SubjectCode">
+        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2 allcollapse" id="@item.SubjectCode">
             <div class="row align-items-center flex-grow-1 p-2">
                 <div class="col-md-5 text-center d-flex flex-column">
                     <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
@@ -150,6 +155,13 @@
                             {
                                 <strong>Gyakorlat:</strong>
                                 @Html.DisplayFor(modelItem => item.GyHours)
+                                <br />
+                            }
+                            @if (item.LHours != null)
+                            {
+                                <strong>Labor:</strong>
+                                @Html.DisplayFor(modelItem => item.LHours)
+                                <br />
                             }
                         </div>
                     </div>
@@ -168,19 +180,17 @@
                                     @if (item.EducationType == "traditional")
                                     {
                                         @Html.Raw(", ")
-
-                                        <u>hagyományos</u>
-                                        @Html.Raw("oktatással")
+                                        @Html.Raw("jelenléti oktatással")
                                     }
                                     else if (item.EducationType == "sync")
                                     {
-                                        @Html.Raw("Szinkron oktatással")
-
+                                        @Html.Raw(", ")
+                                        @Html.Raw("szinkron oktatással")
                                     }
                                     else if (item.EducationType == "async")
                                     {
-                                        @Html.Raw("Asszinkron oktatással")
-
+                                        @Html.Raw(", ")
+                                        @Html.Raw("asszinkron oktatással")
                                     }
                                     @if (programme.Obligatory == true)
                                     {
@@ -257,6 +267,7 @@
                                         @foreach (var teacher in course.TeachersLink)
                                         {
                                             @Html.DisplayFor(modelItem => teacher.Loads)
+                                            @Html.Raw(" %")
                                             <br />
                                         }
                                     </td>
@@ -432,6 +443,13 @@
                         {
                             @Html.Raw("Gyakorlat: ")
                             @Html.DisplayFor(modelItem => item.GyHours)
+                            <br />
+                        }
+                        @if (item.LHours != null)
+                        {
+                            @Html.Raw("Labor: ")
+                            @Html.DisplayFor(modelItem => item.LHours)
+                            <br />
                         }
                     </td>
                     <td rowspan="@courseCount">

@@ -12,11 +12,11 @@
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
                 </div>
                 <div class="modal-body">
-                    <div id="errorAlert" class="alert alert-danger collapse">
+                    @*<div id="errorAlert" class="alert alert-danger collapse">
                         <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
                         <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
-                    </div>
-
+                    </div>*@
+                    <div id="errorAlert" class="text-danger"></div>
                     <div class="form-group">
                         <input type="hidden" asp-for="CourseId" class="form-control" value="@Model.CourseId" />
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
@@ -26,7 +26,7 @@
                         <input asp-for="NeptunOk" class="form-control" />
                         <span asp-validation-for="NeptunOk" class="text-danger"></span>
                     </div>
-                    
+
                     <div class="form-group">
                         <label asp-for="CourseType">Kurzus típus</label>
                         <select class="custom-select" name="CourseType">
@@ -48,14 +48,14 @@
                             else if (Model.CourseType == "Csak Vizsga")
                             {
                                 <option value="Elmélet">Elmélet</option>
-                                <option value="Gyakorlat" >Gyakorlat</option>
+                                <option value="Gyakorlat">Gyakorlat</option>
                                 <option value="Csak Vizsga" selected>Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
                             }
                             else if (Model.CourseType == "Egyéni felkészülés")
                             {
                                 <option value="Elmélet">Elmélet</option>
-                                <option value="Gyakorlat" >Gyakorlat</option>
+                                <option value="Gyakorlat">Gyakorlat</option>
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés" selected>Egyéni felkészülés</option>
                             }
@@ -64,17 +64,17 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Hours">Óraszám</label>
-                        <input asp-for="Hours" class="form-control" />
+                        <input asp-for="Hours" class="form-control" min="0" required />
                         <span asp-validation-for="Hours" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="CourseCode">Kurzus kód</label>
-                        <input asp-for="CourseCode" class="form-control" />
+                        <input asp-for="CourseCode" class="form-control" min="0" required />
                         <span asp-validation-for="CourseCode" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Members">Létszám</label>
-                        <input asp-for="Members" class="form-control" />
+                        <input asp-for="Members" class="form-control" required min="0" max="1000" />
                         <span asp-validation-for="Members" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -118,7 +118,9 @@
                                 </div>
                                 <div class="col-5">
                                     <label>Terhelés</label>
-                                    <input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />
+                                    @*<input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />*@
+                                    <input value="@item.Loads" class="form-control" asp-for="@item.Loads" min="1" max="100" required />
+                                    <span asp-validation-for="@item.Loads" class="text-danger"></span>
                                 </div>
                                 <div class="col-1 p-0">
                                     <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
@@ -140,3 +142,4 @@
         </form>
     </div>
 </div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

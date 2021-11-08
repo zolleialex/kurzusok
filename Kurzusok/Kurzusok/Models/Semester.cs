@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 #nullable disable
 
 namespace Kurzusok.Models
@@ -14,6 +14,8 @@ namespace Kurzusok.Models
 
         public int Id { get; set; }
         public string Date { get; set; }
+        //[Required(ErrorMessage = "A kötelező!")]
+        //[Range(1, 100, ErrorMessage = "Az oktató terheltsége csak 1 és 100 között egész érték lehet!")]
         public int Weeks { get; set; }
 
         public virtual ICollection<Subjects> Subjects { get; set; }

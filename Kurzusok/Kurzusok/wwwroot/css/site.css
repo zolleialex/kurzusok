@@ -1,11 +1,9 @@
 ﻿
-#excelTable {
+
+#excelTable, #dropdownTable, #opencloseButtons {
     display: none;
 }
 
-#dropdownTable {
-    display: block;
-}
 
 body {
     padding-top: 100px;
@@ -46,31 +44,35 @@ body {
 }
 
 .w-85 {
-    width: 85% ;
+    width: 85%;
 }
 
 .w-80 {
-    width: 80% ;
+    width: 80%;
 }
+
 .dark-border {
-    border:1px solid #7b8a8b !important;
+    border: 1px solid #7b8a8b !important;
 }
-.smaller{
+
+.smaller {
     font-size: 70%;
 }
-.maxwidth{
-    max-width:350px;
+
+.maxwidth {
+    max-width: 350px;
 }
 
 @media only screen and (max-width: 1200px) {
-    .w-d1{
+    .w-d1 {
         width: 95%;
     }
 
     .w-d2 {
-        width: 94% ;
+        width: 94%;
     }
 }
+
 @media only screen and (max-width: 900px) {
     .w-d1 {
         width: 100%;

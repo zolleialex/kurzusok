@@ -12,10 +12,11 @@
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
                 </div>
                 <div class="modal-body">
-                    <div id="errorAlert" class="alert alert-danger collapse">
-                        <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
-                        <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
-                    </div>
+                    @*<div id="errorAlert" class="alert alert-danger collapse">
+                            <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
+                            <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
+                        </div>*@
+                    <div id="errorAlert" class="text-danger"></div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
                     </div>
@@ -35,17 +36,17 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Hours">Óraszám</label>
-                        <input asp-for="Hours" class="form-control" />
+                        <input asp-for="Hours" class="form-control" min="0" required />
                         <span asp-validation-for="Hours" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="CourseCode">Kurzus kód</label>
-                        <input asp-for="CourseCode" class="form-control" />
+                        <input asp-for="CourseCode" class="form-control" min="0" required />
                         <span asp-validation-for="CourseCode" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Members">Létszám</label>
-                        <input asp-for="Members" class="form-control" />
+                        <input asp-for="Members" class="form-control" min="0" required />
                         <span asp-validation-for="Members" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -56,12 +57,12 @@
                     <div class="form-group">
                         <label asp-for="Software">Szoftver</label>
                         <input asp-for="Software" class="form-control" />
-                        <span asp-validation-for="Software  " class="text-danger"></span>
+                        <span asp-validation-for="Software" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Comment">Komment</label>
                         <input asp-for="Comment" class="form-control" />
-                        <span asp-validation-for="Comment  " class="text-danger"></span>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
                     </div>
                     <div class="teacherSelect">
                         <div class="row form-group copyThisDiv">
@@ -71,13 +72,12 @@
                                     @foreach (var item in teachers)
                                     {
                                         <option value="@item.TeacherId">@item.Name</option>
-
                                     }
                                 </select>
                             </div>
                             <div class="col-6">
                                 <label>Terhelés</label>
-                                <input type="number" name="LoadList" min="1" max="100" class="form-control" />
+                                <input type="number" name="LoadList" min="1" max="100" class="form-control" required />
                             </div>
                         </div>
                     </div>
@@ -97,3 +97,4 @@
         </form>
     </div>
 </div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

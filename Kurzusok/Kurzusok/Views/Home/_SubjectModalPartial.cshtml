@@ -11,41 +11,44 @@
 
                     <h4 class="modal-title" id="addSubjectLabel">Tárgy hozzáadása</h4>
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
-                   
+
                 </div>
                 <div class="modal-body">
-                    <div id="errorAlert" class="alert alert-danger collapse">
-                        
-                        <strong> Hiba! </strong>
-                        <div id="errormessage"></div>
+                    <div id="errorAlert" class="collapse">
+                        <span class="text-danger" id="errormessage"></span>
                     </div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SemesterId" class="form-control" value="@Model.SemesterId" />
                     </div>
                     <div class="form-group">
                         <label asp-for="SubjectCode">Tantárgy kód</label>
-                        <input asp-for="SubjectCode" class="form-control" />
+                        <input asp-for="SubjectCode" class="form-control" required />
                         <span asp-validation-for="SubjectCode" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Name">Megnevezés</label>
-                        <input asp-for="Name" class="form-control" />
+                        <input asp-for="Name" class="form-control" required />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
-                        <input asp-for="EHours" class="form-control" />
+                        <input asp-for="EHours" class="form-control" min="0" />
                         <span asp-validation-for="EHours" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
-                        <input asp-for="GyHours" class="form-control" />
+                        <input asp-for="GyHours" class="form-control" min="0" />
                         <span asp-validation-for="GyHours" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LHours" class="control-label">Labor órák száma</label>
+                        <input asp-for="LHours" class="form-control" min="0" />
+                        <span asp-validation-for="LHours" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="EducationType" class="control-label">Képzési forma</label>
                         <select class="custom-select" asp-for="EducationType">
-                            <option value="traditional">Hagyományos</option>
+                            <option value="traditional">Jelenléti</option>
                             <option value="sync">Szinkron</option>
                             <option value="async">Asszinkron</option>
                         </select>
@@ -78,3 +81,4 @@
         </form>
     </div>
 </div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

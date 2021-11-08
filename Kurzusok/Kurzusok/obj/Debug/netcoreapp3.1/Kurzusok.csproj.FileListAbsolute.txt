@@ -4138,3 +4138,4 @@ C:\Users\varga\Desktop\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Adm
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\_AdminLayout.cshtml.g.cs
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_CourseModalEditPartial.cshtml.g.cs
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Home\_SubjectModalEditPartial.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\_AdminLayout.cshtml.g.cs

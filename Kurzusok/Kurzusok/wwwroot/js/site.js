@@ -79,15 +79,11 @@ ajaxpostBasic = form => {// Form PostolÃ¡sa
                     $('#errorAlert').show();
                     $('#errormessage').html(response.responseText);
                 }
-            },
-            error: function (err) {
-                $('#errorAlert').show();
-                $('#errormessage').html("Minden adatot helyesen tölts ki!");
-                console.log(err);
             }
         })
     } catch (e) {
         $('#errorAlert').show();
+        $('#errormessage').html('Valami hiba történt a kérés feldolgozása közben!');
         console.log(e);
     }
     //A default event megelÅ‘zÃ©se miatt
@@ -154,10 +150,12 @@ function changeTable() {
         localStorage.setItem("tableViewStore", "0");
         document.getElementById("excelTable").style.display = "block";
         document.getElementById("dropdownTable").style.display = "none";
+        document.getElementById("opencloseButtons").style.display = "none";
     } else {
         localStorage.setItem("tableViewStore", "1");
         document.getElementById("dropdownTable").style.display = "block";
         document.getElementById("excelTable").style.display = "none";
+        document.getElementById("opencloseButtons").style.display = "inline-flex";
     }
 }
 
@@ -179,6 +177,8 @@ $('a[data-toggle="add-comment-modal"]').click(function (event) {
     $('#courseId').attr("value", id)
     $('#applyComment').modal('show');
 })
+
+
 $(".collapse").on('show.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
@@ -186,17 +186,37 @@ $(".collapse").on('show.bs.collapse', function (e) {
 
     localStorage.setItem("collapsedTable", JSON.stringify(collapsedTables));
 });
+
 $(".collapse").on('hide.bs.collapse', function (e) {
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-up");
     e.target.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-down");
     collapsedTables.splice(collapsedTables.indexOf(e.target.id), 1);
     localStorage.setItem("collapsedTable", JSON.stringify(collapsedTables));
 });
+
 //Prevent collapse on button clicks
 $('.no-collapsable').on('click', function (e) {
     e.stopPropagation();
 });
+
 //Új félév megnyitásakor a collapse localStorage törlése
 function clearCollapse() {
     localStorage.removeItem("collapsedTable");
 }
+
+$('#allopen').on('click', function () {
+    let tables = document.getElementsByClassName('allcollapse');
+    console.log(tables.length);
+    for (let i of tables) {
+        console.log(i.id);
+        $(i).collapse('show');
+    }
+});
+$('#allclose').on('click', function () {
+    let tables = document.getElementsByClassName('allcollapse');
+    console.log(tables.length);
+    for (let i of tables) {
+        console.log(i.id);
+        $(i).collapse('hide');
+    }
+});
