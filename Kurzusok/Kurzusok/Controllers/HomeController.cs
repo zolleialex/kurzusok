@@ -200,8 +200,15 @@ namespace Kurzusok.Controllers
                     Console.WriteLine(Teachers[i] + "tanárnak a terheltsége:" + LoadList[i]);
                 }
                 course.TeachersLink = CourseTeachers;
-                string newComment = $"[[${User.Identity.Name}$]]{course.Comment}";
-                course.Comment = newComment;
+                if (!string.IsNullOrEmpty(course.Comment))
+                {
+                    string newComment = $"[[${User.Identity.Name}$]]{course.Comment}";
+                    course.Comment = newComment;
+                }
+                else
+                {
+                    course.Comment = null;
+                }
                 _context.Courses.Add(course);
                 await _context.SaveChangesAsync();
                 string subjectId = Convert.ToString(course.SubjectId);
@@ -213,7 +220,7 @@ namespace Kurzusok.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateSemester(string LastSemester)
+        public async Task<IActionResult> CreateSemester(string LastSemester, int week, int withSubjects)
         {
             int[] NewSemesterNumbers = LastSemester.Split('/').Select(int.Parse).ToArray();
             int startIteration = 0;
@@ -249,70 +256,73 @@ namespace Kurzusok.Controllers
             Semester newSemester = new Semester
             {
                 Date = NewSemesterStr,
-                Weeks = 13,
+                Weeks = week,
             };
-            List<Subjects> newSubjectList = new List<Subjects>();
-            foreach (var copySubject in CopySemesterObject.Subjects)
+            if (withSubjects==1)
             {
-                Subjects newSubject = new Subjects
+                List<Subjects> newSubjectList = new List<Subjects>();
+                foreach (var copySubject in CopySemesterObject.Subjects)
                 {
-                    SemesterId = newSemester.Id,
-                    SubjectCode = copySubject.SubjectCode,
-                    EHours = copySubject.EHours,
-                    GyHours = copySubject.GyHours,
-                    Name = copySubject.Name,
-                    EducationType = copySubject.EducationType,
-                    Semester = newSemester
-                };
-                List<Courses> newCourseList = new List<Courses>();
-                foreach (var copyCourse in copySubject.Courses)
-                {
-                    Courses newCourse = new Courses
+                    Subjects newSubject = new Subjects
                     {
-                        Classroom = copyCourse.Classroom,
-                        Comment = copyCourse.Comment,
-                        CourseCode = copyCourse.CourseCode,
-                        CourseType = copyCourse.CourseType,
-                        Hours = copyCourse.Hours,
-                        Members = copyCourse.Members,
-                        Software = copyCourse.Software,
-                        SubjectId = newSubject.SubjectId,
-                        Subject = newSubject
+                        SemesterId = newSemester.Id,
+                        SubjectCode = copySubject.SubjectCode,
+                        EHours = copySubject.EHours,
+                        GyHours = copySubject.GyHours,
+                        Name = copySubject.Name,
+                        EducationType = copySubject.EducationType,
+                        Semester = newSemester
                     };
-                    List<CoursesTeachers> newCoursesTeachersList = new List<CoursesTeachers>();
-                    foreach (var copyCoursesTeachers in copyCourse.TeachersLink)
+                    List<Courses> newCourseList = new List<Courses>();
+                    foreach (var copyCourse in copySubject.Courses)
                     {
-                        CoursesTeachers newCoursesTeachers = new CoursesTeachers
+                        Courses newCourse = new Courses
                         {
-                            Teacher = copyCoursesTeachers.Teacher,
-                            TeacherId = copyCoursesTeachers.TeacherId,
-                            Course = newCourse,
-                            CourseId = newCourse.CourseId,
-                            Loads = copyCoursesTeachers.Loads
+                            Classroom = copyCourse.Classroom,
+                            Comment = copyCourse.Comment,
+                            CourseCode = copyCourse.CourseCode,
+                            CourseType = copyCourse.CourseType,
+                            Hours = copyCourse.Hours,
+                            Members = copyCourse.Members,
+                            Software = copyCourse.Software,
+                            SubjectId = newSubject.SubjectId,
+                            Subject = newSubject
                         };
-                        newCoursesTeachersList.Add(newCoursesTeachers);
+                        List<CoursesTeachers> newCoursesTeachersList = new List<CoursesTeachers>();
+                        foreach (var copyCoursesTeachers in copyCourse.TeachersLink)
+                        {
+                            CoursesTeachers newCoursesTeachers = new CoursesTeachers
+                            {
+                                Teacher = copyCoursesTeachers.Teacher,
+                                TeacherId = copyCoursesTeachers.TeacherId,
+                                Course = newCourse,
+                                CourseId = newCourse.CourseId,
+                                Loads = copyCoursesTeachers.Loads
+                            };
+                            newCoursesTeachersList.Add(newCoursesTeachers);
+                        }
+                        newCourse.TeachersLink = newCoursesTeachersList;
+                        newCourseList.Add(newCourse);
                     }
-                    newCourse.TeachersLink = newCoursesTeachersList;
-                    newCourseList.Add(newCourse);
-                }
-                newSubject.Courses = newCourseList;
-                List<SubjectProgrammes> newSubjectProgrammesList = new List<SubjectProgrammes>();
-                foreach (var copySubjectProgrammes in copySubject.ProgrammesLink)
-                {
-                    SubjectProgrammes newSubjectProgrammes = new SubjectProgrammes
+                    newSubject.Courses = newCourseList;
+                    List<SubjectProgrammes> newSubjectProgrammesList = new List<SubjectProgrammes>();
+                    foreach (var copySubjectProgrammes in copySubject.ProgrammesLink)
                     {
-                        Obligatory = copySubjectProgrammes.Obligatory,
-                        Programme = copySubjectProgrammes.Programme,
-                        ProgrammeId = copySubjectProgrammes.ProgrammeId,
-                        Subject = newSubject,
-                        SubjectId = newSubject.SubjectId
-                    };
-                    newSubjectProgrammesList.Add(newSubjectProgrammes);
+                        SubjectProgrammes newSubjectProgrammes = new SubjectProgrammes
+                        {
+                            Obligatory = copySubjectProgrammes.Obligatory,
+                            Programme = copySubjectProgrammes.Programme,
+                            ProgrammeId = copySubjectProgrammes.ProgrammeId,
+                            Subject = newSubject,
+                            SubjectId = newSubject.SubjectId
+                        };
+                        newSubjectProgrammesList.Add(newSubjectProgrammes);
+                    }
+                    newSubject.ProgrammesLink = newSubjectProgrammesList;
+                    newSubjectList.Add(newSubject);
                 }
-                newSubject.ProgrammesLink = newSubjectProgrammesList;
-                newSubjectList.Add(newSubject);
+                newSemester.Subjects = newSubjectList;
             }
-            newSemester.Subjects = newSubjectList;
             _context.Add(newSemester);
             await _context.SaveChangesAsync();
             HttpContext.Session.SetString("SemesterId", "");
@@ -548,20 +558,23 @@ namespace Kurzusok.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment([FromForm] int courseId, [FromForm] string comment)
         {
-            var currentCourse = await _context.Courses.Where(b => b.CourseId == courseId).FirstOrDefaultAsync();
-            string currentComment = currentCourse.Comment;
-            string newComment;
-            if (currentComment != null)
+            if (!string.IsNullOrEmpty(comment))
             {
-                newComment = $"[[${User.Identity.Name}$]]{currentComment};ß {comment}";
+                var currentCourse = await _context.Courses.Where(b => b.CourseId == courseId).FirstOrDefaultAsync();
+                string currentComment = currentCourse.Comment;
+                string newComment;
+                if (currentComment != null)
+                {
+                    newComment = $"[[${User.Identity.Name}$]]{currentComment};ß {comment}";
+                }
+                else
+                {
+                    newComment = $"[[${User.Identity.Name}$]]{comment}";
+                }
+                currentCourse.Comment = newComment;
+                _context.Courses.Update(currentCourse);
+                await _context.SaveChangesAsync();
             }
-            else
-            {
-                newComment = $"[[${User.Identity.Name}$]]{comment}";
-            }
-            currentCourse.Comment = newComment;
-            _context.Courses.Update(currentCourse);
-            await _context.SaveChangesAsync();
             int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
             return RedirectToAction(nameof(Index), new { currentSemesterId });
         }

@@ -5,6 +5,7 @@
     Layout = "/Views/Shared/_SignInLayout.cshtml";
     ViewData["Title"] = "Belépés";
 }
+@*<img src="https://eszk.sze.hu/images/ARCULAT/Logok/sze_logo_fekvo_RGB_white_bg.png" id="bgimg" />*@
 <h1 class="mb-6">Kurzuskiírási rendszer</h1>
 <form class="form-signin" id="account" method="post">
     <h2 class="h3 mb-3 font-weight-normal">Bejelentkezés</h2>
@@ -12,7 +13,7 @@
     <section>
         <div class="form-group">
             <label asp-for="Input.UserName" class="sr-only">Felhasználó név</label>
-            <input asp-for="Input.UserName"  class="form-control" placeholder="Felhasználó név" required="" autofocus="" />
+            <input asp-for="Input.UserName" class="form-control" placeholder="Felhasználó név" required="" autofocus="" />
             <span asp-validation-for="Input.UserName" class="text-danger"></span>
         </div>
         <div class="form-group">

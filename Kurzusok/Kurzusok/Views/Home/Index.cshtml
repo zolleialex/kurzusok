@@ -20,7 +20,7 @@
             <button type="button" class="btn btn-primary" id="allopen">Táblák nyitása</button>
             <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
             <button type="button" class="btn btn-primary" id="allclose">Táblák zárása</button>
-        </div>     
+        </div>
     }
 </div>
 <div id="PlaceHolderHere"></div>
@@ -107,6 +107,34 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
                     <button type="submit" class="btn btn-danger" id="addcomment">Mentés</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*Add semester*@
+<div class="modal fade" id="addSemester" tabindex="-1" role="dialog" aria-labelledby="addSemester" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSemesterLabel">Új szemeszter felvétele</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-controller="Home" asp-action="CreateSemester" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <label for="week">Adja meg hány hét van az adott félévben!</label>
+                    <input type="number" min="0" max="30" autofocus name="week" id="week" required />
+                    <input type="hidden" name="lastSemester" value="@lastSemester" />
+                    <br />
+                    Szeretné hozzáadni az 1 évvel korábbi tantárgyakat az új szemeszterthez?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                    <button class="btn btn-danger" name="withSubjects" value="0">Nem</button>
+                    <button class="btn btn-primary" name="withSubjects" value="1">Igen</button>
                 </div>
             </form>
         </div>
@@ -656,76 +684,57 @@
 </div>
 
 @section SideBar{
-    <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform"> </form>
-    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
-        <ul class="nav nav-sidebar justify-content-center" id="opened">
-            <li class="nav-item pb-1 height">
-                <div class="input-group">
-                    <input type="text" name="anysearch" class="form-control" placeholder="Keresés" form="anysearchform">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu w-100">
-                            <div class="p-3">EZ MÉG KÉRDÉSES</div>
-                            <div class="d-inline-block p-3">
-                                <label>Tárgy: </label><input type="text" name="subject" class="form-control" placeholder="Tárgy" />
-                            </div>
-                            <div class="d-inline-block p-3">
-                                <label>Oktató: </label><input type="text" name="teacher" class="form-control" placeholder="Oktató" />
-                            </div>
-                            <div class="d-inline-block p-3">
-                                <label>Szak: </label><input type="text" name="programme" class="form-control" placeholder="Szak" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item pb-1 height">
-                <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
-                    @date
-                </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                    @foreach (var item in Model.SemestersList)
-                    {
-                        if (date != item.Date)
-                        {
-                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" onclick="clearCollapse()">@item.Date</a>
-                        }
-                    }
-                </div>
-            </li>
-            @if (User.IsInRole("Admin"))
-            {
+
+        <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+            <ul class="nav nav-sidebar justify-content-center" id="opened">
                 <li class="nav-item pb-1 height">
-                    <form method="post" class="navbar-form d-flex" asp-controller="Home" asp-action="CreateSemester">
-                        <button class="btn text-dark pl-1 text-nowrap" type="submit" name="lastSemester" value="@lastSemester" onclick="clearCollapse()">Új félév felvétele</button>
+                    <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                        <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
                     </form>
                 </li>
-            }
-            <li class="nav-item pt-1 pl-1">
-                <div class="custom-control custom-switch text-nowrap">
-                    <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
-                    <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
-                </div>
-            </li>
-        </ul>
-        <ul class="nav nav-sidebar" id="closed">
-            <li class="nav-item pb-1">
-                <i class="fas fa-search"></i>
-            </li>
-            <li class="nav-item pb-1">
-                <i class="fas fa-list-ul"></i>
-            </li>
-            @if (User.IsInRole("Admin"))
+    <li class="nav-item pb-1 height">
+        <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+            @date
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+            @foreach (var item in Model.SemestersList)
             {
-                <li class="nav-item pb-1">
-                    <i class="fas fa-plus-square"></i>
-                </li>
+                if (date != item.Date)
+                {
+                    <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" onclick="clearCollapse()">@item.Date</a>
+                }
             }
+        </div>
+    </li>
+    @if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item pb-1 height">
+            <a class="nav-link text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="modal" data-target="#addSemester" onclick="clearCollapse()">Új félév felvétele</a>
+        </li>
+    }
+    <li class="nav-item pt-2 pl-1">
+        <div class="custom-control custom-switch text-nowrap">
+            <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
+            <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
+        </div>
+    </li>
+    </ul>
+    <ul class="nav nav-sidebar" id="closed">
+        <li class="nav-item pb-1">
+            <i class="fas fa-search"></i>
+        </li>
+        <li class="nav-item pb-1">
+            <i class="fas fa-list-ul"></i>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
             <li class="nav-item pb-1">
-                <i class="fas fa-table"></i>
+                <i class="fas fa-plus-square"></i>
             </li>
-        </ul>
+        }
+        <li class="nav-item pb-1">
+            <i class="fas fa-table"></i>
+        </li>
+    </ul>
     </div>
 }
