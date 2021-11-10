@@ -39,8 +39,20 @@ body {
         color: black !important;
     }
 
-.newSubject .dropdown-menu > a:hover {
-    text-decoration: underline !important;
+td {
+    border: 0;
+}
+
+.newSubject {
+    border-top: 3px solid rgba(44, 62, 80, 0.25) !important;
+}
+
+    .newSubject .dropdown-menu > :hover {
+        text-decoration: underline !important;
+    }
+
+.border-left-3 {
+    border-left: 3px solid rgba(44, 62, 80, 0.25) !important;
 }
 
 .w-85 {

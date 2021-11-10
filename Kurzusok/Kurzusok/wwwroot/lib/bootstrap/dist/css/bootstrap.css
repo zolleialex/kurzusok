@@ -1864,10 +1864,6 @@ pre {
         border-top: 1px solid #dee2e6;
     }
 
-.newSubject {
-    border-top: 3px solid rgba(44, 62, 80, 0.25) !important;
-}
-
 .table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;

@@ -442,25 +442,24 @@
                 <tr class="newSubject border-bottom">
                     @if (User.IsInRole("Admin"))
                     {
-                        <td rowspan="@courseCount">
+                        <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                             <a class="dropdown-toggle" id="subjectdropdownMenu" data-toggle="dropdown">
                                 <span class="fa fa-cog"></span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                                <a class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</a><br />
-
+                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
                                 <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
                                 <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
                             </div>
                         </td>
                     }
-                    <td rowspan="@courseCount">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @Html.DisplayFor(modelItem => item.SubjectCode)
                     </td>
-                    <td rowspan="@courseCount">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td rowspan="@courseCount">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @if (item.EHours != null)
                         {
                             @Html.Raw("Elmélet: ")
@@ -480,7 +479,7 @@
                             <br />
                         }
                     </td>
-                    <td rowspan="@courseCount">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @foreach (var programme in item.ProgrammesLink)
                         {
                             @Html.DisplayFor(modelItem => programme.Programme.Name)
@@ -489,7 +488,7 @@
                     </td>
                     @foreach (var course in item.Courses.Take(1))
                     {
-                        <td class="border-left">
+                        <td class="border-left-3">
                             @Html.DisplayFor(modelItem => course.CourseCode)
                         </td>
                         <td>
@@ -581,7 +580,6 @@
 
                     }
                 </tr>
-
                 @foreach (var course in item.Courses.Skip(1))
                 {
                     <tr class="border-bottom">
@@ -676,7 +674,6 @@
                         </td>
 
                     </tr>
-
                 }
             }
         </tbody>
@@ -684,57 +681,60 @@
 </div>
 
 @section SideBar{
-
-        <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
-            <ul class="nav nav-sidebar justify-content-center" id="opened">
-                <li class="nav-item pb-1 height">
-                    <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
-                        <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
-                    </form>
-                </li>
-    <li class="nav-item pb-1 height">
-        <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
-            @date
-        </a>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-            @foreach (var item in Model.SemestersList)
-            {
-                if (date != item.Date)
-                {
-                    <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" onclick="clearCollapse()">@item.Date</a>
-                }
-            }
-        </div>
-    </li>
-    @if (User.IsInRole("Admin"))
-    {
-        <li class="nav-item pb-1 height">
-            <a class="nav-link text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="modal" data-target="#addSemester" onclick="clearCollapse()">Új félév felvétele</a>
-        </li>
-    }
-    <li class="nav-item pt-2 pl-1">
-        <div class="custom-control custom-switch text-nowrap">
-            <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
-            <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
-        </div>
-    </li>
-    </ul>
-    <ul class="nav nav-sidebar" id="closed">
-        <li class="nav-item pb-1">
-            <i class="fas fa-search"></i>
-        </li>
-        <li class="nav-item pb-1">
-            <i class="fas fa-list-ul"></i>
-        </li>
-        @if (User.IsInRole("Admin"))
-        {
-            <li class="nav-item pb-1">
-                <i class="fas fa-plus-square"></i>
+    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+        <ul class="nav nav-sidebar justify-content-center" id="opened">
+            <li class="nav-item pb-1 height">
+                <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                    <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
+                </form>
             </li>
-        }
-        <li class="nav-item pb-1">
-            <i class="fas fa-table"></i>
-        </li>
-    </ul>
+            <li class="nav-item pb-1 height">
+                <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+                    @date
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                    @foreach (var item in Model.SemestersList)
+                    {
+                        if (date != item.Date)
+                        {
+                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" onclick="clearCollapse()">@item.Date</a>
+                        }
+                    }
+                </div>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1 height">
+                    <a class="nav-link text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="modal" data-target="#addSemester" onclick="clearCollapse()">Új félév felvétele</a>
+                </li>
+            }
+            <li class="nav-item pt-2 pl-1">
+                <div class="custom-control custom-switch text-nowrap">
+                    <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
+                    <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
+                </div>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar" id="closed">
+            <li class="nav-item pb-1">
+                <i class="fas fa-search"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-list-ul"></i>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1">
+                    <i class="fas fa-plus-square"></i>
+                </li>
+            }
+            <li class="nav-item pb-1">
+                <i class="fas fa-table"></i>
+            </li>
+        </ul>
     </div>
+}
+
+@section Scripts{
+    <script src="~/js/site.js" asp-append-version="true"></script>
 }
