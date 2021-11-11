@@ -3,7 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <h1>Oktatók</h1>
 
 <p>
@@ -22,20 +26,73 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hoursperweek)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TeacherId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TeacherId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TeacherId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Hoursperweek)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.TeacherId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.TeacherId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.TeacherId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<div id="container"><p>Hello</p></div>
+<script>
+
+
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Browser market shares in January, 2018'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Count',
+            colorByPoint: true,
+            data: [{
+                name: '@(Model.First().Name)',
+                y: 5
+            }, {
+                name: 'Count2',
+                y: 4
+            }, {
+                name: 'Count3',
+                y: 1
+            }, {
+                name: 'Count4',
+                y: 1.58
+            }]
+        }]
+    });
+
+</script>
