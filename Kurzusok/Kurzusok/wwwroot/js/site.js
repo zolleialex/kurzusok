@@ -23,7 +23,6 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         }
     })
 })
-
 PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {// Oldal újratöltése 
     location.reload();
 })

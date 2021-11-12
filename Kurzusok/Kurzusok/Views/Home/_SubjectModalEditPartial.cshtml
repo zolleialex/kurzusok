@@ -1,6 +1,13 @@
 ﻿@model Subjects
+@using Microsoft.AspNetCore.Http;
 @{
     IList<Programmes> programmes = ViewBag.programmes;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
 }
 
 <div class="modal editsubjectmodal" id="editSubject">
@@ -12,10 +19,6 @@
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
                 </div>
                 <div class="modal-body">
-                    @*<div id="errorAlert" class="alert alert-danger collapse">
-            <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
-            <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
-        </div>*@
                     <div id="errorAlert" class="text-danger"></div>
                     <div class="form-group">
                         <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
@@ -31,28 +34,42 @@
                         <input asp-for="Name" class="form-control" required />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
-                        <input asp-for="EHours" class="form-control" min="0" />
-                        <span asp-validation-for="EHours" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
-                        <input asp-for="GyHours" class="form-control" min="0" />
-                        <span asp-validation-for="GyHours" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LHours" class="control-label">Labor órák száma</label>
-                        <input asp-for="LHours" class="form-control" min="0" />
-                        <span asp-validation-for="LHours" class="text-danger"></span>
-                    </div>
+                    @if (training == "Nappali")
+                    {
+                        <div class="form-group">
+                            <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
+                            <input asp-for="EHours" class="form-control" min="0" />
+                            <span asp-validation-for="EHours" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
+                            <input asp-for="GyHours" class="form-control" min="0" />
+                            <span asp-validation-for="GyHours" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LHours" class="control-label">Labor órák száma</label>
+                            <input asp-for="LHours" class="form-control" min="0" />
+                            <span asp-validation-for="LHours" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label asp-for="CorrespondHours" class="control-label">Órák száma</label>
+                            <input asp-for="CorrespondHours" class="form-control" min="0" />
+                            <span asp-validation-for="CorrespondHours" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="form-group">
                         <label asp-for="EducationType" class="control-label">Képzési forma</label>
                         <select class="custom-select" asp-for="EducationType">
                             @if (Model.EducationType == "traditional")
                             {
                                 <option value="traditional" selected>Jelenléti</option>
-                                <option value="sync">Szinkron</option>
+                                @if (training == "Levelezős")
+                                {
+                                    <option value="sync">Szinkron</option>
+                                }
                                 <option value="async">Asszinkron</option>
                             }
                             else if (Model.EducationType == "sync")
@@ -64,19 +81,23 @@
                             else
                             {
                                 <option value="traditional">Jelenléti</option>
-                                <option value="sync">Szinkron</option>
+                                @if (training == "Levelezős")
+                                {
+                                    <option value="sync">Szinkron</option>
+                                }
                                 <option value="async" selected>Asszinkron</option>
                             }
                         </select>
                     </div>
                     @foreach (var item in Model.ProgrammesLink)
                     {
-                        <div class=" Formselect">
-                            <div class="row form-group copyThisDiv">
-                                <div class="col-10 p-1">
-                                    <label>Képzés</label>
-                                    <select class="custom-select" name="Programmes">
-                                        @foreach (var programme in programmes)
+                        <div class="Formselect">
+                            <label>Képzés</label>
+                            <div class="d-flex form-group copyThisDiv">
+                                <select class="custom-select mr-3" name="Programmes">
+                                    @foreach (var programme in programmes)
+                                    {
+                                        if (programme.Training == training.ToLower())
                                         {
                                             string prName = programme.Name + " " + programme.Training;
                                             if (item.ProgrammeId == programme.ProgrammeId)
@@ -88,16 +109,12 @@
                                                 <option value="@programme.ProgrammeId">@prName</option>
                                             }
                                         }
-                                    </select>
-                                </div>
-                                <div class="col-2 p-0">
-                                    <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
-                                </div>
+                                    }
+                                </select>
+                                <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
                             </div>
-
                         </div>
                     }
-
                     <div class="teacherMoreSelect" id="toCopy"></div>
                     <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Hozzárendelés másik képzéshez</button>
                 </div>

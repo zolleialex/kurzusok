@@ -92,7 +92,7 @@ namespace Kurzusok
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{semester?}");
+                    pattern: "{controller=Home}/{action=Index}/{currentSemesterId?}/{training?}");
             });
 
         }

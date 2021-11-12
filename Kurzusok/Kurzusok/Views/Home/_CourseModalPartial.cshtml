@@ -1,6 +1,13 @@
 ﻿@model Courses
+@using Microsoft.AspNetCore.Http;
 @{
     IList<Teachers> teachers = ViewBag.teachers;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
 }
 
 <div class="modal  coursemodal" id="addCourse">
@@ -29,16 +36,23 @@
                         <label asp-for="CourseType">Kurzus típus</label>
                         <select class="custom-select" name="CourseType">
                             <option value="Elmélet">Elmélet</option>
-                            <option value="Gyakorlat">Gyakorlat</option>
+                            @if (training == "Nappali")
+                            {
+                                <option value="Gyakorlat">Gyakorlat</option>
+                            }
                             <option value="Csak Vizsga">Csak Vizsga</option>
                             <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                            <option value="E-learning">E-learning</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Hours">Óraszám</label>
-                        <input asp-for="Hours" class="form-control" min="0" required />
-                        <span asp-validation-for="Hours" class="text-danger"></span>
-                    </div>
+                    @if (training == "Nappali")
+                    {
+                        <div class="form-group">
+                            <label asp-for="Hours">Óraszám</label>
+                            <input asp-for="Hours" class="form-control" min="0" required />
+                            <span asp-validation-for="Hours" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="form-group">
                         <label asp-for="CourseCode">Kurzus kód</label>
                         <input asp-for="CourseCode" class="form-control" min="0" required />

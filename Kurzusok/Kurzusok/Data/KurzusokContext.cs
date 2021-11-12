@@ -156,7 +156,7 @@ namespace Kurzusok.Data
                     .IsUnicode(false)
                     .HasColumnName("course_type");
 
-                entity.Property(e => e.Hours).IsRequired().HasColumnName("hours");
+                entity.Property(e => e.Hours).HasColumnName("hours");
 
                 entity.Property(e => e.Members).IsRequired().HasColumnName("members");
 
@@ -304,6 +304,7 @@ namespace Kurzusok.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("subject_code");
+                entity.Property(e => e.CorrespondHours).HasColumnName("correspond_hours");
 
                 entity.HasOne(e => e.Semester).WithMany(e => e.Subjects).HasForeignKey(e => e.SemesterId).OnDelete(DeleteBehavior.Cascade);
             });

@@ -28,6 +28,8 @@ namespace Kurzusok.Models
         public string SubjectCode { get; set; }
         public int SemesterId { get; set; }
         public string EducationType { get; set; }
+        [Range(0, 100, ErrorMessage = "A levelezős órák száma 0 és 100 közötti egész szám lehet!")]
+        public int? CorrespondHours { get; set; }
 
         public virtual Semester Semester { get; set; }
         public virtual ICollection<Courses> Courses { get; set; }

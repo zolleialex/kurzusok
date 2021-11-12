@@ -1,6 +1,13 @@
 ﻿@model Courses
+@using Microsoft.AspNetCore.Http;
 @{
     IList<Teachers> teachers = ViewBag.teachers;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
 }
 
 <div class="modal  editcoursemodal" id="editCourse">
@@ -13,9 +20,9 @@
                 </div>
                 <div class="modal-body">
                     @*<div id="errorAlert" class="alert alert-danger collapse">
-                        <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
-                        <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
-                    </div>*@
+                            <button type="button" class="close" data-dismiss="alert"><span>X</span></button>
+                            <strong> Hiba! </strong> Rossz, vagy nem megfelelő adatokat akarsz megadni! Helyesen tölts ki minden kötelező mezőt!
+                        </div>*@
                     <div id="errorAlert" class="text-danger"></div>
                     <div class="form-group">
                         <input type="hidden" asp-for="CourseId" class="form-control" value="@Model.CourseId" />
@@ -33,10 +40,13 @@
                             @if (Model.CourseType == "Elmélet")
                             {
                                 <option value="Elmélet" selected>Elmélet</option>
-                                <option value="Gyakorlat">Gyakorlat</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                }
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
-
+                                <option value="E-learning">E-learning</option>
                             }
                             else if (Model.CourseType == "Gyakorlat")
                             {
@@ -44,29 +54,51 @@
                                 <option value="Gyakorlat" selected>Gyakorlat</option>
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
                             }
                             else if (Model.CourseType == "Csak Vizsga")
                             {
                                 <option value="Elmélet">Elmélet</option>
-                                <option value="Gyakorlat">Gyakorlat</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                }
                                 <option value="Csak Vizsga" selected>Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
                             }
                             else if (Model.CourseType == "Egyéni felkészülés")
                             {
                                 <option value="Elmélet">Elmélet</option>
-                                <option value="Gyakorlat">Gyakorlat</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                }
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés" selected>Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
                             }
-
+                            else if (Model.CourseType == "E-learning")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                }
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning" selected>E-learning</option>
+                            }
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Hours">Óraszám</label>
-                        <input asp-for="Hours" class="form-control" min="0" required />
-                        <span asp-validation-for="Hours" class="text-danger"></span>
-                    </div>
+                    @if (training == "Nappali")
+                    {
+                        <div class="form-group">
+                            <label asp-for="Hours">Óraszám</label>
+                            <input asp-for="Hours" class="form-control" min="0" required />
+                            <span asp-validation-for="Hours" class="text-danger"></span>
+                        </div>
+                    }
                     <div class="form-group">
                         <label asp-for="CourseCode">Kurzus kód</label>
                         <input asp-for="CourseCode" class="form-control" min="0" required />

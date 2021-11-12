@@ -33,6 +33,7 @@ namespace Kurzusok.Controllers
         public IActionResult Index()
         {
             string SessionSemesterId = HttpContext.Session.GetString("SemesterId");
+
             int currentSemesterId;
             if (!string.IsNullOrEmpty(SessionSemesterId))
             {
@@ -42,32 +43,58 @@ namespace Kurzusok.Controllers
             {
                 var semesters = _context.Semester.ToListAsync();
                 currentSemesterId = semesters.Result.Last().Id;
+                HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
             }
-            return RedirectToAction(nameof(Index), new { currentSemesterId });
+            string SessionTraining = HttpContext.Session.GetString("Training");
+            string training;
+            if (!string.IsNullOrEmpty(SessionTraining))
+            {
+                training = SessionTraining;
+            }
+            else
+            {
+                training = "Nappali";
+                HttpContext.Session.SetString("Training", "Nappali");
+            }
+            return RedirectToAction(nameof(Index), new { currentSemesterId, training });
         }
 
         // GET: Home/{semester}
         [Authorize]
-        [Route("{currentSemesterId}")]
-        public async Task<IActionResult> Index(int currentSemesterId, string anysearch)
+        [Route("{currentSemesterId}/{training}")]
+        public async Task<IActionResult> Index(int currentSemesterId,string training, string anysearch)
         {
             //Összes szemeszter lekérdezése
             var semesters = _context.Semester.ToListAsync();
             _homeViewModel.SemestersList = await semesters;
             int lastId = _homeViewModel.SemestersList.Last().Id;
+            if (training=="Levelezos")
+            {
+                training="Levelezős";
+            }
+            var neededTrainingProgrammes = await _context.Programmes.Where(c => c.Training == training.ToLower()).Select(c => c.ProgrammeId).ToListAsync(); // Nappali vagy levelezős szakok lekérése
             Semester currentSemester;
             if (!string.IsNullOrEmpty(anysearch))
             {
                 currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).FirstOrDefaultAsync();
+                if (currentSemester==null)
+                {
+                    currentSemester = await _context.Semester.Where(c => c.Id == lastId).FirstOrDefaultAsync();
+                    HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
+                }
                 List<Subjects> currentSemesterSubjects = new List<Subjects>();
                 var searchedTeacher = await _context.Teachers.Where(c => c.Name.Contains(anysearch)).Select(d => d.TeacherId).ToListAsync();
                 List<Subjects> searchedSubjectwTeacher;
                 if (searchedTeacher.Count != 0)
                 {
-                    searchedSubjectwTeacher = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
+                    searchedSubjectwTeacher = await _context.Subjects.Where(c => c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b=> neededTrainingProgrammes.Contains(b.ProgrammeId)) && c.Courses.Any((b => b.TeachersLink.Any(b => searchedTeacher.Contains(b.TeacherId))))).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ToListAsync();
                     currentSemesterSubjects = searchedSubjectwTeacher;
                 }
-                var searchedProgramme = await _context.Programmes.Where(c => c.Name.Contains(anysearch)).Select(d => d.ProgrammeId).ToListAsync();
+                var searchedProgramme = await _context.Programmes.Where(c => c.Training == training.ToLower() && c.Name.Contains(anysearch)).Select(d => d.ProgrammeId).ToListAsync();
                 List<Subjects> searchedSubjectwProgramme;
                 if (searchedProgramme.Count != 0)
                 {
@@ -81,7 +108,7 @@ namespace Kurzusok.Controllers
                         currentSemesterSubjects.Add(item);
                     }
                 }
-                var searchedSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
+                var searchedSubject = await _context.Subjects.Where(c => c.Name.Contains(anysearch) && c.SemesterId == currentSemester.Id && c.ProgrammesLink.Any(b => neededTrainingProgrammes.Contains(b.ProgrammeId))).Include(k => k.ProgrammesLink).ThenInclude(k => k.Programme).Include(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ToListAsync();
                 if (searchedSubject.Count != 0)
                 {
                     if (searchedProgramme.Count != 0 || searchedTeacher.Count != 0)
@@ -93,15 +120,14 @@ namespace Kurzusok.Controllers
                         currentSemesterSubjects.Add(item);
                     }
                 }
-                //currentSemester = _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink.Where(d=>searchedTeacher.Contains(d.TeacherId))).ThenInclude(b => b.Teacher).Include(b => b.Subjects.Where(d => searchedSubject.Contains(d.Name))).ThenInclude(k => k.ProgrammesLink.Where(d => searchedProgramme.Contains(d.ProgrammeId))).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
             }
             else
             {
                 //Egy adott szemeszter lekérdezése tárgyakkal
-                currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
+                currentSemester = await _context.Semester.Where(c => c.Id == currentSemesterId).Include(b => b.Subjects.Where(b => b.ProgrammesLink.Any(b => neededTrainingProgrammes.Contains(b.ProgrammeId)))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                 if (currentSemester == null) //Ha nincs a megadott ID-s szemeszter akkor az utolsót kérdezzük le
                 {
-                    currentSemester = await _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
+                    currentSemester = await _context.Semester.Where(c => c.Id == lastId).Include(b => b.Subjects.Where(b => b.ProgrammesLink.Any(b => neededTrainingProgrammes.Contains(b.ProgrammeId)))).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).FirstOrDefaultAsync();
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(lastId));
                 }
                 else
@@ -109,6 +135,7 @@ namespace Kurzusok.Controllers
                     HttpContext.Session.SetString("SemesterId", Convert.ToString(currentSemesterId));
                 }
             }
+            HttpContext.Session.SetString("Training", training);
             _homeViewModel.CurrentSemester = currentSemester;
             return View(_homeViewModel);
         }
@@ -131,7 +158,7 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,EducationType")] Subjects subjects, List<int> programmes)
+        public async Task<IActionResult> CreateSubjectPost([Bind("Id,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,CorrespondHours,EducationType")] Subjects subjects, List<int> programmes)
         {
             if (ModelState.IsValid && programmes.Count() > 0)
             {
@@ -271,6 +298,7 @@ namespace Kurzusok.Controllers
                         GyHours = copySubject.GyHours,
                         Name = copySubject.Name,
                         EducationType = copySubject.EducationType,
+                        CorrespondHours = copySubject.CorrespondHours,
                         Semester = newSemester
                     };
                     List<Courses> newCourseList = new List<Courses>();
@@ -383,7 +411,7 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,EducationType")] Subjects subjects, List<int> Programmes)
+        public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,CorrespondHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
 
             if (ModelState.IsValid && Programmes.Count() > 0)
@@ -552,7 +580,8 @@ namespace Kurzusok.Controllers
         public IActionResult AnySearch(string anysearch)
         {
             int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { currentSemesterId, anysearch });
+            string training = HttpContext.Session.GetString("Training");
+            return RedirectToAction(nameof(Index), new { currentSemesterId, training, anysearch });
         }
         [Authorize]
         [HttpPost]
@@ -575,8 +604,7 @@ namespace Kurzusok.Controllers
                 _context.Courses.Update(currentCourse);
                 await _context.SaveChangesAsync();
             }
-            int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-            return RedirectToAction(nameof(Index), new { currentSemesterId });
+            return RedirectToAction(nameof(Index));
         }
     }
 }
