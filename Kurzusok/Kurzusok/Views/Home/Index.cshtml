@@ -9,7 +9,7 @@
     if (string.IsNullOrEmpty(training))
     {
         training = "Nappali";
-        Context.Session.SetString("Training","Nappali");
+        Context.Session.SetString("Training", "Nappali");
     }
     int colthespan = 6;
     List<string> whoCommented = new List<string>();
@@ -134,18 +134,34 @@
                 </button>
             </div>
             <form method="post" asp-controller="Home" asp-action="CreateSemester" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <label for="week">Adja meg hány hét van az adott félévben!</label>
-                    <input type="number" min="0" max="30" autofocus name="week" id="week" required />
-                    <input type="hidden" name="lastSemester" value="@lastSemester" />
-                    <br />
-                    Szeretné hozzáadni az 1 évvel korábbi tantárgyakat az új szemeszterthez?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
-                    <button class="btn btn-danger" name="withSubjects" value="0">Nem</button>
-                    <button class="btn btn-primary" name="withSubjects" value="1">Igen</button>
-                </div>
+                @if (Model.SemestersList.Count >= 2)
+                {
+                    <div class="modal-body">
+                        <label for="week">Adja meg hány hét van az adott félévben!</label>
+                        <input type="number" min="0" max="30" autofocus name="week" id="week" required />
+                        <input type="hidden" name="lastSemester" value="@lastSemester" />
+                        <br />
+                        Szeretné hozzáadni az 1 évvel korábbi tantárgyakat az új szemeszterthez?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                        <button class="btn btn-danger" name="withSubjects" value="0">Nem</button>
+                        <button class="btn btn-primary" name="withSubjects" value="1">Igen</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="modal-body">
+                        <label for="week">Adja meg hány hét van az adott félévben!</label>
+                        <input type="number" min="0" max="30" autofocus name="week" id="week" required />
+                        <input type="hidden" name="lastSemester" value="@lastSemester" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                        <button class="btn btn-danger" name="withSubjects" value="0">Hozzáadás</button>
+                    </div>
+                }
+
             </form>
         </div>
     </div>
@@ -179,32 +195,32 @@
         </div>
         <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2 allcollapse" id="@item.SubjectCode">
             <div class="row align-items-center flex-grow-1 p-2">
-                <div class="col-md-5 text-center d-flex flex-column">
-                    <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
+                <div class="col-md-4 d-flex flex-column">
+                    <div class="align-items-center m-auto flex-grow-1 mt-lg-1">
 
-                        <div class="text-right">
+                        <div>
                             @if (training == "Levelezős")
                             {
-                                <strong>Óraszám: </strong>
+                                <strong>Óraszám/félév: </strong>
                                 @Html.DisplayFor(modelItem => item.CorrespondHours)
                             }
                             else
                             {
                                 @if (item.EHours != null)
                                 {
-                                    <strong>Elmélet: </strong>
+                                    <strong>Elméleti órák/hét: </strong>
                                     @Html.DisplayFor(modelItem => item.EHours)
                                     <br />
                                 }
                                 @if (item.GyHours != null)
                                 {
-                                    <strong>Gyakorlat:</strong>
+                                    <strong>Gyakorlati órák/hét: </strong>
                                     @Html.DisplayFor(modelItem => item.GyHours)
                                     <br />
                                 }
                                 @if (item.LHours != null)
                                 {
-                                    <strong>Labor:</strong>
+                                    <strong>Labor órák/hét: </strong>
                                     @Html.DisplayFor(modelItem => item.LHours)
                                     <br />
                                 }
@@ -212,32 +228,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7 text-center d-flex flex-column">
-                    <div class="align-items-center d-flex text-center m-auto flex-grow-1 mt-lg-1">
+                <div class="col-md-2 d-flex flex-column">
+                    <div class="align-items-center d-flex m-auto flex-grow-1 mt-lg-1">
+                        <div>
+                            @if (item.EducationType == "traditional")
+                            {
+                                <strong>Jelenléti oktatás</strong>
+                            }
+                            else if (item.EducationType == "sync")
+                            {
+                                <strong>Szinkron oktatás</strong>
+                            }
+                            else if (item.EducationType == "async")
+                            {
+                                <strong>Asszinkron oktatás</strong>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="align-items-center d-flex m-auto flex-grow-1 mt-lg-1">
                         <div class="pr-lg-2">
                             <strong>Szakok:</strong>
                         </div>
-
                         <ul class="m-0">
                             @foreach (var programme in item.ProgrammesLink)
                             {
                                 <li class="text-left">
                                     <i>@programme.Programme.Name</i>
-                                    @if (item.EducationType == "traditional")
-                                    {
-                                        @Html.Raw(", ")
-                                        @Html.Raw("jelenléti oktatással")
-                                    }
-                                    else if (item.EducationType == "sync")
-                                    {
-                                        @Html.Raw(", ")
-                                        @Html.Raw("szinkron oktatással")
-                                    }
-                                    else if (item.EducationType == "async")
-                                    {
-                                        @Html.Raw(", ")
-                                        @Html.Raw("asszinkron oktatással")
-                                    }
                                     @if (programme.Obligatory == true)
                                     {
                                         @Html.Raw(", ")
@@ -299,34 +317,34 @@
                         <tbody>
                             @foreach (var course in item.Courses)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => course.CourseType)
-                                </td>
-                                <td>
-                                    @foreach (var teacher in course.TeachersLink)
-                                    {
-                                        @Html.DisplayFor(modelItem => teacher.Teacher.Name)
-                                        <br />
-                                    }
-                                </td>
-                                <td>
-                                    @foreach (var teacher in course.TeachersLink)
-                                    {
-                                        @Html.DisplayFor(modelItem => teacher.Loads)
-                                        @Html.Raw(" %")
-                                        <br />
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => course.CourseCode)
-                                </td>
-                                @if (training == "Nappali")
-                                {
+                                <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => course.Hours)
+                                        @Html.DisplayFor(modelItem => course.CourseType)
                                     </td>
-                                }
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Loads)
+                                            @Html.Raw(" %")
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseCode)
+                                    </td>
+                                    @if (training == "Nappali")
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => course.Hours)
+                                        </td>
+                                    }
                                     <td>
                                         @if (course.Classroom != null)
                                         {
@@ -357,7 +375,7 @@
                                     }
                                 </tr>
                                 <tr>
-                                    @if (User.IsInRole("Admin"))
+                                    @if (User.IsInRole("Admin") && training == "Nappali")
                                     {
                                         colthespan = 7;
                                     }
@@ -426,6 +444,9 @@
                 </th>
                 <th scope="col">
                     Órák
+                </th>
+                <th scope="col">
+                    Oktatási forma
                 </th>
                 <th scope="col">
                     Szakok
@@ -509,9 +530,31 @@
 
                     </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @if (item.EducationType == "traditional")
+                        {
+                            @Html.Raw("Jelenléti");
+                        }
+                        else if (item.EducationType == "sync")
+                        {
+                            @Html.Raw("Szinkron");
+                        }
+                        else if (item.EducationType == "async")
+                        {
+                            @Html.Raw("Asszinkron");
+                        }
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @foreach (var programme in item.ProgrammesLink)
                         {
-                            @Html.DisplayFor(modelItem => programme.Programme.Name)
+                            @programme.Programme.Name
+                            @if (programme.Obligatory == true)
+                            {
+                                @Html.Raw(", kötelező")
+                            }
+                            else
+                            {
+                                @Html.Raw(", választható")
+                            }
                             <br />
                         }
                     </td>
@@ -718,23 +761,33 @@
                 </form>
             </li>
             <li class="nav-item pb-1 height">
-                <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
-                    @date
-                </a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                    @foreach (var item in Model.SemestersList)
-                    {
-                        if (date != item.Date)
+                @if (Model.SemestersList.Count > 1)
+                {
+                    <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+                        @date
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                        @foreach (var item in Model.SemestersList)
                         {
-                            string temptrain = "Nappali";
-                            if (training=="Levelezős")
+                            if (date != item.Date)
                             {
-                                temptrain = "Levelezos";
+                                string temptrain = "Nappali";
+                                if (training == "Levelezős")
+                                {
+                                    temptrain = "Levelezos";
+                                }
+                                <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" asp-route-training="@temptrain" onclick="clearCollapse()">@item.Date</a>
                             }
-                            <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" asp-route-training="@temptrain" onclick="clearCollapse()">@item.Date</a>
                         }
-                    }
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-dark pl-1 py-0 d-inline">
+                        @date
+                    </p>
+                }
+
             </li>
             <li class="nav-item pb-1 height">
                 <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline text-nowrap" id="dropdownMenuTraining" data-toggle="dropdown">

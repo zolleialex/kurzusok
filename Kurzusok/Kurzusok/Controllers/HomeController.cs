@@ -413,7 +413,7 @@ namespace Kurzusok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,CorrespondHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
-
+            Console.WriteLine("WTF");
             if (ModelState.IsValid && Programmes.Count() > 0)
             {
                 List<ProgrammeDetails> prgDetails = new List<ProgrammeDetails>();
@@ -424,7 +424,7 @@ namespace Kurzusok.Controllers
                     if (prSubject == null)//Ha nincs, akkor hibával visszatér
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == Programmes[i]).FirstOrDefaultAsync();
-                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel.";
+                        string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel vagy kóddal.";
                         return Json(new { isvalid = false, responseText = responseText });
                     }
                     else
@@ -432,7 +432,6 @@ namespace Kurzusok.Controllers
                         prgDetails.Add(prSubject);
                     }
                 }
-
 
                 var sbj_prgs = await _context.SubjectProgrammes.Where(c => c.SubjectId == subjects.SubjectId).ToListAsync(); //Régi kapcsolótábla törlése
                 foreach (var sbj_prg in sbj_prgs)
