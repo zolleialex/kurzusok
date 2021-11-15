@@ -100,6 +100,20 @@ namespace Kurzusok.Controllers
             return RedirectToAction("Index");
         }
 
-
+        public IActionResult DeleteAccounts()
+        {
+            var users = userManager.Users.ToList();
+            return View(users);
+        }
+        public async Task<IActionResult> DeleteAccountsConfirmed(List<string> users)
+        {
+            
+            foreach (var id in users)
+            {
+                var user = await userManager.FindByIdAsync(id);
+                await userManager.DeleteAsync(user);
+            }
+            return RedirectToAction("DeleteAccounts");
+        }
     }
 }

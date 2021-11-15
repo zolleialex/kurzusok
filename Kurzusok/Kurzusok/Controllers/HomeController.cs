@@ -171,7 +171,7 @@ namespace Kurzusok.Controllers
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == programmes[i]).FirstOrDefaultAsync();
                         string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel vagy kóddal.";
-                        return Json(new { isvalid = false, responseText = responseText });
+                        return Json(new { isvalid = false, responseText });
                     }
                     else {// Ha van, akkor hozzáadja a listához, később kelleni fog
                         prgDetails.Add(prSubject);
@@ -425,7 +425,7 @@ namespace Kurzusok.Controllers
                     {
                         var prog = await _context.Programmes.Where(c => c.ProgrammeId == Programmes[i]).FirstOrDefaultAsync();
                         string responseText = "A " + prog.Name + " " + prog.Training + " mintatantervben nem szerepel a megadott tárgy ilyen tárgynévvel vagy kóddal.";
-                        return Json(new { isvalid = false, responseText = responseText });
+                        return Json(new { isvalid = false, responseText });
                     }
                     else
                     {// Ha van, akkor hozzáadja a listához, később kelleni fog

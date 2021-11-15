@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims;
+@model List<IdentityUser>
+@{;
+    ViewData["Title"] = "Felhasználók törlése";
+    Layout = "/Views/Administration/_AdminLayout.cshtml";
+}
+<div class="modal fade accountdeletemodal" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="deleteAccount" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountLabel">Felhasználók törlése</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-controller="Administration" asp-action="DeleteAccountsConfirmed">
+                <div class="modal-body">
+                    <div id="names"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Mége</button>
+                    <button type="submit" class="btn btn-danger">Felhasználók törlése</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="w-50 d-block">
+    <h4>@ViewData["Title"]</h4>
+    <hr />
+    <div class="alert alert-warning" role="alert">
+        <p>
+            <strong>Az adatok törlésével véglegesen eltávolítja a fiókokat, és azokat nem lehet visszaállítani.</strong>
+        </p>
+    </div>
+    <div class="pt-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-sm-1 border-top-0"></th>
+                    <th class="col-sm-5 border-top-0">Név</th>
+                    <th class="col-sm-6 border-top-0">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @if (User.FindFirst(ClaimTypes.NameIdentifier).Value != item.Id)
+                    {
+                        <tr>
+                            <td>
+                                <input class="users" type="checkbox" id=@item.Id name="@item.UserName" />
+                            </td>
+                            <td>
+                                @item.UserName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr>
+                    <td class="pt-3 border-top-0" colspan="3">
+                        <button type="submit" class="btn btn-danger w-15" data-toggle="account-delete-modal" data-target="#deleteAccount">Törlés</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}

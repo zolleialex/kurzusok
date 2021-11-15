@@ -62,7 +62,9 @@ td {
 .w-80 {
     width: 80%;
 }
-
+.w-15 {
+    width: 15%;
+}
 .dark-border {
     border: 1px solid #7b8a8b !important;
 }
