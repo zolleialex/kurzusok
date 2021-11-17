@@ -4141,3 +4141,7 @@ C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Ra
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\_AdminLayout.cshtml.g.cs
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\DeleteAccounts.cshtml.g.cs
 C:\Users\varga\Desktop\Projektmunka\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Curriculum\Index.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\DeleteAccounts.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Syllabus\Index.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Syllabus\_CreateSubjectToSyllabus.cshtml.g.cs

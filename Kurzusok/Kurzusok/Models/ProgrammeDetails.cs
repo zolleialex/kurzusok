@@ -14,8 +14,9 @@ namespace Kurzusok.Models
         public int? EHours { get; set; }
         public int? GyHours { get; set; }
         public int? LabHours { get; set; }
+        public int? CorrespondHours { get; set; }
         public int Credit { get; set; }
-        public int RecommendedSemester { get; set; }
+        public int? RecommendedSemester { get; set; }
         public bool Obligatory { get; set; }
 
         public virtual Programmes Programme { get; set; }

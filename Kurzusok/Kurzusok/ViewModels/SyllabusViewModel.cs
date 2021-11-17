@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Kurzusok.ViewModels
 {
-    public class CurriculumViewModel
+    public class SyllabusViewModel
     {
-        public IList<Programmes> CurriculmList { get; set; }
-        public Programmes CurrentCurriculum { get; set; }
+        public IList<Programmes> SyllabusList { get; set; }
+        public Programmes CurrentSyllabus { get; set; }
 
 
     }

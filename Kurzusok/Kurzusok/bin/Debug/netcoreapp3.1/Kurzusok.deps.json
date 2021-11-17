@@ -31,6 +31,7 @@
     ".NETCoreApp,Version=v3.1": {
       "Kurzusok/1.0.0": {
         "dependencies": {
+          "HtmlAgilityPack": "1.11.38",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.10",
           "Microsoft.AspNetCore.Identity.UI": "3.1.10",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "3.1.18",
@@ -308,6 +309,17 @@
         },
         "compile": {
           "Kurzusok.dll": {}
+        }
+      },
+      "HtmlAgilityPack/1.11.38": {
+        "runtime": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {
+            "assemblyVersion": "1.11.38.0",
+            "fileVersion": "1.11.38.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {}
         }
       },
       "Humanizer.Core/2.8.26": {
@@ -3963,6 +3975,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "HtmlAgilityPack/1.11.38": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DC1j3GzU9lBp8hSXb9eYRHiJOUS5sxjBjme/4RTYjTXlgiFCOMXkIY+rmL+BtUss1pCwCN4LaVlZ/ci/fWY+lA==",
+      "path": "htmlagilitypack/1.11.38",
+      "hashPath": "htmlagilitypack.1.11.38.nupkg.sha512"
     },
     "Humanizer.Core/2.8.26": {
       "type": "package",

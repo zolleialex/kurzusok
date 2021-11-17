@@ -414,7 +414,6 @@ namespace Kurzusok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSubjectPost([Bind("SubjectId,SemesterId,SubjectCode,Name,EHours,GyHours,LHours,CorrespondHours,EducationType")] Subjects subjects, List<int> Programmes)
         {
-            Console.WriteLine("WTF");
             if (ModelState.IsValid && Programmes.Count() > 0)
             {
                 List<ProgrammeDetails> prgDetails = new List<ProgrammeDetails>();

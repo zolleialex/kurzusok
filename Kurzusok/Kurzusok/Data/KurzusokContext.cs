@@ -199,6 +199,8 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.LabHours).HasColumnName("lab_hours");
 
+                entity.Property(e => e.CorrespondHours).HasColumnName("correspond_hours");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50)
