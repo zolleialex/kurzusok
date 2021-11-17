@@ -62,11 +62,12 @@ namespace Kurzusok.Controllers
         // GET: Home/{semester}
         [Authorize]
         [Route("{currentSemesterId}/{training}")]
-        public async Task<IActionResult> Index(int currentSemesterId,string training, string anysearch)
+        public async Task<IActionResult> Index(int currentSemesterId, string training, string anysearch)
         {
             //Összes szemeszter lekérdezése
             var semesters = _context.Semester.ToListAsync();
             _homeViewModel.SemestersList = await semesters;
+            
             int lastId = _homeViewModel.SemestersList.Last().Id;
             if (training=="Levelezos")
             {

@@ -1,0 +1,175 @@
+﻿@model Kurzusok.ViewModels.CurriculumViewModel;
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "Mintatantervek";
+    string currentCurrId = Model.CurrentCurriculum.ProgrammeId.ToString();
+    string CurrentCurriculumName = Model.CurrentCurriculum.Name + Model.CurrentCurriculum.Training;
+    string training = Model.CurrentCurriculum.Training;
+
+}
+<div class="container-fluid">
+    <h1>Mintatantervek</h1>
+
+    <h1>@CurrentCurriculumName tanterv</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        @*<a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>*@
+        <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@currentCurrId">Tárgy hozzáadása a mintatantervhez</button>
+    }
+
+</div>
+<div id="PlaceHolderHere"></div>
+
+<div class="table-responsive pt-3">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th scope="col"></th>
+                }
+                <th scope="col">
+                    Tárgy kód
+                </th>
+                <th scope="col">
+                    Név
+                </th>
+                <th scope="col">
+                    Órák
+                </th>
+                <th scope="col">
+                    Kredit
+                </th>
+                <th scope="col">
+                    Ajánlott félév
+                </th>
+                <th scope="col">
+                    Kötelező
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CurrentCurriculum.ProgrammeDetails)
+            {
+
+                <tr class="newSubject border-bottom">
+
+                    <td>
+                        <a class="dropdown-toggle" id="subjectdropdownMenu" data-toggle="dropdown">
+                            <span class="fa fa-cog"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                            @*<button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>*@
+                        </div>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubjectCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @if (training == "Levelezős")
+                        {
+                            @*@Html.DisplayFor(modelItem => item.correspond)*@
+                        }
+                        else
+                        {
+                            @if (item.EHours != null)
+                            {
+                                @Html.Raw("Elmélet: ")
+                                @Html.DisplayFor(modelItem => item.EHours)
+                                <br />
+                            }
+                            @if (item.GyHours != null)
+                            {
+                                @Html.Raw("Gyakorlat: ")
+                                @Html.DisplayFor(modelItem => item.GyHours)
+                                <br />
+                            }
+                            @if (item.LabHours != null)
+                            {
+                                @Html.Raw("Labor: ")
+                                @Html.DisplayFor(modelItem => item.LabHours)
+                                <br />
+                            }
+                        }
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Credit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RecommendedSemester)
+                    </td>
+                    <td>
+
+                        @if (item.Obligatory == true)
+                        {
+                            @Html.Raw("Igen")
+                        }
+                        else
+                        {
+                            @Html.Raw("Nem")
+                        }
+                        <br />
+
+                    </td>
+
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+@section SideBar{
+    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+        <ul class="nav nav-sidebar justify-content-center" id="opened">
+            <li class="nav-item pb-1 height">
+                <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                    <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
+                </form>
+            </li>
+            <li class="nav-item pb-1 height">
+                @if (Model.CurriculmList.Count > 1)
+                {
+                    <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+                        @CurrentCurriculumName
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                        @foreach (var item in Model.CurriculmList)
+                        {
+                            if (currentCurrId != Convert.ToString(item.ProgrammeId))
+                            {
+                                <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentProgrammesId="@item.ProgrammeId" onclick="clearCollapse()">@item.Name @item.Training</a>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-dark pl-1 py-0 d-inline">
+                        @CurrentCurriculumName
+                    </p>
+                }
+
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar" id="closed">
+        </ul>
+    </div>
+}
+
+
+@section Scripts{
+    <script src="~/js/SideBar.js" asp-append-version="true"></script>
+}
