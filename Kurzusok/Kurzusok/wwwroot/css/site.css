@@ -96,3 +96,9 @@ td {
         width: 98%;
     }
 }
+
+@media (max-width: 1500px) {
+    #excelTable, .changetable {
+        display: none;
+    }
+}

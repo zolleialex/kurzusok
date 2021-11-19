@@ -11,6 +11,5 @@ namespace Kurzusok.ViewModels
         public IList<Programmes> SyllabusList { get; set; }
         public Programmes CurrentSyllabus { get; set; }
 
-
     }
 }

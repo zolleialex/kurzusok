@@ -1,16 +1,10 @@
 ﻿@model Kurzusok.ViewModels.SyllabusViewModel
-@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Mintatantervek";
     string currentSyllabusId = Model.CurrentSyllabus.ProgrammeId.ToString();
-    string currentSyllabusName = Model.CurrentSyllabus.Name +" "+ Model.CurrentSyllabus.Training;
-    string training = Context.Session.GetString("Training");
-    if (string.IsNullOrEmpty(training))
-    {
-        training = "Nappali";
-        Context.Session.SetString("Training", "Nappali");
-    }
-
+    string currentSyllabusName = Model.CurrentSyllabus.Name + " " + Model.CurrentSyllabus.Training;
+    string training = Model.CurrentSyllabus.Training;
+    training = char.ToUpper(training[0]) + training[1..];
 }
 <div class="container-fluid">
     <h1>Mintatantervek</h1>
@@ -18,20 +12,21 @@
     <h1>@currentSyllabusName tanterv</h1>
 
     @*<a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>*@
-<form class="form-group d-flex pt-3" asp-controller="Syllabus" asp-action="ReadFromWeb">
-    <input class="form-control w-25" type="url" id="tableUrl" placeholder="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" title="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" name="url" />
-    <input type="hidden" name="id" value="@currentSyllabusId" />
-    @if (training == "Nappali")
-    {
-        <input type="hidden" name="training" value="full" />
-    }
-    else
-    {
-        <input type="hidden" name="training" value="part" />
-    }
+    @Html.ValidationMessage("ReadError", new { @class = "text-danger" })
+    <form class="form-group d-flex pt-3" asp-controller="Syllabus" asp-action="ReadFromWeb">
+        <input class="form-control w-25" type="url" id="tableUrl" placeholder="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" title="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" name="url" />
+        <input type="hidden" name="id" value="@currentSyllabusId" />
+        @if (training == "Nappali")
+        {
+            <input type="hidden" name="training" value="full" />
+        }
+        else
+        {
+            <input type="hidden" name="training" value="part" />
+        }
 
-    <button type="submit" class="btn btn-primary ml-1">Felvétel</button>
-</form>
+        <button type="submit" class="btn btn-primary ml-1">Felvétel</button>
+    </form>
     <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action(" CreateSubject")" data-id="@currentSyllabusId">Tárgy felvétele a mintatantervhez manuálisan</button>
 </div>
 <div id="PlaceHolderHere"></div>
@@ -51,7 +46,15 @@
                     Tárgy típus
                 </th>
                 <th scope="col">
-                    Órák
+                    @if (training == "Nappali")
+                    {
+
+                        @Html.Raw("Óra/hét")
+                    }
+                    else
+                    {
+                        @Html.Raw("Óra/félév")
+                    }
                 </th>
                 <th scope="col">
                     Kredit
@@ -181,5 +184,6 @@
 
 
 @section Scripts{
-    <script src="~/js/SideBar.js" asp-append-version="true"></script>
+    <script src="~/js/sidebar.js" asp-append-version="true"></script>
+    <script src="~/js/syllabus.js" asp-append-version="true"></script>
 }

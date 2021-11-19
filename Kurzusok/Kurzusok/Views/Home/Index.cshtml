@@ -443,19 +443,27 @@
                     Név
                 </th>
                 <th scope="col">
-                    Órák
+                    @if (training == "Nappali")
+                    {
+
+                        @Html.Raw("Óra/hét")
+                    }
+                    else
+                    {
+                        @Html.Raw("Óra/félév")
+                    }
                 </th>
                 <th scope="col">
-                    Oktatási forma
+                    Forma
                 </th>
                 <th scope="col">
-                    Szakok
+                    Szak
                 </th>
                 <th scope="col">
                     Kurzus kód
                 </th>
                 <th scope="col">
-                    Kurzus típusa
+                    Kurzus típus
                 </th>
                 <th scope="col">
                     Létszám
@@ -467,13 +475,13 @@
                     Megjegyzés
                 </th>
                 <th scope="col">
-                    Oktatók
+                    Oktató
                 </th>
                 <th scope="col">
                     Terhelés
                 </th>
                 <th scope="col">
-                    Kurzusok kezelés
+                    Kurzus kezelés
                 </th>
             </tr>
         </thead>
@@ -810,7 +818,7 @@
                     <a class="nav-link text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="modal" data-target="#addSemester" onclick="clearCollapse()">Új félév felvétele</a>
                 </li>
             }
-            <li class="nav-item pt-2 pl-1">
+            <li class="nav-item pt-2 pl-1 changetable">
                 <div class="custom-control custom-switch text-nowrap">
                     <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
                     <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
@@ -833,7 +841,7 @@
                     <i class="fas fa-plus-square"></i>
                 </li>
             }
-            <li class="nav-item pb-1">
+            <li class="nav-item pb-1 changetable">
                 <i class="fas fa-table"></i>
             </li>
         </ul>
@@ -841,5 +849,6 @@
 }
 
 @section Scripts{
+    <script src="~/js/sidebar.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 }

@@ -88,59 +88,55 @@ ajaxpostBasic = form => {// Form Postolása
     //A default event megelőzése miatt
     return false;
 }
-let timeout = null;
-let collapsedTables = [];
-function delay() {
-    timeout = setTimeout(closeBar, 1000);
-}
-function openBar() {
-    clearTimeout(timeout);
-    document.getElementById("SideBar").style.width = "200px";
-    document.getElementById("SideBar").style.padding = "20px";
-    document.getElementById("main").style.paddingLeft = "230px";
-    document.getElementById("opened").style.display = "inline";
-    document.getElementById("closed").style.display = "none";
-}
-function closeBar() {
-    $('.dropdown-toggle').dropdown('hide');
-    document.getElementById("SideBar").style.width = "60px";
-    document.getElementById("SideBar").style.padding = "20px 0 0 0";
-    document.getElementById("main").style.paddingLeft = "90px";
-    document.getElementById("opened").style.display = "none";
-    document.getElementById("closed").style.display = "inline";
-}
-
 
 window.addEventListener("load", function () {// Táblázat nézet megtartása Local Storage-val.
-    let checkBox = document.getElementById("tableView");
-    let chtblId = localStorage.getItem("tableViewStore");
-    if (chtblId === null) {
-        chtblId = "1";
-        localStorage.setItem("tableViewStore", chtblId);
-    }
-    else {
-        if (chtblId == "0") {
-            checkBox.checked = true;
+    if (screen.width > 1500 || $(window).width() > 1500) {
+        let checkBox = document.getElementById("tableView");
+        let chtblId = localStorage.getItem("tableViewStore");
+        if (chtblId === null) {
+            chtblId = "1";
+            localStorage.setItem("tableViewStore", chtblId);
         }
         else {
-            checkBox.checked = false;
-            let collaps = JSON.parse(localStorage.getItem("collapsedTable"));
-            if (collaps != null) {
-                for (let i of collaps) {
-                    let oneCollapse = document.getElementById(i);
-                    oneCollapse.classList.add("show");
-                    oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
-                    oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
-                    if (collapsedTables.includes(i) == false) {
-                        collapsedTables.push(i);
-                    }
-                }
+            if (chtblId == "0") {
+                checkBox.checked = true;
             }
+            else {
+                checkBox.checked = false;
+                keepCollapse();
+            }
+            changeTable();
         }
-        changeTable();
+    }
+    else {
+        keepCollapse();
     }
 })
 
+window.addEventListener("resize", function () {
+    if (screen.width < 1500 || $(window).width() < 1500) {
+        console.log("dd");
+        let checkBox = document.getElementById("tableView");
+        checkBox.checked = false;
+        changeTable();
+    }
+
+})
+
+function keepCollapse() {
+    let collaps = JSON.parse(localStorage.getItem("collapsedTable"));
+    if (collaps != null) {
+        for (let i of collaps) {
+            let oneCollapse = document.getElementById(i);
+            oneCollapse.classList.add("show");
+            oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.remove("fa-chevron-down");
+            oneCollapse.previousElementSibling.firstElementChild.lastElementChild.firstElementChild.classList.add("fa-chevron-up");
+            if (collapsedTables.includes(i) == false) {
+                collapsedTables.push(i);
+            }
+        }
+    }
+}
 
 function changeTable() {
     let checkBox = document.getElementById("tableView");
