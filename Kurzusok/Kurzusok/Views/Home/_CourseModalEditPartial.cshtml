@@ -93,7 +93,7 @@
                     {
                         <div class="form-group">
                             <label asp-for="Hours">Óraszám</label>
-                            <input asp-for="Hours" class="form-control" min="0" required />
+                            <input asp-for="Hours" class="form-control" min="0" />
                             <span asp-validation-for="Hours" class="text-danger"></span>
                         </div>
                     }
@@ -149,7 +149,7 @@
                                 <div class="col-5">
                                     <label>Terhelés</label>
                                     @*<input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />*@
-                                    <input value="@item.Loads" class="form-control" asp-for="@item.Loads" min="1" max="100" required />
+                                    <input asp-for="@item.Loads" class="form-control" name="LoadList" value="@item.Loads" min="1" max="100" required />
                                     <span asp-validation-for="@item.Loads" class="text-danger"></span>
                                 </div>
                                 <div class="col-1 p-0">

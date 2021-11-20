@@ -59,7 +59,7 @@ namespace Kurzusok.Controllers
             return RedirectToAction(nameof(Index), new { currentSemesterId, training });
         }
 
-        // GET: Home/{semester}
+        // GET: Home/{semester}/{training}
         [Authorize]
         [Route("{currentSemesterId}/{training}")]
         public async Task<IActionResult> Index(int currentSemesterId, string training, string anysearch)
@@ -145,10 +145,9 @@ namespace Kurzusok.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateSubject(int id)
         {
-            Console.WriteLine(id);
             Subjects sbj = new Subjects
             {
-                SemesterId = int.Parse(HttpContext.Session.GetString("SemesterId"))
+                SemesterId = id
             };
             var programmes = await _context.Programmes.ToListAsync();
             ViewBag.programmes = programmes;
@@ -516,7 +515,6 @@ namespace Kurzusok.Controllers
                         Loads = LoadList[i]
                     };
                     CourseTeachers.Add(CourseTeacher);
-                    Console.WriteLine(Teachers[i] + "tanárnak a terheltsége:" + LoadList[i]);
                 }
                 course.TeachersLink = CourseTeachers;
 
@@ -533,7 +531,6 @@ namespace Kurzusok.Controllers
                     }
                     else
                     {
-                        Console.WriteLine("Nem igazán sikerült updatelni");
                         throw;
                     }
                 }

@@ -64,10 +64,11 @@ ajaxpostBasic = form => {// Form Postolása
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.isvalid) {// Ha a sikeresen véghezment minden
+                if (response.isvalid) {// Ha a sikeresen véghezment minden                
                     PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltüntetése
                     if (response.createCourse || SubmitValue == "saveandnext") { // Új kurzus felvételre irányítás
-                        $.get("Home/CreateCourse", { id: response.subjectid }).done(function (data) {
+                        $.get("/Home/CreateCourse", { id: response.subjectid }).done(function (data) {
+                            PlaceHolderElement.find('.coursemodal').modal('hide');
                             PlaceHolderElement.html(data);
                             PlaceHolderElement.find('.coursemodal').modal('show');
                         })
@@ -115,7 +116,6 @@ window.addEventListener("load", function () {// Táblázat nézet megtartása Lo
 
 window.addEventListener("resize", function () {
     if (screen.width < 1500 || $(window).width() < 1500) {
-        console.log("dd");
         let checkBox = document.getElementById("tableView");
         checkBox.checked = false;
         changeTable();
