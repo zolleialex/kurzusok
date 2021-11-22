@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +44,8 @@ namespace Kurzusok
             });
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
@@ -56,7 +58,7 @@ namespace Kurzusok
                 // Register other policies here
             });
             services.Configure<IdentityOptions>(options =>
-            {                
+            {
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = true;
                 options.User.AllowedUserNameCharacters =
@@ -64,6 +66,14 @@ namespace Kurzusok
                 options.User.RequireUniqueEmail = true;
 
             });
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                     new EmailSender(
+                            Configuration["EmailSender:Host"],
+                            Configuration.GetValue<int>("EmailSender:Port"),
+                            Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                            Configuration["EmailSender:UserName"],
+                            Configuration["EmailSender:Password"])
+            );
             //services.AddSingleton<HomeViewModel>();
         }
 
@@ -83,7 +93,7 @@ namespace Kurzusok
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();

@@ -16,13 +16,14 @@
     string commentHelper, displayComment;
 }
 @*Félév törlés, tábla nyitás*@
-<div class="container-fluid">
-    <h1>@date félév</h1>
+<div class="container-fluid overflow-hidden">
+    <h1>@date félév</h1> 
     <h3>@training tagozat</h3>
     @if (User.IsInRole("Admin"))
     {
         <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
         <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+
     }
     @if (Model.CurrentSemester.Subjects.Count != 0)
     {
@@ -31,6 +32,7 @@
             <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
             <button type="button" class="btn btn-primary" id="allclose">Táblák zárása</button>
         </div>
+        <div class="clearfix"></div>
     }
 </div>
 <div id="PlaceHolderHere"></div>

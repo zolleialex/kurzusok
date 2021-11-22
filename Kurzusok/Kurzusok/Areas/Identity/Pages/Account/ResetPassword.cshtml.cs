@@ -27,18 +27,19 @@ namespace Kurzusok.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Az email cím megadása kötelező!")]
             [EmailAddress]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "A jelszó megadása kötelező!")]
+            [StringLength(100, ErrorMessage = "A jelszó minimum {2} és maximum {1} karakter hosszú lehet.", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [Display(Name = "Jelszó")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Jelszó megerősítése")]
+            [Compare("Password", ErrorMessage = "A két jelszó nem egyezik.")]
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }
@@ -70,7 +71,6 @@ namespace Kurzusok.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 

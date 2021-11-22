@@ -136,7 +136,7 @@ namespace Kurzusok.Controllers
         }
         public async Task<IActionResult> RegisterPost([Bind("UserName, Email, Password, ConfirmPassword")] InputModel Input)
         {
-            var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email };
+            var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email, EmailConfirmed=true };
             var result = await userManager.CreateAsync(user, Input.Password);
             if (result.Succeeded)
             {
