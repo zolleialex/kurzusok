@@ -77,8 +77,8 @@
                             <span class="fa fa-cog"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                            @*<button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>*@
+                            <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubjectSyllabus")" data-id="@item.Id"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                @*<a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>*@
                         </div>
                     </td>
 
@@ -148,9 +148,9 @@
     <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
         <ul class="nav nav-sidebar justify-content-center" id="opened">
             <li class="nav-item pb-1 height">
-                <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                @*<form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
                     <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
-                </form>
+                </form>*@
             </li>
             <li class="nav-item pb-1 height">
                 @if (Model.SyllabusList.Count > 1)

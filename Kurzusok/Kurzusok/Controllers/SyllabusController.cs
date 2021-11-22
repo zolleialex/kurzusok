@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 namespace Kurzusok.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "Admin")]
     public class SyllabusController : Controller
     {
         private readonly KurzusokContext _context;
@@ -69,6 +70,7 @@ namespace Kurzusok.Controllers
             return View(_syllabusViewModel);
         }
         // GET: Create syllabus
+        [HttpGet]
         public IActionResult CreateSubjectToSyllabus(int id)
         {
             ProgrammeDetails prDetails = new ProgrammeDetails
@@ -81,20 +83,21 @@ namespace Kurzusok.Controllers
 
         // POST:  Create syllabus
         [HttpPost]
+        
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectToSyllabusPost([Bind("Id,ProgrammeId,SubjectCode,Name,EHours,GyHours,LabHours,CorrespondHours,EducationType,Credit,RecommendedSemester,Obligatory")] ProgrammeDetails prDetails)
         {
             if (ModelState.IsValid)
             {
                 var prSubject = await _context.ProgrammeDetails.Where(c => c.ProgrammeId == prDetails.ProgrammeId &&( c.Name == prDetails.Name || c.SubjectCode == prDetails.SubjectCode)).FirstOrDefaultAsync();
-                if (prSubject==null)
+                if (prSubject==null)//Ha nincsen már az adatbázisban akkor felvesszük
                 {
                     _context.Add(prDetails);
                     await _context.SaveChangesAsync();
                     string programmeId = Convert.ToString(prDetails.ProgrammeId);
                     return Json(new { isvalid = true, programmeid = programmeId });
                 }
-                else
+                else //Ha van az db-ben, akkor hibaüzenettel visszatérünk
                 {
                     string responseText = "Ebben a mintatantervben már létezik ilyen tantárgy vagy tantárgynév";
                     return Json(new { isvalid = false, responseText });
@@ -102,6 +105,41 @@ namespace Kurzusok.Controllers
                 
             }
             return Json(new { isvalid = false });
+        }
+        // GET: Edit syllabus
+        [HttpGet]
+        public async Task<IActionResult> EditSubjectSyllabus(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var programmeDetails = await _context.ProgrammeDetails.Where(c => c.Id == (int)id).FirstOrDefaultAsync();
+            if (programmeDetails == null)
+            {
+                return NotFound();
+            }            
+            return PartialView("_EditSubjectToSyllabus", programmeDetails);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSubjectPost([Bind("Id,ProgrammeId,SubjectCode,Name,EHours,GyHours,LabHours,CorrespondHours,EducationType,Credit,RecommendedSemester,Obligatory")] ProgrammeDetails prDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.ProgrammeDetails.Update(prDetails);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {                    
+                        return NotFound();                    
+                }
+                return Json(new { isvalid = true, responseText = "Jó adatok." });
+            }
+            return Json(new { isvalid = false, responseText = "Rossz adatok." });
+
         }
 
         public async Task<IActionResult> ReadFromWeb(int id, string url, string training)

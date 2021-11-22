@@ -4,21 +4,20 @@
     string training = Context.Session.GetString("Training");
 }
 
-<div class="modal syllabussubjectmodal" id="addSubject">
+<div class="modal editsubjectsyllabusmodal" id="editSubject">
     <div class="modal-dialog">
-        <form asp-action="CreateSubjectToSyllabusPost" onsubmit="return ajaxpostBasic(this);">
+        <form asp-action="EditSubjectPost" onsubmit="return ajaxpostBasic(this);">
             <div class="modal-content">
                 <div class="modal-header">
-
-                    <h4 class="modal-title" id="addSubjectLabel">Tárgy hozzáadása a mintatantervhez</h4>
+                    <h4 class="modal-title" id="editSubjectLabel">Tárgy szerkesztése</h4>
                     <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
-
                 </div>
                 <div class="modal-body">
                     <div id="errorAlert" class="collapse">
                         <span class="text-danger" id="errormessage"></span>
                     </div>
                     <div class="form-group">
+                        <input type="hidden" asp-for="Id" class="form-control" value="@Model.Id" />
                         <input type="hidden" asp-for="ProgrammeId" class="form-control" value="@Model.ProgrammeId" />
                     </div>
                     <div class="form-group">
@@ -35,17 +34,17 @@
                     {
                         <div class="form-group">
                             <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
-                            <input asp-for="EHours" class="form-control" min="0" value="0" />
+                            <input asp-for="EHours" class="form-control" min="0" />
                             <span asp-validation-for="EHours" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
-                            <input asp-for="GyHours" class="form-control" min="0" value="0" />
+                            <input asp-for="GyHours" class="form-control" min="0" />
                             <span asp-validation-for="GyHours" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="LabHours" class="control-label">Labor órák száma</label>
-                            <input asp-for="LabHours" class="form-control" min="0" value="0" />
+                            <input asp-for="LabHours" class="form-control" min="0" />
                             <span asp-validation-for="LabHours" class="text-danger"></span>
                         </div>
                     }
@@ -72,12 +71,11 @@
                         <input asp-for="Obligatory" class="form-control" />
                         <span asp-validation-for="Obligatory" class="text-danger"></span>
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                    <div class="form-group">
-                        <input type="submit" value="Mentés" class="btn btn-primary" />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                        <div class="form-group">
+                            <input type="submit" value="Mentés" class="btn btn-primary" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,4 +83,3 @@
     </div>
 </div>
 @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
