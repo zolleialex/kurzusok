@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace Kurzusok.Controllers
 {
-    [Authorize]
     [Authorize(Roles = "Admin")]
     public class SyllabusController : Controller
     {
@@ -51,6 +50,7 @@ namespace Kurzusok.Controllers
             if (TempData.ContainsKey("ErrorMessage"))
             {
                 ModelState.AddModelError("ReadError", TempData["ErrorMessage"].ToString());
+                TempData.Remove("ErrorMessage");
             }
             var SyllabusList = _context.Programmes.ToListAsync();
             _syllabusViewModel.SyllabusList = await SyllabusList;

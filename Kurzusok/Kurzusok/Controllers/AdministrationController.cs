@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Kurzusok.Models;
 
 namespace Kurzusok.Controllers
 {
-   [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -21,13 +22,13 @@ namespace Kurzusok.Controllers
             this.userManager = userManager;
         }
         public async Task<IActionResult> Index()
-        {            
+        {
             var roles = roleManager.Roles.ToList();
-            var model = new List<RolesViewModel>();           
+            var model = new List<RolesViewModel>();
 
             foreach (var role in roles)
             {
-                List<String> Users = new List<string>();
+                List<string> Users = new List<string>();
 
                 var RoleModel = new RolesViewModel
                 {
@@ -38,14 +39,14 @@ namespace Kurzusok.Controllers
                 {
                     if (await userManager.IsInRoleAsync(user, role.Name))
                     {
-                        Users.Add((string)user.UserName);
+                        Users.Add(user.UserName);
 
                     }
                 }
                 RoleModel.Users = Users;
                 model.Add(RoleModel);
             }
-            
+
             return View(model);
         }
 
@@ -89,12 +90,12 @@ namespace Kurzusok.Controllers
                 IdentityResult Iresult = null;
                 if (model[i].Selected == true && (await userManager.IsInRoleAsync(user, role.Name) == false))
                 {
-                     Iresult = await userManager.AddToRoleAsync(user, role.Name);
+                    Iresult = await userManager.AddToRoleAsync(user, role.Name);
                 }
-                else if(model[i].Selected == false && (await userManager.IsInRoleAsync(user, role.Name) == true))
+                else if (model[i].Selected == false && (await userManager.IsInRoleAsync(user, role.Name) == true))
                 {
                     Iresult = await userManager.RemoveFromRoleAsync(user, role.Name);
-                } 
+                }
 
             }
             return RedirectToAction("Index");
@@ -107,13 +108,50 @@ namespace Kurzusok.Controllers
         }
         public async Task<IActionResult> DeleteAccountsConfirmed(List<string> users)
         {
-            
+
             foreach (var id in users)
             {
                 var user = await userManager.FindByIdAsync(id);
                 await userManager.DeleteAsync(user);
             }
             return RedirectToAction("DeleteAccounts");
+        }
+        public IActionResult RegisterAccount()
+        {
+            if (TempData.ContainsKey("ErrorMessages"))
+            {
+                var errors = TempData["ErrorMessages"] as IEnumerable<string>;
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError(string.Empty, error);
+                }
+                TempData.Remove("ErrorMessages");
+            }
+            else if(TempData.ContainsKey("Success"))
+            {
+               ViewBag.Success = TempData["Success"];
+            }
+            var inputModel = new InputModel();
+            return View(inputModel);
+        }
+        public async Task<IActionResult> RegisterPost([Bind("UserName, Email, Password, ConfirmPassword")] InputModel Input)
+        {
+            var user = new IdentityUser { UserName = Input.UserName, Email = Input.Email };
+            var result = await userManager.CreateAsync(user, Input.Password);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Sikeres regisztráció!";
+            }
+            List<string> errorStr = new List<string>();
+            foreach (var error in result.Errors)
+            {
+                errorStr.Add(error.Description);
+            }
+            if (errorStr.Count>0)
+            {
+                TempData["ErrorMessages"] = errorStr;
+            }
+            return RedirectToAction("RegisterAccount");
         }
     }
 }
