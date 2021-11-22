@@ -42,3 +42,11 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
     //A default event megelĹ‘zĂ©se miatt
     return false;
 }
+
+
+$('a[data-toggle="subject-delete-modal"]').click(function (event) {
+    let id = $(this).data('id');
+    let route = "/Syllabus/SubjectDeleteSyllabus/" + id;
+    $('#sdel').attr("href", route)
+    $('#applySubjectDelete').modal('show');
+})

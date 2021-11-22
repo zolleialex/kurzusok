@@ -6,6 +6,26 @@
     string training = Model.CurrentSyllabus.Training;
     training = char.ToUpper(training[0]) + training[1..];
 }
+@*Subject delete*@
+<div class="modal fade subject-delete-modal" id="applySubjectDelete" tabindex="-1" role="dialog" aria-labelledby="applySubjectDelete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applySubjectDeleteLabel">Tárgy törlése</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Biztosan törölni szeretnéd ezt a tárgyat a mintatantervből?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                <a class="btn btn-danger" id="sdel" asp-action="SubjectDelete">Tárgy törlése</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <h1>Mintatantervek</h1>
 
@@ -78,7 +98,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
                             <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubjectSyllabus")" data-id="@item.Id"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                @*<a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>*@
+                            <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.Id" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
                         </div>
                     </td>
 
@@ -149,8 +169,8 @@
         <ul class="nav nav-sidebar justify-content-center" id="opened">
             <li class="nav-item pb-1 height">
                 @*<form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
-                    <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
-                </form>*@
+                        <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
+                    </form>*@
             </li>
             <li class="nav-item pb-1 height">
                 @if (Model.SyllabusList.Count > 1)

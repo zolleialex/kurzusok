@@ -142,6 +142,15 @@ namespace Kurzusok.Controllers
 
         }
 
+        // GET: Delete one subject from programmedetails
+        [Route("Syllabus/SubjectDeleteSyllabus/{id?}")]
+        public async Task<IActionResult> SubjectDeleteSyllabus(int id)
+        {
+            var programmeDetail = await _context.ProgrammeDetails.Where(c => c.Id == id).FirstAsync();           
+            _context.ProgrammeDetails.Remove(programmeDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public async Task<IActionResult> ReadFromWeb(int id, string url, string training)
         {
             var web = new HtmlWeb
