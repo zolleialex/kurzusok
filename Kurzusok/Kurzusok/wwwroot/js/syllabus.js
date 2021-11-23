@@ -9,6 +9,8 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         }
         else if (url == "/Syllabus/EditSubjectSyllabus") {
             PlaceHolderElement.find('.editsubjectsyllabusmodal').modal('show');
+        } else if (url == "/Syllabus/CreateSyllabus") {
+            PlaceHolderElement.find('.createsyllabusmodal').modal('show');
         }
 
     })
@@ -25,9 +27,14 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.isvalid) {// Ha a sikeresen vĂ©ghezment minden                
-                   PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltĂĽntetĂ©se                    
-                   location.reload();
+                if (response.isvalid) {// Ha a sikeresen vĂ©ghezment minden  
+                    if (response.createdsyllabus) {
+                        window.location.href = "/Syllabus/" + response.programmeid;
+                    } else {
+                        PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltĂĽntetĂ©se                    
+                        location.reload();
+                    }
+                   
                 } else {
                     $('#errorAlert').show();
                     $('#errormessage').html(response.responseText);

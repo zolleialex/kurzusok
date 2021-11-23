@@ -1,0 +1,44 @@
+﻿@model Programmes
+@using Microsoft.AspNetCore.Http;
+
+
+<div class="modal createsyllabusmodal" id="addSyllabus">
+    <div class="modal-dialog">
+        <form asp-action="CreateSyllabusPost" onsubmit="return ajaxpostBasic(this);">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="addSubjectLabel">Mintatanterv létrehozása</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="errorAlert" class="collapse">
+                        <span class="text-danger" id="errormessage"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Name">Mintatanterv neve</label>
+                        <input asp-for="Name" class="form-control" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Training">Képzés típusa</label>
+                        <select class="custom-select" name="Training">                            
+                            <option value="nappali">Nappali</option>
+                            <option value="levelezős">Levelezős</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                        <div class="form-group">
+                            <input type="submit" value="Mentés" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+

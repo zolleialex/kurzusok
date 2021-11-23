@@ -69,7 +69,39 @@ namespace Kurzusok.Controllers
             _syllabusViewModel.CurrentSyllabus = CurrentSyllabus;
             return View(_syllabusViewModel);
         }
-        // GET: Create syllabus
+        // GET: Create syllabus 
+        [HttpGet]
+        public IActionResult CreateSyllabus()
+        {
+            Programmes prg = new Programmes();
+            return PartialView("_CreateSyllabus", prg);
+        }
+        //POST: Create syllabus
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSyllabusPost([Bind("Id,Name,Training")] Programmes programme)
+        {
+            if (ModelState.IsValid)
+            {
+                var isPrg = await _context.Programmes.Where(c => c.Name == programme.Name).FirstOrDefaultAsync();
+                if (isPrg == null)//Ha nincsen még az adatbázisban akkor felvesszük
+                {
+                    _context.Add(programme);
+                    await _context.SaveChangesAsync();
+                    string programmeId = Convert.ToString(programme.ProgrammeId);
+                    return Json(new { isvalid = true, createdsyllabus = true, programmeid = programmeId });
+                }
+                else //Ha van az db-ben, akkor hibaüzenettel visszatérünk
+                {
+                    string responseText = "Már van ilyen nevű mintatanterv";
+                    return Json(new { isvalid = false, responseText });
+                }
+
+            }
+            return Json(new { isvalid = false });
+        }
+
+        // GET: Create syllabus subject
         [HttpGet]
         public IActionResult CreateSubjectToSyllabus(int id)
         {
@@ -81,16 +113,16 @@ namespace Kurzusok.Controllers
             return PartialView("_CreateSubjectToSyllabus", prDetails);
         }
 
-        // POST:  Create syllabus
+        // POST:  Create syllabus subject
         [HttpPost]
-        
+
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateSubjectToSyllabusPost([Bind("Id,ProgrammeId,SubjectCode,Name,EHours,GyHours,LabHours,CorrespondHours,EducationType,Credit,RecommendedSemester,Obligatory")] ProgrammeDetails prDetails)
         {
             if (ModelState.IsValid)
             {
-                var prSubject = await _context.ProgrammeDetails.Where(c => c.ProgrammeId == prDetails.ProgrammeId &&( c.Name == prDetails.Name || c.SubjectCode == prDetails.SubjectCode)).FirstOrDefaultAsync();
-                if (prSubject==null)//Ha nincsen már az adatbázisban akkor felvesszük
+                var prSubject = await _context.ProgrammeDetails.Where(c => c.ProgrammeId == prDetails.ProgrammeId && (c.Name == prDetails.Name || c.SubjectCode == prDetails.SubjectCode)).FirstOrDefaultAsync();
+                if (prSubject == null)//Ha nincsen már az adatbázisban akkor felvesszük
                 {
                     _context.Add(prDetails);
                     await _context.SaveChangesAsync();
@@ -102,7 +134,7 @@ namespace Kurzusok.Controllers
                     string responseText = "Ebben a mintatantervben már létezik ilyen tantárgy vagy tantárgynév";
                     return Json(new { isvalid = false, responseText });
                 }
-                
+
             }
             return Json(new { isvalid = false });
         }
@@ -118,7 +150,7 @@ namespace Kurzusok.Controllers
             if (programmeDetails == null)
             {
                 return NotFound();
-            }            
+            }
             return PartialView("_EditSubjectToSyllabus", programmeDetails);
         }
         [HttpPost]
@@ -133,8 +165,8 @@ namespace Kurzusok.Controllers
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
-                {                    
-                        return NotFound();                    
+                {
+                    return NotFound();
                 }
                 return Json(new { isvalid = true, responseText = "Jó adatok." });
             }
@@ -146,7 +178,7 @@ namespace Kurzusok.Controllers
         [Route("Syllabus/SubjectDeleteSyllabus/{id?}")]
         public async Task<IActionResult> SubjectDeleteSyllabus(int id)
         {
-            var programmeDetail = await _context.ProgrammeDetails.Where(c => c.Id == id).FirstAsync();           
+            var programmeDetail = await _context.ProgrammeDetails.Where(c => c.Id == id).FirstAsync();
             _context.ProgrammeDetails.Remove(programmeDetail);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
