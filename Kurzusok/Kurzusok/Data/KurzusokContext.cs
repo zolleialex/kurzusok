@@ -222,7 +222,7 @@ namespace Kurzusok.Data
                 entity.HasOne(d => d.Programme)
                     .WithMany(p => p.ProgrammeDetails)
                     .HasForeignKey(d => d.ProgrammeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ProgrammeDetails_Programmes");
             });
 

@@ -16,6 +16,23 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
     })
 })
 
+$('button[data-toggle="delete-syllabus"]').click(function (event) {
+    var url = $(this).data('url');
+    var id = $(this).data('id');
+    $.get(url, { id: id }).done(function (response) {
+        if (response.isvalid) { 
+            
+                window.location.href = "/Syllabus/" + response.programmeid;
+            
+
+        } else {
+            $('#errorAlert').show();
+            $('#errormessage').html(response.responseText);
+        }
+    })
+})
+
+
 
 
 ajaxpostBasic = form => {// Form PostolĂˇsa

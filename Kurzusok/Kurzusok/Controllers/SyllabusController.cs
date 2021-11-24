@@ -183,6 +183,32 @@ namespace Kurzusok.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        // GET: Delete Syllabus 
+        [HttpGet]
+        public async Task<IActionResult> SyllabusDelete(int id)
+        {
+            //Ez még így nem jó kéne egy ellenőrzés
+            var subjectlist = await _context.Semester.Include(a => a.Subjects).ThenInclude(c => c.ProgrammesLink).Where(i => i.Subjects.Any(o =>o.ProgrammesLink.Any(p=>p.ProgrammeId==id))).ToListAsync();
+            if (subjectlist.Count() > 0)
+            {
+                string response = "Nem lehet törölni mert a következő szemeszterek használják ezt a mintatantervet: ";
+                foreach (var item in subjectlist)
+                {
+                    response = response + item.Date + "; ";
+                }
+                return Json(new { isvalid = false, responseText = response });
+
+            }
+
+            var programme = await _context.Programmes.Where(c => c.ProgrammeId == id).Include(d => d.ProgrammeDetails).FirstAsync();
+            _context.Programmes.Remove(programme);
+            await _context.SaveChangesAsync();
+
+            return Json(new { isvalid = true, responseText = "Jó adatok." });
+        }
+
         public async Task<IActionResult> ReadFromWeb(int id, string url, string training)
         {
             var web = new HtmlWeb

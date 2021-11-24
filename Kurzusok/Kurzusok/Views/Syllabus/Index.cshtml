@@ -5,6 +5,7 @@
     string currentSyllabusName = Model.CurrentSyllabus.Name + " " + Model.CurrentSyllabus.Training;
     string training = Model.CurrentSyllabus.Training;
     training = char.ToUpper(training[0]) + training[1..];
+    int id = Model.CurrentSyllabus.ProgrammeId;
 }
 @*Subject delete*@
 <div class="modal fade subject-delete-modal" id="applySubjectDelete" tabindex="-1" role="dialog" aria-labelledby="applySubjectDelete" aria-hidden="true">
@@ -26,10 +27,44 @@
         </div>
     </div>
 </div>
-<div class="container-fluid">
-    <h1>Mintatantervek</h1>
+@*Syllabus delete*@
+<div class="modal fade" id="applySyllabusDelete" tabindex="-1" role="dialog" aria-labelledby="applySemesterDelete" aria-hidden="true" ar>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applySyllabusDeleteLabel">Mintatanterv törlése</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="errorAlert" class="collapse">
+                    <span class="text-danger" id="errormessage"></span>
+                </div>
+                Biztosan törölni szeretnéd ezt a mintatantervet?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                <button class="btn btn-danger" data-toggle="delete-syllabus" data-url="@Url.Action("SyllabusDelete")" data-id="@id">Tanterv törlése</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <h1>@currentSyllabusName tanterv</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-11">
+            <h1>Mintatantervek</h1>
+            <h1>@currentSyllabusName tanterv</h1>
+
+        </div>
+        <div class="col-1">
+            <a class="btn btn-danger" data-toggle="modal" data-target="#applySyllabusDelete">Tanterv törlése</a>
+
+        </div>
+
+    </div>
 
     @*<a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>*@
     @Html.ValidationMessage("ReadError", new { @class = "text-danger" })
@@ -197,7 +232,7 @@
 
             </li>
             <li class="nav-item pb-1 height">
-                <button class=" btn text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="subject-modal" data-target="#addSyllabus" data-url="@Url.Action("CreateSyllabus")" >Új mintatanterv</button>
+                <button class=" btn text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="subject-modal" data-target="#addSyllabus" data-url="@Url.Action("CreateSyllabus")">Új mintatanterv</button>
             </li>
         </ul>
         <ul class="nav nav-sidebar" id="closed">
