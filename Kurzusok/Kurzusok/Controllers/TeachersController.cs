@@ -18,90 +18,79 @@ namespace Kurzusok.Controllers
             _context = context;
         }
 
-        // GET: Teachers
-        public async Task<IActionResult> Index()
+        [Route("Teachers")]
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.Teachers.ToListAsync());
-        }
-
-        // GET: Teachers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            if (!string.IsNullOrEmpty(search))
             {
-                return NotFound();
+                return View(await _context.Teachers.Where(b=>b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).ToListAsync());
             }
-
-            var teachers = await _context.Teachers
-                .FirstOrDefaultAsync(m => m.TeacherId == id);
-            if (teachers == null)
+            else
             {
-                return NotFound();
+                return View(await _context.Teachers.OrderByDescending(b => b.IsWorking).ToListAsync());
             }
-
-            return View(teachers);
         }
 
         // GET: Teachers/Create
-        public IActionResult Create()
+        public IActionResult AddTeacher()
         {
-            return View();
+            Teachers t = new Teachers
+            {
+                IsWorking = true,
+                Hoursperweek = 0
+            };
+            return PartialView("_TeacherModalPartial", t);
         }
 
-        // POST: Teachers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Teachers/AddTeacher
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Hoursperweek")] Teachers teachers)
+        public async Task<IActionResult> AddTeacherPost([Bind("TeacherId,Name,Hoursperweek,Position,IsLeft")] Teachers teacher)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(teachers);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var isThere = await _context.Teachers.Where(b => b.Name == teacher.Name && b.Position == teacher.Position).FirstOrDefaultAsync();
+                if (isThere==null)
+                {
+                    _context.Add(teacher);
+                    await _context.SaveChangesAsync();
+                    return Json(new { isvalid = true });
+                }
+                else
+                {
+                    string responseText = "Ilyen nevű oktató már szerepel az adatbázisban!";
+                    return Json(new { isvalid = false, responseText });
+                }
             }
-            return View(teachers);
+            return Json(new { isvalid = false });
         }
 
-        // GET: Teachers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Teachers/EditTeacher
+        public async Task<IActionResult> EditTeacher(int id)
         {
-            if (id == null)
+            var teacher = await _context.Teachers.Where(b=>b.TeacherId==id).FirstOrDefaultAsync();
+            if (teacher == null)
             {
                 return NotFound();
             }
-
-            var teachers = await _context.Teachers.FindAsync(id);
-            if (teachers == null)
-            {
-                return NotFound();
-            }
-            return View(teachers);
+            return PartialView("_EditTeacherModalPartial", teacher);
         }
 
-        // POST: Teachers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Teachers/EditTeacher
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Hoursperweek")] Teachers teachers)
+        public async Task<IActionResult> EditTeacherPost([Bind("TeacherId,Name,Hoursperweek,Position,IsWorking")] Teachers teacher)
         {
-            if (id != teachers.TeacherId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(teachers);
+                    _context.Update(teacher);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeachersExists(teachers.TeacherId))
+                    if (!TeachersExists(teacher.TeacherId))
                     {
                         return NotFound();
                     }
@@ -110,43 +99,51 @@ namespace Kurzusok.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(new { isvalid = true });
             }
-            return View(teachers);
+            string responseText = "Hiba történt";
+            return Json(new { isvalid = false, responseText });
         }
 
-        // GET: Teachers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Teachers/TeacherLeft
+        public async Task<IActionResult> TeacherLeft(int id)
         {
-            if (id == null)
+            int? teacherid = await _context.Teachers.Where(m => m.TeacherId == id).Select(b => b.TeacherId).FirstOrDefaultAsync(); ;
+            if (teacherid == null)
             {
                 return NotFound();
             }
-
-            var teachers = await _context.Teachers
-                .FirstOrDefaultAsync(m => m.TeacherId == id);
-            if (teachers == null)
-            {
-                return NotFound();
-            }
-
-            return View(teachers);
+            return PartialView("_TeacherLeftModalPartial", teacherid);
         }
 
-        // POST: Teachers/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Teachers/TeacherLeft/
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> TeacherLeftPost(int id)
         {
-            var teachers = await _context.Teachers.FindAsync(id);
-            _context.Teachers.Remove(teachers);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(m => m.TeacherId == id);
+            if (teacher==null)
+            {
+                return Json(new { isvalid = false, responseText ="Nem található az oktató az adatbázisban." });
+            }
+            else
+            {
+                teacher.IsWorking = false;
+                _context.Teachers.Update(teacher);
+                await _context.SaveChangesAsync();
+                return Json(new { isvalid = true});
+            }
+
         }
 
         private bool TeachersExists(int id)
         {
             return _context.Teachers.Any(e => e.TeacherId == id);
+        }
+
+        public IActionResult Search(string search)
+        {
+            return RedirectToAction(nameof(Index), new { search });
         }
     }
 }

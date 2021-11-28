@@ -1675,10 +1675,6 @@ C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_SignInLayout.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
-C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\Create.cshtml.g.cs
-C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\Delete.cshtml.g.cs
-C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\Details.cshtml.g.cs
-C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\Edit.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\Index.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
@@ -4147,3 +4143,7 @@ C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Syllabus\_CreateSubjectToSyllabus.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Administration\RegisterAccount.cshtml.g.cs
 C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Syllabus\_EditSubjectToSyllabus.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Syllabus\_CreateSyllabus.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\_TeacherModalPartial.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\_EditTeacherModalPartial.cshtml.g.cs
+C:\Users\zolle\OneDrive\Dokumentumok\GitHub\kurzusok\Kurzusok\Kurzusok\obj\Debug\netcoreapp3.1\Razor\Views\Teachers\_TeacherLeftModalPartial.cshtml.g.cs

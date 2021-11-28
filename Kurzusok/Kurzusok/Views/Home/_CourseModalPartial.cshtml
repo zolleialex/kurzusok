@@ -83,7 +83,10 @@
                                 <select class="custom-select" name="Teachers">
                                     @foreach (var item in teachers)
                                     {
-                                        <option value="@item.TeacherId">@item.Name</option>
+                                        if (item.IsWorking)
+                                        {
+                                            <option value="@item.TeacherId">@item.Name</option>
+                                        }
                                     }
                                 </select>
                             </div>

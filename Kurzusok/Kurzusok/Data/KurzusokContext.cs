@@ -327,6 +327,14 @@ namespace Kurzusok.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("name");
+
+                entity.Property(e => e.Position)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("position");
+
+                entity.Property(e => e.IsWorking).IsRequired().HasColumnName("is_working");
             });
 
             OnModelCreatingPartial(modelBuilder);

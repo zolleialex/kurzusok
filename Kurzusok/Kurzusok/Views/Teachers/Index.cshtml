@@ -1,50 +1,81 @@
 ﻿@model IEnumerable<Kurzusok.Models.Teachers>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Oktatók";
 }
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<h1>Oktatók</h1>
+<div class="w-85 m-auto">
+    <div class="container-fluid pt-2 overflow-hidden">
+        <h2>Oktatók</h2>
+        <button type="button" class="btn btn-primary" data-toggle="add-teacher-modal" data-target="#addTeacher" id="addteacher" data-url="@Url.Action("AddTeacher")">Oktató felvétele</button>
+        <form asp-controller="Teachers" asp-action="Search" id="searchform" class="float-right">
+            <input type="text" name="search" class="form-control" placeholder="Keresés" />
+        </form>
+        <div class="clearfix"></div>
+    </div>
+    <div id="PlaceHolderHere"></div>
+    <div class="pt-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Név
+                    </th>
+                    <th>
+                        Min. óra/hét
+                    </th>
+                    <th>
+                        Munkakör
+                    </th>
+                    <th>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hoursperweek)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Hoursperweek)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.TeacherId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.TeacherId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.TeacherId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-<div id="container"><p>Hello</p></div>
+                    </th>
+                    <th>
+                        Kezelés
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Hoursperweek)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Position)
+                        </td>
+                        <td>
+                            @if (!item.IsWorking)
+                            {
+                                @Html.Raw("Jelenleg nem az egyetem oktatója")
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-default btn-xs" data-toggle="edit-teacher-modal" data-target="#editTeacher" id="editteacher" data-url="@Url.Action("EditTeacher")" data-id="@item.TeacherId">
+                                <span class="far fa-edit" aria-hidden="true"></span>
+                            </button>
+                            <button class="btn btn-xs" data-toggle="edit-teacher-modal" data-target="#teacherLeft" id="teacherleft" data-url="@Url.Action("TeacherLeft")" data-id="@item.TeacherId">
+                                <span class="fas text-danger fa-ban" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="container"><p>Hello</p></div>
+</div>
+
 <script>
 
 
@@ -80,7 +111,7 @@
             name: 'Count',
             colorByPoint: true,
             data: [{
-                name: '@(Model.First().Name)',
+                name: 'Count1',
                 y: 5
             }, {
                 name: 'Count2',
@@ -96,3 +127,6 @@
     });
 
 </script>
+@section Scripts{
+    <script src="~/js/teacher.js" asp-append-version="true"></script>
+}

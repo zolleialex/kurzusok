@@ -141,7 +141,10 @@
                                             }
                                             else
                                             {
-                                                <option value="@teacher.TeacherId">@teacher.Name</option>
+                                                if (teacher.IsWorking)
+                                                {
+                                                    <option value="@teacher.TeacherId">@teacher.Name</option>
+                                                }
                                             }
                                         }
                                     </select>

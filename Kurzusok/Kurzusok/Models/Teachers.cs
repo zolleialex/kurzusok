@@ -15,6 +15,9 @@ namespace Kurzusok.Models
         //[Required(ErrorMessage = "Az oktató terheltségének megadása kötelező!")]
         //[Range(1, 100, ErrorMessage = "Az oktató terheltsége csak 1 és 100 között egész érték lehet!")]
         public int Hoursperweek { get; set; }
+        [Required(ErrorMessage = "Az oktató munkakörének kiválasztása kötelező!")]
+        public string Position { get; set; }
+        public bool IsWorking { get; set; }
         public ICollection<CoursesTeachers> CoursesLink { get; set; }
     }
 }
