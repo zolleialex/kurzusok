@@ -33,6 +33,7 @@ namespace Kurzusok.Data
         public virtual DbSet<SubjectProgrammes> SubjectProgrammes { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
         public virtual DbSet<Teachers> Teachers { get; set; }
+        public virtual DbSet<Positions> Positions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Hungarian_CI_AS");
@@ -318,23 +319,35 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
-                entity.Property(e => e.Hoursperweek)
-                    .HasColumnName("hoursperweek")
-                    .HasDefaultValueSql("('0')");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("name");
 
-                entity.Property(e => e.Position)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("position");
+                entity.Property(e => e.PositionId).HasColumnName("position_id");
 
                 entity.Property(e => e.IsWorking).IsRequired().HasColumnName("is_working");
+
+                entity.HasOne(e => e.Position).WithMany(e => e.Teachers).HasForeignKey(e => e.PositionId);
+            });
+            modelBuilder.Entity<Positions>(entity =>
+            {
+                entity.HasKey(e => e.PositionId)
+                    .HasName("PK_Positions");
+
+                entity.Property(e => e.PositionId).HasColumnName("position_id");
+
+                entity.Property(e => e.Hoursperweek)
+                    .HasColumnName("hoursperweek")
+                    .HasDefaultValueSql("('0')");
+
+
+                entity.Property(e => e.PositionName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("position_name");              
+
             });
 
             OnModelCreatingPartial(modelBuilder);

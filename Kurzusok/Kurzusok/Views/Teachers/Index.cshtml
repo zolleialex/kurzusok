@@ -26,9 +26,6 @@
                         Név
                     </th>
                     <th>
-                        Min. óra/hét
-                    </th>
-                    <th>
                         Munkakör
                     </th>
                     <th>
@@ -47,10 +44,7 @@
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Hoursperweek)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Position)
+                            @Html.DisplayFor(modelItem => item.Position.PositionName)
                         </td>
                         <td>
                             @if (!item.IsWorking)
@@ -59,12 +53,21 @@
                             }
                         </td>
                         <td>
-                            <button class="btn btn-default btn-xs" data-toggle="edit-teacher-modal" data-target="#editTeacher" id="editteacher" data-url="@Url.Action("EditTeacher")" data-id="@item.TeacherId">
-                                <span class="far fa-edit" aria-hidden="true"></span>
-                            </button>
-                            <button class="btn btn-xs" data-toggle="edit-teacher-modal" data-target="#teacherLeft" id="teacherleft" data-url="@Url.Action("TeacherLeft")" data-id="@item.TeacherId">
-                                <span class="fas text-danger fa-ban" aria-hidden="true"></span>
-                            </button>
+                            @if (!item.IsWorking)
+                            {
+                                <button class="btn btn-xs" data-toggle="edit-teacher-modal" data-target="#teacherBack" id="teacherback" data-url="@Url.Action("TeacherBack")" data-id="@item.TeacherId">
+                                    <span class="fas fa-user-plus" aria-hidden="true"></span>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-xs" data-toggle="edit-teacher-modal" data-target="#editTeacher" id="editteacher" data-url="@Url.Action("EditTeacher")" data-id="@item.TeacherId">
+                                    <span class="far fa-edit" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-xs" data-toggle="edit-teacher-modal" data-target="#teacherLeft" id="teacherleft" data-url="@Url.Action("TeacherLeft")" data-id="@item.TeacherId">
+                                    <span class="fas text-danger fa-ban" aria-hidden="true"></span>
+                                </button>
+                            }
                         </td>
                     </tr>
 

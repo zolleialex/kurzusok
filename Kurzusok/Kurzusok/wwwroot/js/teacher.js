@@ -19,6 +19,9 @@ $('button[data-toggle="edit-teacher-modal"]').click(function (event) {
         else if (url == "/Teachers/TeacherLeft") {
             PlaceHolderElement.find('.teacherleftmodal').modal('show');
         }
+        else if (url == "/Teachers/TeacherBack") {
+            PlaceHolderElement.find('.teacherbackmodal').modal('show');
+        }
 
     })
 })
@@ -37,6 +40,7 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
                     PlaceHolderElement.find('.addteachermodal').modal('hide');
                     PlaceHolderElement.find('.editteachermodal').modal('hide');
                     PlaceHolderElement.find('.teacherleftmodal').modal('hide');
+                    PlaceHolderElement.find('.teacherbackmodal').modal('hide');
                     location.reload();
                 } else {
                     $('#errorAlert').show();

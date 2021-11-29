@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Kurzusok.Data;
 using Kurzusok.Models;
+using System;
 
 namespace Kurzusok.Controllers
 {
@@ -23,11 +24,11 @@ namespace Kurzusok.Controllers
         {
             if (!string.IsNullOrEmpty(search))
             {
-                return View(await _context.Teachers.Where(b=>b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).ToListAsync());
+                return View(await _context.Teachers.Where(b=>b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).Include(b => b.Position).ToListAsync());
             }
             else
             {
-                return View(await _context.Teachers.OrderByDescending(b => b.IsWorking).ToListAsync());
+                return View(await _context.Teachers.OrderByDescending(b => b.IsWorking).Include(b=>b.Position).ToListAsync());
             }
         }
 
@@ -37,7 +38,7 @@ namespace Kurzusok.Controllers
             Teachers t = new Teachers
             {
                 IsWorking = true,
-                Hoursperweek = 0
+                Position = new Positions()
             };
             return PartialView("_TeacherModalPartial", t);
         }
@@ -45,7 +46,7 @@ namespace Kurzusok.Controllers
         // POST: Teachers/AddTeacher
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddTeacherPost([Bind("TeacherId,Name,Hoursperweek,Position,IsLeft")] Teachers teacher)
+        public async Task<IActionResult> AddTeacherPost([Bind("TeacherId,Name,IsWorking,PositionId")] Teachers teacher)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +69,7 @@ namespace Kurzusok.Controllers
         // GET: Teachers/EditTeacher
         public async Task<IActionResult> EditTeacher(int id)
         {
-            var teacher = await _context.Teachers.Where(b=>b.TeacherId==id).FirstOrDefaultAsync();
+            var teacher = await _context.Teachers.Where(b=>b.TeacherId==id).Include(b=>b.Position).FirstOrDefaultAsync();
             if (teacher == null)
             {
                 return NotFound();
@@ -79,7 +80,7 @@ namespace Kurzusok.Controllers
         // POST: Teachers/EditTeacher
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTeacherPost([Bind("TeacherId,Name,Hoursperweek,Position,IsWorking")] Teachers teacher)
+        public async Task<IActionResult> EditTeacherPost([Bind("TeacherId,Name,IsWorking,PositionId")] Teachers teacher)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +136,35 @@ namespace Kurzusok.Controllers
             }
 
         }
+        public async Task<IActionResult> TeacherBack(int id)
+        {
+            int? teacherid = await _context.Teachers.Where(m => m.TeacherId == id).Select(b => b.TeacherId).FirstOrDefaultAsync(); ;
+            if (teacherid == null)
+            {
+                return NotFound();
+            }
+            return PartialView("_TeacherBackModalPartial", teacherid);
+        }
 
+        // POST: Teachers/TeacherLeft/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TeacherBackPost(int id)
+        {
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(m => m.TeacherId == id);
+            if (teacher == null)
+            {
+                return Json(new { isvalid = false, responseText = "Nem található az oktató az adatbázisban." });
+            }
+            else
+            {
+                teacher.IsWorking = true;
+                _context.Teachers.Update(teacher);
+                await _context.SaveChangesAsync();
+                return Json(new { isvalid = true });
+            }
+
+        }
         private bool TeachersExists(int id)
         {
             return _context.Teachers.Any(e => e.TeacherId == id);

@@ -13,6 +13,7 @@
                     </div>
                     <div class="form-group">
                         <input type="hidden" asp-for="TeacherId" />
+                        <input type="hidden" asp-for="IsWorking" />
                     </div>
                     <div class="form-group">
                         <label asp-for="Name">Név</label>
@@ -20,13 +21,13 @@
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Position" class="control-label">Munkakör</label>
-                        <select class="custom-select" asp-for="Position">
-                            <option value="Egyetemi, főiskolai tanár">Egyetemi, főiskolai tanár</option>
-                            <option value="Egyetemi, főiskolai docens">Egyetemi, főiskolai docens</option>
-                            <option value="Adjunktus, tanársegéd, mesteroktató">Adjunktus, tanársegéd, mesteroktató</option>
-                            <option value="Tanszéki mérnök">Tanszéki mérnök</option>
-                            <option value="Tanári munkakörök">Tanári munkakörök</option>
+                        <label asp-for="PositionId" class="control-label">Munkakör</label>
+                        <select class="custom-select" asp-for="PositionId">
+                            <option value="1">Egyetemi, főiskolai tanár</option>
+                            <option value="2">Egyetemi, főiskolai docens</option>
+                            <option value="3">Adjunktus, tanársegéd, mesteroktató</option>
+                            <option value="4">Tanszéki mérnök</option>
+                            <option value="5">Tanári munkakörök</option>
                         </select>
                     </div>
                 </div>
