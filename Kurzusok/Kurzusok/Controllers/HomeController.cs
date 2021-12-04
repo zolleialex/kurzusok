@@ -141,16 +141,16 @@ namespace Kurzusok.Controllers
             foreach (var item in _homeViewModel.CurrentSemester.Subjects)
             {
                 List<string> typeCheck = new List<string>();
-                if (item.EHours != null)
+                if (item.EHours != null && item.EHours != 0)
                 {
                     typeCheck.Add("Elmélet");
                 }
-                if (item.GyHours != null)
+                if (item.GyHours != null && item.GyHours != 0)
                 {
                     typeCheck.Add("Gyakorlat");
 
                 }
-                if (item.LHours != null)
+                if (item.LHours != null && item.LHours != 0)
                 {
                     typeCheck.Add("Labor");
                 }
@@ -177,19 +177,7 @@ namespace Kurzusok.Controllers
                 allTypeCheckForSubjects.Add(typeCheck);
             }
             ViewBag.allTypeCheckForSubjects = allTypeCheckForSubjects;
-            foreach (var item in allTypeCheckForSubjects)
-            {
-                Console.WriteLine("A tárgyhoz még fel kell venni ezeket a kurzusokat: ");
-                if (item != null)
-                {
-                    foreach (var a in item)
-                    {
-                        Console.WriteLine(a + "; ");
-                    }
-
-                }
-
-            }
+           
             return View(_homeViewModel);
         }
 

@@ -61,12 +61,17 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
         $('#errorLoad').hide();
         let formdata = new FormData(form);
         let sumLoads = 0;
+        let isCourse = false;
         for (var value of formdata.entries()) {
             if (value[0] == "LoadList") {
+                isCourse = true;
                 sumLoads = sumLoads + parseInt(value[1]);                
             }
         }
-        let difference = 100 - sumLoads;
+        let difference = 0;
+        if (isCourse) {
+             difference = 100 - sumLoads;
+        }
         if (difference != 0) {            
             $('#errorLoad').show();
             $('#errorLoadmessage').html("A tanárok össz terhelése nem 100%!");
@@ -88,7 +93,7 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
                                 PlaceHolderElement.find('.coursemodal').modal('show');
                             })
                         } else {// Vagy az oldal frissĂ­tĂ©se
-                            // location.reload();
+                            location.reload();
                         }
                     } else {
                         $('#errorAlert').show();
