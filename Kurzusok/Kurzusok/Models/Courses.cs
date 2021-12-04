@@ -17,8 +17,6 @@ namespace Kurzusok.Models
         public string Comment { get; set; }
         public bool NeptunOk { get; set; }
         public string Software { get; set; }
-        [Range(0, 100, ErrorMessage = "A kurzus óraszáma csak 0 és 100 között egész érték lehet!")]
-        public int? Hours { get; set; }
         [Required(ErrorMessage = "Az kurzus kódjának megadása kötelező!")]
         [Range(0, 100, ErrorMessage = "A kurzus kódja 0 és 100 között egész érték lehet!")]
         public int CourseCode { get; set; }

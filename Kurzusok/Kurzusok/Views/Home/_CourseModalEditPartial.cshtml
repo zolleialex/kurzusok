@@ -108,14 +108,6 @@
                             }
                         </select>
                     </div>
-                    @if (training == "Nappali")
-                    {
-                        <div class="form-group">
-                            <label asp-for="Hours">Óraszám</label>
-                            <input asp-for="Hours" class="form-control" min="0" />
-                            <span asp-validation-for="Hours" class="text-danger"></span>
-                        </div>
-                    }
                     <div class="form-group">
                         <label asp-for="CourseCode">Kurzus kód</label>
                         <input asp-for="CourseCode" class="form-control" min="0" required />

@@ -1,13 +1,9 @@
-﻿@model IEnumerable<Kurzusok.Models.Teachers>
+﻿@model Kurzusok.ViewModels.TeacherViewModel
 
 @{
     ViewData["Title"] = "Oktatók";
 }
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div class="w-85 m-auto">
     <div class="container-fluid pt-2 overflow-hidden">
         <h2>Oktatók</h2>
@@ -29,6 +25,9 @@
                         Munkakör
                     </th>
                     <th>
+                        Utolsó két félév össz óraszáma
+                    </th>
+                    <th>
 
                     </th>
                     <th>
@@ -37,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.TeachersList)
                 {
                     <tr>
                         <td>
@@ -47,9 +46,25 @@
                             @Html.DisplayFor(modelItem => item.Position.PositionName)
                         </td>
                         <td>
+                            @{double? hours = 0;}
+                            @foreach (var hour in item.CoursesLink)
+                            {
+                                hours += hour.HoursPerSemester;
+                            }
+                            @if (hours == null)
+                            {
+                                @Html.Raw('0')
+                            }
+                            else
+                            {
+                                @hours
+                            }
+
+                        </td>
+                        <td>
                             @if (!item.IsWorking)
                             {
-                                @Html.Raw("Jelenleg nem az egyetem oktatója")
+                                @Html.Raw("Nem az egyetem oktatója")
                             }
                         </td>
                         <td>
@@ -71,63 +86,51 @@
                         </td>
                     </tr>
 
-                }
+                                }
             </tbody>
         </table>
     </div>
+    @for (int i = 1; i < Model.Positions.Count() + 1; i++)
+    {
+        @Html.Raw("<div id='chart_div" + i + "' class='container' style='width: 550px; height: 400px; margin: 0 auto'></div>")
+    }
 
-    <div id="container"><p>Hello</p></div>
 </div>
 
-<script>
+<script charset="utf-8">
 
+    google.charts.load('current', { packages: ['corechart'] });
+    @{foreach (var item in Model.Positions)
+        {
+            @Html.Raw("google.charts.setOnLoadCallback(function() {drawChart(" + Json.Serialize(item.PositionId) + ");});")
+        }
+     }
+    function drawChart(positionId) {
+            $.ajax({
+            type: "POST",
+                url: "@Url.Action("NextPosition")",
+                data: { posId: positionId },
+                success: function (dat) {
+                    var currentName = dat.currentposName;
+                    var currentWeek = dat.currentposWeek;
+                    let data = google.visualization.arrayToDataTable([
+                        [currentName, 'Terhelés', { role: 'style' }],
+                        ['Copper', 8.94, '#b87333'],
+                        ['Silver', 10.49, 'silver'],
+                        ['Gold', 19.30, 'gold'],
+                        ['Platinum', 21.45, 'color: #e5e4e2']
+                    ]);
+                    let options = { title: currentName, legend: { position: 'none' } };
 
-    Highcharts.chart('container', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: 'Browser market shares in January, 2018'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-            point: {
-                valueSuffix: '%'
-            }
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
-            }
-        },
-        series: [{
-            name: 'Count',
-            colorByPoint: true,
-            data: [{
-                name: 'Count1',
-                y: 5
-            }, {
-                name: 'Count2',
-                y: 4
-            }, {
-                name: 'Count3',
-                y: 1
-            }, {
-                name: 'Count4',
-                y: 1.58
-            }]
-        }]
-    });
+                    // Instantiate and draw the chart.
+                    let toDiv = 'chart_div' + positionId;
+                    let chart = new google.visualization.ColumnChart(document.getElementById(toDiv));
+                    chart.draw(data, options);
+            },
+            });
+
+    }
+
 
 </script>
 @section Scripts{

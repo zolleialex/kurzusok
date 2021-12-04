@@ -307,12 +307,6 @@
                                 <th scope="col">
                                     Kurzus kód
                                 </th>
-                                @if (training == "Nappali")
-                                {
-                                    <th scope="col">
-                                        Óraszám
-                                    </th>
-                                }
                                 <th scope="col">
                                     Terem, szoftver igény
                                 </th>
@@ -356,12 +350,6 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => course.CourseCode)
                                     </td>
-                                    @if (training == "Nappali")
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => course.Hours)
-                                        </td>
-                                    }
                                     <td>
                                         @if (course.Classroom != null)
                                         {
@@ -392,10 +380,6 @@
                                     }
                                 </tr>
                                 <tr>
-                                    @if (User.IsInRole("Admin") && training == "Nappali")
-                                    {
-                                        colthespan = 7;
-                                    }
                                     <td colspan="@colthespan" class="text-left">
                                         @{displayComment = course.Comment;
                                             if (displayComment != null)
