@@ -28,21 +28,17 @@ namespace Kurzusok.Controllers
         [Route("Teachers")]
         public async Task<IActionResult> Index(string search)
         {
-            var lastTwoSemester = await _context.Semester.OrderByDescending(b => b.Id).Take(2).ToListAsync();
-            _teacherViewModel.LastSemesterWeek = lastTwoSemester.Where(b => b.Id == lastTwoSemester.Max(b => b.Id)).Select(b => b.Weeks).FirstOrDefault();
-            _teacherViewModel.Positions = await _context.Positions.ToListAsync();
-            for (int i = 0; i < lastTwoSemester.Count(); i++)
-            {
-                _teacherViewModel.LastTwoSemesterName[i] = lastTwoSemester[i].Date;
-            }         
+            _teacherViewModel.LastTwoSemester = await _context.Semester.OrderByDescending(b => b.Id).Take(2).ToListAsync();
+            _teacherViewModel.LastSemesterWeek = _teacherViewModel.LastTwoSemester.Where(b => b.Id == _teacherViewModel.LastTwoSemester.Max(b => b.Id)).Select(b => b.Weeks).FirstOrDefault();
+            _teacherViewModel.Positions = await _context.Positions.ToListAsync();        
             List<Teachers> teachers= new List<Teachers>();
             if (!string.IsNullOrEmpty(search))
             {
-                teachers = await _context.Teachers.Where(b => b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).Include(b => b.Position).Include(b => b.CoursesLink).ToListAsync();
+                teachers = await _context.Teachers.Where(b => b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).Include(b => b.Position).Include(b => b.CoursesLink).ThenInclude(c=>c.Course).ThenInclude(b=>b.Subject).ThenInclude(k=>k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v=>v.ProgrammesLink).ThenInclude(i=>i.Programme).ToListAsync();
             }
             else
             {
-                teachers = await _context.Teachers.OrderByDescending(b => b.IsWorking).Include(b => b.Position).Include(b => b.CoursesLink).ToListAsync();
+                teachers = await _context.Teachers.OrderByDescending(b => b.IsWorking).Include(b => b.Position).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(k => k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v => v.ProgrammesLink).ThenInclude(i => i.Programme).ToListAsync();
             }
             _teacherViewModel.TeachersList = teachers;
             return View(_teacherViewModel);

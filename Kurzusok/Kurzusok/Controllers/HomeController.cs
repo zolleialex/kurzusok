@@ -267,69 +267,16 @@ namespace Kurzusok.Controllers
             if (ModelState.IsValid && Teachers.Count() > 0 && Teachers.Count() == LoadList.Count())
             {
                 List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
-                if (course.CourseType == "Elmélet" || course.CourseType == "Gyakorlat" || course.CourseType == "Labor")
+                for (int i = 0; i < Teachers.Count(); i++)
                 {
-                    int lastId = _context.Semester.Last().Id;
-                    if (int.Parse(HttpContext.Session.GetString("SemesterId"))==lastId)
+                    CoursesTeachers CourseTeacher = new CoursesTeachers()
                     {
-                        int? subjectHour;
-                        string SessionTraining = HttpContext.Session.GetString("Training");
-                        if (SessionTraining == "Nappali")
-                        {
-                            if (course.CourseType == "Elmélet")
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.EHours).FirstOrDefaultAsync();
-                            }
-                            else if (course.CourseType == "Gyakorlat")
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.GyHours).FirstOrDefaultAsync();
-                            }
-                            else
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.LHours).FirstOrDefaultAsync();
-                            }
-                            int semesterweek = await _context.Semester.Where(b => b.Id == lastId).Select(b => b.Weeks).FirstOrDefaultAsync();
-                            for (int i = 0; i < Teachers.Count(); i++)
-                            {
-                                CoursesTeachers CourseTeacher = new CoursesTeachers()
-                                {
-                                    TeacherId = Teachers[i],
-                                    Loads = LoadList[i],
-                                    HoursPerSemester = LoadList[i] / 100 * semesterweek * (int)subjectHour
-                                };
-                                CourseTeachers.Add(CourseTeacher);
-                            }
-                        }
-                        else
-                        {
-                            subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.CorrespondHours).FirstOrDefaultAsync();
-                            int semesterweek = await _context.Semester.Where(b => b.Id == int.Parse(HttpContext.Session.GetString("SemesterId"))).Select(b => b.Weeks).FirstOrDefaultAsync();
-                            for (int i = 0; i < Teachers.Count(); i++)
-                            {
-                                CoursesTeachers CourseTeacher = new CoursesTeachers()
-                                {
-                                    TeacherId = Teachers[i],
-                                    Loads = LoadList[i],
-                                    HoursPerSemester = LoadList[i] / 100 * (int)subjectHour
-                                };
-                                CourseTeachers.Add(CourseTeacher);
-                            }
-                        }
-                    }
-                    
+                        TeacherId = Teachers[i],
+                        Loads = LoadList[i]
+                    };
+                    CourseTeachers.Add(CourseTeacher);
                 }
-                else
-                {
-                    for (int i = 0; i < Teachers.Count(); i++)
-                    {
-                        CoursesTeachers CourseTeacher = new CoursesTeachers()
-                        {
-                            TeacherId = Teachers[i],
-                            Loads = LoadList[i]
-                        };
-                        CourseTeachers.Add(CourseTeacher);
-                    }
-                }
+
                 course.TeachersLink = CourseTeachers;
                 if (!string.IsNullOrEmpty(course.Comment))
                 {
@@ -383,8 +330,8 @@ namespace Kurzusok.Controllers
                     CopySemesterStr += --CopySemesterNumbers[i] + "/";
                 }
             }
-            var checkSem= await _context.Semester.Where(c => c.Date == CopySemesterStr).FirstOrDefaultAsync();
-            if (checkSem!=null)
+            var checkSem = await _context.Semester.Where(c => c.Date == CopySemesterStr).FirstOrDefaultAsync();
+            if (checkSem != null)
             {
                 var CopySemesterObject = await _context.Semester.Where(c => c.Date == CopySemesterStr).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
                 Semester newSemester = new Semester
@@ -432,8 +379,7 @@ namespace Kurzusok.Controllers
                                     TeacherId = copyCoursesTeachers.TeacherId,
                                     Course = newCourse,
                                     CourseId = newCourse.CourseId,
-                                    Loads = copyCoursesTeachers.Loads,
-                                    HoursPerSemester = copyCoursesTeachers.HoursPerSemester
+                                    Loads = copyCoursesTeachers.Loads
                                 };
                                 newCoursesTeachersList.Add(newCoursesTeachers);
                             }
@@ -462,7 +408,7 @@ namespace Kurzusok.Controllers
                 _context.Add(newSemester);
                 await _context.SaveChangesAsync();
                 HttpContext.Session.SetString("SemesterId", "");
-            }      
+            }
             return RedirectToAction(nameof(Index));
 
         }
@@ -616,67 +562,14 @@ namespace Kurzusok.Controllers
                 }
 
                 List<CoursesTeachers> CourseTeachers = new List<CoursesTeachers>();
-                if (course.CourseType == "Elmélet" || course.CourseType == "Gyakorlat" || course.CourseType == "Labor")
+                for (int i = 0; i < Teachers.Count(); i++)
                 {
-                    int lastId = _context.Semester.Last().Id;
-                    if (int.Parse(HttpContext.Session.GetString("SemesterId")) == lastId)
+                    CoursesTeachers CourseTeacher = new CoursesTeachers()
                     {
-                        int? subjectHour;
-                        string SessionTraining = HttpContext.Session.GetString("Training");
-                        if (SessionTraining == "Nappali")
-                        {
-                            if (course.CourseType == "Elmélet")
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.EHours).FirstOrDefaultAsync();
-                            }
-                            else if (course.CourseType == "Gyakorlat")
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.GyHours).FirstOrDefaultAsync();
-                            }
-                            else
-                            {
-                                subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.LHours).FirstOrDefaultAsync();
-                            }
-                            int semesterweek = await _context.Semester.Where(b => b.Id == lastId).Select(b => b.Weeks).FirstOrDefaultAsync();
-                            for (int i = 0; i < Teachers.Count(); i++)
-                            {
-                                CoursesTeachers CourseTeacher = new CoursesTeachers()
-                                {
-                                    TeacherId = Teachers[i],
-                                    Loads = LoadList[i],
-                                    HoursPerSemester = LoadList[i] / 100 * semesterweek * (int)subjectHour
-                                };
-                                CourseTeachers.Add(CourseTeacher);
-                            }
-                        }
-                        else
-                        {
-                            subjectHour = await _context.Subjects.Where(b => b.SubjectId == course.SubjectId).Select(b => b.CorrespondHours).FirstOrDefaultAsync();
-                            int semesterweek = await _context.Semester.Where(b => b.Id == int.Parse(HttpContext.Session.GetString("SemesterId"))).Select(b => b.Weeks).FirstOrDefaultAsync();
-                            for (int i = 0; i < Teachers.Count(); i++)
-                            {
-                                CoursesTeachers CourseTeacher = new CoursesTeachers()
-                                {
-                                    TeacherId = Teachers[i],
-                                    Loads = LoadList[i],
-                                    HoursPerSemester = LoadList[i] / 100 * (int)subjectHour
-                                };
-                                CourseTeachers.Add(CourseTeacher);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < Teachers.Count(); i++)
-                    {
-                        CoursesTeachers CourseTeacher = new CoursesTeachers()
-                        {
-                            TeacherId = Teachers[i],
-                            Loads = LoadList[i]
-                        };
-                        CourseTeachers.Add(CourseTeacher);
-                    }
+                        TeacherId = Teachers[i],
+                        Loads = LoadList[i]
+                    };
+                    CourseTeachers.Add(CourseTeacher);
                 }
                 course.TeachersLink = CourseTeachers;
                 try

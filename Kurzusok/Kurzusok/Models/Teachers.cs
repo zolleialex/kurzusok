@@ -15,10 +15,6 @@ namespace Kurzusok.Models
         public string Name { get; set; }
         public int PositionId { get; set; }
         public bool IsWorking { get; set; }
-        [NotMapped]
-        public int[] LastTwoSemHours { get; set; }
-        [NotMapped]
-        public int[] LastSemHours { get; set; }
         public Positions Position { get; set; }
         public ICollection<CoursesTeachers> CoursesLink { get; set; }
     }

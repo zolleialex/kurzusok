@@ -1,4 +1,5 @@
 ﻿@model Kurzusok.ViewModels.TeacherViewModel
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Oktatók";
@@ -46,10 +47,51 @@
                             @Html.DisplayFor(modelItem => item.Position.PositionName)
                         </td>
                         <td>
-                            @{double? hours = 0;}
-                            @foreach (var hour in item.CoursesLink)
+                            @{double? hours = 0;
+                                int? subjecthours = 0;}
+                            @foreach (var courselink in item.CoursesLink)
                             {
-                                hours += hour.HoursPerSemester;
+                                if ((courselink.Course.Subject.Semester.Id == Model.LastTwoSemester[0].Id || courselink.Course.Subject.Semester.Id == Model.LastTwoSemester[1].Id) && (courselink.Course.CourseType == "Gyakorlat" || courselink.Course.CourseType == "Elmélet" || courselink.Course.CourseType == "Labor"))
+                                {
+                                    foreach (var programme in courselink.Course.Subject.ProgrammesLink)
+                                    {
+                                        int semWeek = 0;
+                                        if (courselink.Course.Subject.Semester.Id == Model.LastTwoSemester[0].Id)
+                                        {
+                                            semWeek = Model.LastTwoSemester[0].Weeks;
+                                        }
+                                        else
+                                        {
+                                            semWeek = Model.LastTwoSemester[1].Weeks;
+                                        }
+                                        if (programme.Programme.Training == "nappali")
+                                        {
+                                            Console.WriteLine("ITT LEGYÉL");
+                                            if (courselink.Course.CourseType == "Gyakorlat")
+                                            {
+                                                subjecthours = courselink.Course.Subject.GyHours;
+                                            }
+                                            else if (courselink.Course.CourseType == "Elmélet")
+                                            {
+                                                subjecthours = courselink.Course.Subject.EHours;
+                                            }
+                                            else
+                                            {
+                                                subjecthours = courselink.Course.Subject.LHours;
+                                            }
+
+                                            hours += Convert.ToDouble(courselink.Loads) / 100 * semWeek * (int)subjecthours;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("MIÉRT ITT VAGY TE BUZI");
+                                            subjecthours = courselink.Course.Subject.CorrespondHours;
+                                            Console.WriteLine("Load: "+ courselink.Loads+"hour: "+ subjecthours + " Hányados: "+ courselink.Loads / 100 * (int)subjecthours);
+                                            hours += Convert.ToDouble(courselink.Loads) / 100 * (int)subjecthours;
+                                        }
+                                    }
+
+                                }
                             }
                             @if (hours == null)
                             {
@@ -86,7 +128,7 @@
                         </td>
                     </tr>
 
-                                }
+                }
             </tbody>
         </table>
     </div>

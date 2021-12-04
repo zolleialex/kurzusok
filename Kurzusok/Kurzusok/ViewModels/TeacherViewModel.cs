@@ -10,7 +10,7 @@ namespace Kurzusok.ViewModels
 
         public int LastSemesterWeek;
 
-        public string[] LastTwoSemesterName = new string[2];
+        public IList<Semester> LastTwoSemester { get; set; } 
 
         public IList<Positions> Positions { get; set; }
     }

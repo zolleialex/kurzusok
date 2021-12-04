@@ -183,8 +183,6 @@ namespace Kurzusok.Data
 
                 entity.Property(e => e.TeacherId).HasColumnName("teacher_id");
 
-                entity.Property(e => e.HoursPerSemester).HasColumnName("hourspersemester");
-
                 entity.HasOne(e => e.Course).WithMany(e => e.TeachersLink).HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.Cascade);
             });
 
