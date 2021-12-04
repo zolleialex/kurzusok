@@ -137,6 +137,59 @@ namespace Kurzusok.Controllers
             }
             HttpContext.Session.SetString("Training", training);
             _homeViewModel.CurrentSemester = currentSemester;
+            List<List<string>> allTypeCheckForSubjects = new List<List<string>>();
+            foreach (var item in _homeViewModel.CurrentSemester.Subjects)
+            {
+                List<string> typeCheck = new List<string>();
+                if (item.EHours != null)
+                {
+                    typeCheck.Add("Elmélet");
+                }
+                if (item.GyHours != null)
+                {
+                    typeCheck.Add("Gyakorlat");
+
+                }
+                if (item.LHours != null)
+                {
+                    typeCheck.Add("Labor");
+                }
+                foreach (var i in item.Courses)
+                {
+                    if (i.CourseType == "E-learning" || i.CourseType == "Egyéni felkészülés" || i.CourseType == "Csak vizsga")
+                    {
+                        typeCheck = null;
+                    }
+                    else if (i.CourseType == "Elmélet")
+                    {
+                        typeCheck.RemoveAll(a => a == "Elmélet");
+                    }
+                    else if (i.CourseType == "Gyakorlat")
+                    {
+                        typeCheck.RemoveAll(a => a == "Gyakorlat");
+                    }
+                    else if (i.CourseType == "Labor")
+                    {
+                        typeCheck.RemoveAll(a => a == "Labor");
+                    }
+                }
+
+                allTypeCheckForSubjects.Add(typeCheck);
+            }
+            ViewBag.allTypeCheckForSubjects = allTypeCheckForSubjects;
+            foreach (var item in allTypeCheckForSubjects)
+            {
+                Console.WriteLine("A tárgyhoz még fel kell venni ezeket a kurzusokat: ");
+                if (item != null)
+                {
+                    foreach (var a in item)
+                    {
+                        Console.WriteLine(a + "; ");
+                    }
+
+                }
+
+            }
             return View(_homeViewModel);
         }
 
@@ -333,7 +386,7 @@ namespace Kurzusok.Controllers
             var checkSem= await _context.Semester.Where(c => c.Date == CopySemesterStr).FirstOrDefaultAsync();
             if (checkSem!=null)
             {
-                var CopySemesterObject = await _context.Semester.Where(c => c.Date == CopySemesterStr).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).ThenInclude(b => b.Teacher).ThenInclude(b => b.Position).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).ThenInclude(k => k.Programme).ThenInclude(b => b.ProgrammeDetails).FirstOrDefaultAsync();
+                var CopySemesterObject = await _context.Semester.Where(c => c.Date == CopySemesterStr).Include(b => b.Subjects).ThenInclude(k => k.Courses).ThenInclude(b => b.TeachersLink).Include(b => b.Subjects).ThenInclude(k => k.ProgrammesLink).FirstOrDefaultAsync();
                 Semester newSemester = new Semester
                 {
                     Date = NewSemesterStr,
