@@ -33,6 +33,7 @@
                     </div>
 
                     <div class="form-group">
+
                         <label asp-for="CourseType">Kurzus típus</label>
                         <select class="custom-select" name="CourseType">
                             @if (Model.CourseType == "Elmélet")
@@ -41,6 +42,8 @@
                                 @if (training == "Nappali")
                                 {
                                     <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
                                 }
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
@@ -50,6 +53,16 @@
                             {
                                 <option value="Elmélet">Elmélet</option>
                                 <option value="Gyakorlat" selected>Gyakorlat</option>
+                                <option value="Labor">Labor</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "Labor")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat">Gyakorlat</option>
+                                <option value="Labor" selected>Labor</option>
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
                                 <option value="E-learning">E-learning</option>
@@ -60,6 +73,8 @@
                                 @if (training == "Nappali")
                                 {
                                     <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
                                 }
                                 <option value="Csak Vizsga" selected>Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
@@ -71,6 +86,8 @@
                                 @if (training == "Nappali")
                                 {
                                     <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
                                 }
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés" selected>Egyéni felkészülés</option>
@@ -82,6 +99,8 @@
                                 @if (training == "Nappali")
                                 {
                                     <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
                                 }
                                 <option value="Csak Vizsga">Csak Vizsga</option>
                                 <option value="Egyéni felkészülés">Egyéni felkészülés</option>
@@ -124,7 +143,9 @@
                         <label>Törli az összes kommentet?</label>
                         <input type="checkbox" id="DeleteComment" name="DeleteComments" value="1" />
                     </div>
-
+                    <div id="errorLoad" class="collapse">
+                        <span class="text-danger" id="errorLoadmessage"></span>
+                    </div>
                     @foreach (var item in Model.TeachersLink)
                     {
                         <div class="teacherSelect">
@@ -150,7 +171,7 @@
                                     </select>
                                 </div>
                                 <div class="col-5">
-                                    <label>Terhelés</label>
+                                    <label>Terhelés (%)</label>
                                     @*<input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />*@
                                     <input asp-for="@item.Loads" class="form-control" name="LoadList" value="@item.Loads" min="1" max="100" required />
                                     <span asp-validation-for="@item.Loads" class="text-danger"></span>

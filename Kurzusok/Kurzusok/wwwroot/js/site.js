@@ -1,7 +1,7 @@
-// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-const PlaceHolderElement = $('#PlaceHolderHere');//GET függvények meghívása
+const PlaceHolderElement = $('#PlaceHolderHere');//GET fĂĽggvĂ©nyek meghĂ­vĂˇsa
 var SubmitValue = "asd";
 $('button[data-toggle="subject-modal"]').click(function (event) {
     var url = $(this).data('url');
@@ -23,16 +23,16 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         }
     })
 })
-PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {// Oldal újratöltése 
+PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {// Oldal ĂşjratĂ¶ltĂ©se 
     location.reload();
 })
 
-function copyDivContent() { //div másolása formhoz
+function copyDivContent() { //div mĂˇsolĂˇsa formhoz
     var $el = $('.copyThisDiv:first').clone();
     $('#toCopy').append($el);
 }
 
-function addTeacherSelect() { //div másolása formhoz
+function addTeacherSelect() { //div mĂˇsolĂˇsa formhoz
     var $el = $('.TeacherClass:first').clone();
     $('#moreTeacher').append($el);
 }
@@ -43,10 +43,10 @@ PlaceHolderElement.on('click', "#saveandnext", function (event) {
     SubmitValue = "saveandnext";
 })
 
-PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {//Formból eltávolítás
+PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {//FormbĂłl eltĂˇvolĂ­tĂˇs
     event.preventDefault();
     var copydivCount = $("div[class*='copyThisDiv']").length;
-    if (copydivCount > 1) { // Kivéve ha már csak egy van, hülyebiztosítás
+    if (copydivCount > 1) { // KivĂ©ve ha mĂˇr csak egy van, hĂĽlyebiztosĂ­tĂˇs
         var _t = $(this);
         _t.parents('.copyThisDiv').remove();
     }
@@ -55,42 +55,58 @@ PlaceHolderElement.on('click', 'button[id="hidedivbutton"]', function (event) {/
 
 
 
-ajaxpostBasic = form => {// Form Postolása
+ajaxpostBasic = form => {// Form PostolĂˇsa
     try {
-        $.ajax({
-            type: 'POST',
-            url: form.action,
-            data: new FormData(form),
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                if (response.isvalid) {// Ha a sikeresen véghezment minden                
-                    PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltüntetése
-                    if (response.createCourse || SubmitValue == "saveandnext") { // Új kurzus felvételre irányítás
-                        $.get("/Home/CreateCourse", { id: response.subjectid }).done(function (data) {
-                            PlaceHolderElement.find('.coursemodal').modal('hide');
-                            PlaceHolderElement.html(data);
-                            PlaceHolderElement.find('.coursemodal').modal('show');
-                        })
-                    } else {// Vagy az oldal frissítése
-                        location.reload();
-                    }
-                } else {
-                    $('#errorAlert').show();
-                    $('#errormessage').html(response.responseText);
-                }
+        $('#errorAlert').hide();
+        $('#errorLoad').hide();
+        let formdata = new FormData(form);
+        let sumLoads = 0;
+        for (var value of formdata.entries()) {
+            if (value[0] == "LoadList") {
+                sumLoads = sumLoads + parseInt(value[1]);                
             }
-        })
+        }
+        let difference = 100 - sumLoads;
+        if (difference != 0) {            
+            $('#errorLoad').show();
+            $('#errorLoadmessage').html("A tanárok össz terhelése nem 100%!");
+        } else {
+
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: new FormData(form),
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.isvalid) {// Ha a sikeresen vĂ©ghezment minden                
+                        PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltĂĽntetĂ©se
+                        if (response.createCourse || SubmitValue == "saveandnext") { // Ăšj kurzus felvĂ©telre irĂˇnyĂ­tĂˇs
+                            $.get("/Home/CreateCourse", { id: response.subjectid }).done(function (data) {
+                                PlaceHolderElement.find('.coursemodal').modal('hide');
+                                PlaceHolderElement.html(data);
+                                PlaceHolderElement.find('.coursemodal').modal('show');
+                            })
+                        } else {// Vagy az oldal frissĂ­tĂ©se
+                            // location.reload();
+                        }
+                    } else {
+                        $('#errorAlert').show();
+                        $('#errormessage').html(response.responseText);
+                    }
+                }
+            })
+        }
     } catch (e) {
         $('#errorAlert').show();
-        $('#errormessage').html('Valami hiba t�rt�nt a k�r�s feldolgoz�sa k�zben!');
+        $('#errormessage').html('Valami hiba történt a kérés feldolgozása közben!');
         console.log(e);
     }
-    //A default event megelőzése miatt
+    //A default event megelĹ‘zĂ©se miatt
     return false;
 }
 
-window.addEventListener("load", function () {// Táblázat nézet megtartása Local Storage-val.
+window.addEventListener("load", function () {// TĂˇblĂˇzat nĂ©zet megtartĂˇsa Local Storage-val.
     if (screen.width > 1500 || $(window).width() > 1500) {
         let checkBox = document.getElementById("tableView");
         let chtblId = localStorage.getItem("tableViewStore");
@@ -194,7 +210,7 @@ $('.no-collapsable').on('click', function (e) {
     e.stopPropagation();
 });
 
-//�j f�l�v megnyit�sakor a collapse localStorage t�rl�se
+//Új félév megnyitásakor a collapse localStorage törlése
 function clearCollapse() {
     localStorage.removeItem("collapsedTable");
 }

@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Http;
 @{
     ViewData["Title"] = "Kurzusok";
+    List<List<string>> allTypeCheckForSubjects = ViewBag.allTypeCheckForSubjects;
     string date = Model.CurrentSemester.Date;
     string id = Model.CurrentSemester.Id.ToString();
     string lastSemester = Model.SemestersList.Last().Date;
@@ -171,31 +172,36 @@
 
 @*Collapse table*@
 <div class="container-fluid pt-2" id="dropdownTable">
-    @foreach (var item in Model.CurrentSemester.Subjects)
+    @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
     {
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm bg-white rounded w-85 w-d1">
-            <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.SubjectCode">
-                <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.SubjectCode)</div>
+        string color = "";
+        if (allTypeCheckForSubjects[item.i] != null) color = "bg-warning";
+        else color = "bg-white";
+       
+
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm @color rounded w-85 w-d1">
+            <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.value.SubjectCode">
+                <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.value.SubjectCode)</div>
                 @if (User.IsInRole("Admin"))
                 {
-                    <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.value.Name)</div>
                     <div class="col-1 m-0 h5 border-right p-0 no-collapsable" id="options">
-                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId">
+                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId">
                             <span class="far fa-edit"></span>
                         </button>
-                        <a class="btn btn-xs py-0 col-6 no-collapsable" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
+                        <a class="btn btn-xs py-0 col-6 no-collapsable" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
                     </div>
                     <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
                 }
                 else
                 {
-                    <div class="col-6 m-0 h5"> @Html.DisplayFor(modelItem => item.Name)</div>
+                    <div class="col-6 m-0 h5"> @Html.DisplayFor(modelItem => item.value.Name)</div>
                     <div class="col-1 m-0 h5 p-0" id="options"></div>
                     <div class="col-1 text-center m-0 h5 border-left"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
                 }
             </div>
         </div>
-        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2 allcollapse" id="@item.SubjectCode">
+        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2 allcollapse" id="@item.value.SubjectCode">
             <div class="row align-items-center flex-grow-1 p-2">
                 <div class="col-md-4 d-flex flex-column">
                     <div class="align-items-center m-auto flex-grow-1 mt-lg-1">
@@ -204,26 +210,26 @@
                             @if (training == "Levelezős")
                             {
                                 <strong>Óraszám/félév: </strong>
-                                @Html.DisplayFor(modelItem => item.CorrespondHours)
+                                @Html.DisplayFor(modelItem => item.value.CorrespondHours)
                             }
                             else
                             {
-                                @if (item.EHours != null)
+                                @if (item.value.EHours != null)
                                 {
                                     <strong>Elméleti órák/hét: </strong>
-                                    @Html.DisplayFor(modelItem => item.EHours)
+                                    @Html.DisplayFor(modelItem => item.value.EHours)
                                     <br />
                                 }
-                                @if (item.GyHours != null)
+                                @if (item.value.GyHours != null)
                                 {
                                     <strong>Gyakorlati órák/hét: </strong>
-                                    @Html.DisplayFor(modelItem => item.GyHours)
+                                    @Html.DisplayFor(modelItem => item.value.GyHours)
                                     <br />
                                 }
-                                @if (item.LHours != null)
+                                @if (item.value.LHours != null)
                                 {
                                     <strong>Labor órák/hét: </strong>
-                                    @Html.DisplayFor(modelItem => item.LHours)
+                                    @Html.DisplayFor(modelItem => item.value.LHours)
                                     <br />
                                 }
                             }
@@ -233,15 +239,15 @@
                 <div class="col-md-2 d-flex flex-column">
                     <div class="align-items-center d-flex m-auto flex-grow-1 mt-lg-1">
                         <div>
-                            @if (item.EducationType == "traditional")
+                            @if (item.value.EducationType == "traditional")
                             {
                                 <strong>Jelenléti oktatás</strong>
                             }
-                            else if (item.EducationType == "sync")
+                            else if (item.value.EducationType == "sync")
                             {
                                 <strong>Szinkron oktatás</strong>
                             }
-                            else if (item.EducationType == "async")
+                            else if (item.value.EducationType == "async")
                             {
                                 <strong>Asszinkron oktatás</strong>
                             }
@@ -254,7 +260,7 @@
                             <strong>Szakok:</strong>
                         </div>
                         <ul class="m-0">
-                            @foreach (var programme in item.ProgrammesLink)
+                            @foreach (var programme in item.value.ProgrammesLink)
                             {
                                 <li class="text-left">
                                     <i>@programme.Programme.Name</i>
@@ -276,6 +282,15 @@
                 </div>
             </div>
             <div class="col-12 text-center mt-1">
+                @if (allTypeCheckForSubjects[item.i] != null)
+                {
+                    @Html.Raw("A tárgyhoz még fel kell venni a következő típusú kurzusokat: ")
+                    foreach (var a in allTypeCheckForSubjects[item.i])
+                    {
+                        @Html.Raw(a);
+                        @Html.Raw(", ");
+                    }
+                }
                 <div class="table-responsive">
                     <table class="table bg-white">
                         <thead class="thead-dark">
@@ -307,7 +322,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <th>
-                                        <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId">
+                                        <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId">
                                             <span class="fa  fa-plus"></span>
                                         </button>
 
@@ -317,7 +332,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach (var course in item.Courses)
+                            @foreach (var course in item.value.Courses)
                             {
                                 <tr>
                                     <td>
@@ -426,7 +441,7 @@
                 </div>
             </div>
         </div>
-    }
+        }
 </div>
 
 @*Normal table*@
