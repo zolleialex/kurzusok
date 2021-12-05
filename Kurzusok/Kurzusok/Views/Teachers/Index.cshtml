@@ -1,5 +1,4 @@
 ﻿@model Kurzusok.ViewModels.TeacherViewModel
-@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Oktatók";
@@ -9,6 +8,7 @@
     <div class="container-fluid pt-2 overflow-hidden">
         <h2>Oktatók</h2>
         <button type="button" class="btn btn-primary" data-toggle="add-teacher-modal" data-target="#addTeacher" id="addteacher" data-url="@Url.Action("AddTeacher")">Oktató felvétele</button>
+        <a class="btn btn-primary" href="#jump" id="nav">Ugrás a diagramokhoz</a>
         <form asp-controller="Teachers" asp-action="Search" id="searchform" class="float-right">
             <input type="text" name="search" class="form-control" placeholder="Keresés" />
         </form>
@@ -66,7 +66,6 @@
                                         }
                                         if (programme.Programme.Training == "nappali")
                                         {
-                                            Console.WriteLine("ITT LEGYÉL");
                                             if (courselink.Course.CourseType == "Gyakorlat")
                                             {
                                                 subjecthours = courselink.Course.Subject.GyHours;
@@ -84,9 +83,7 @@
                                         }
                                         else
                                         {
-                                            Console.WriteLine("MIÉRT ITT VAGY TE BUZI");
                                             subjecthours = courselink.Course.Subject.CorrespondHours;
-                                            Console.WriteLine("Load: "+ courselink.Loads+"hour: "+ subjecthours + " Hányados: "+ courselink.Loads / 100 * (int)subjecthours);
                                             hours += Convert.ToDouble(courselink.Loads) / 100 * (int)subjecthours;
                                         }
                                     }
@@ -132,9 +129,10 @@
             </tbody>
         </table>
     </div>
+    <div id="jump" class="pb-5"></div>
     @for (int i = 1; i < Model.Positions.Count() + 1; i++)
     {
-        @Html.Raw("<div id='chart_div" + i + "' class='container' style='width: 550px; height: 400px; margin: 0 auto'></div>")
+        @Html.Raw("<div id='chart_div" + i + "' class='container-fluid m-auto text-center w-100' style='height: 400px;'></div>")
     }
 
 </div>
@@ -153,28 +151,41 @@
                 url: "@Url.Action("NextPosition")",
                 data: { posId: positionId },
                 success: function (dat) {
-                    var currentName = dat.currentposName;
-                    var currentWeek = dat.currentposWeek;
-                    let data = google.visualization.arrayToDataTable([
-                        [currentName, 'Terhelés', { role: 'style' }],
-                        ['Copper', 8.94, '#b87333'],
-                        ['Silver', 10.49, 'silver'],
-                        ['Gold', 19.30, 'gold'],
-                        ['Platinum', 21.45, 'color: #e5e4e2']
-                    ]);
-                    let options = { title: currentName, legend: { position: 'none' } };
-
-                    // Instantiate and draw the chart.
                     let toDiv = 'chart_div' + positionId;
-                    let chart = new google.visualization.ColumnChart(document.getElementById(toDiv));
-                    chart.draw(data, options);
+                    if (dat.isvalid) {
+                        let currentName = dat.currentposName;
+                        let currentWeeks = dat.currentposWeek;
+                        let weekArray = [currentWeeks / 4, currentWeeks / 2, { v: currentWeeks, f: currentWeeks+ " (MIN)" }, currentWeeks * 1.5];
+                        let jsonarray = JSON.parse(dat.visualdata);
+                        let data = new google.visualization.DataTable();
+                        data.addColumn('string', currentName);
+                        data.addColumn('number', 'Nappali');
+                        data.addColumn('number', 'Levelezős');
+                        data.addRows(jsonarray);
+                        let options = {
+                            title: currentName + ' (óra/hét)', legend: { position: 'none' }, isStacked: true, vAxis: { minValue: 0, ticks: weekArray }
+                        };
+                        let chart = new google.visualization.ColumnChart(document.getElementById(toDiv));
+                        chart.draw(data, options);
+                    }
+                    else {
+                        document.getElementById(toDiv).innerText = dat.response;
+                        document.getElementById(toDiv).style.height = '30px';
+                        document.getElementById(toDiv).style.color='red';
+                    }
             },
             });
-
     }
+    window.addEventListener("resize", function () {
+     @{foreach (var item in Model.Positions)
+        {
+            @Html.Raw("google.charts.setOnLoadCallback(function() {drawChart(" + Json.Serialize(item.PositionId) + ");});")
+        }
+     }
 
-
+    })
 </script>
 @section Scripts{
     <script src="~/js/teacher.js" asp-append-version="true"></script>
+
 }
