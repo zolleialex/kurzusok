@@ -289,7 +289,7 @@ namespace Kurzusok.Controllers
                             TempData["ErrorMessage"] = "Nem sikerült lekérni a táblázatot az oldalról!";
                             return RedirectToAction("Index");
                         }
-                        if (table.SelectSingleNode("preceding-sibling::b[1]").InnerText.ToLower().Contains("kötelező") && sem == null)
+                        if (table.SelectSingleNode("preceding-sibling::b[1]").InnerText.ToLower().Contains("kötelező") && sem == null && !table.SelectSingleNode("preceding-sibling::b[1]").InnerText.ToLower().Contains("választ"))
                         {
                             TempData["ErrorMessage"] = "Nem sikerült lekérni a táblázatot az oldalról!";
                             return RedirectToAction("Index");
