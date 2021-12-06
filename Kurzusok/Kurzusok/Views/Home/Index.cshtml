@@ -16,11 +16,11 @@
     int colthespanexcel = 0;
     if (User.IsInRole("Admin"))
     {
-        colthespanexcel = 10;
+        colthespanexcel = 11;
     }
     else
     {
-        colthespanexcel = 9;
+        colthespanexcel = 10;
     }
     List<string> whoCommented = new List<string>();
     string commentHelper, displayComment;
@@ -504,6 +504,8 @@
                     Szak
                 </th>
                 <th scope="col">
+                </th>
+                <th scope="col">
                     Kurzus kód
                 </th>
                 <th scope="col">
@@ -527,6 +529,7 @@
                 <th scope="col">
                     Kurzus kezelés
                 </th>
+
             </tr>
         </thead>
         <tbody>
@@ -637,6 +640,16 @@
                     @foreach (var course in item.value.Courses.Take(1))
                     {
                         <td class="border-left-3">
+                            @if (course.NeptunOk == true)
+                            {
+                                <span class="fa fa-check" style="color: green !important;" title="Neptunba beírva"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times" style="color: red !important;" title="Nincs beírva neptunba"></span>
+                            }
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => course.CourseCode)
                         </td>
                         <td>
@@ -723,14 +736,6 @@
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
-                                @if (course.NeptunOk == true)
-                                {
-                                    <span class="fa  fa-check" style="color: green !important;"></span>
-                                }
-                                else
-                                {
-                                    <span class="fa  fa-times" style="color: red !important;"></span>
-                                }
                             }
                         </td>
 
@@ -740,6 +745,16 @@
                 {
                     <tr class="border-bottom">
                         <td class="border-left-3">
+                            @if (course.NeptunOk == true)
+                            {
+                                <span class="fa fa-check" style="color: green !important;" title="Neptunba beírva"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times" style="color: red !important;" title="Nincs beírva neptunba"></span>
+                            }
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => course.CourseCode)
                         </td>
                         <td>
@@ -827,16 +842,7 @@
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
                             }
-                            @if (course.NeptunOk == true)
-                            {
-                                <span class="fa  fa-check" style="color: green !important;"></span>
-                            }
-                            else
-                            {
-                                <span class="fa  fa-times" style="color: red !important;"></span>
-                            }
                         </td>
-
                     </tr>
                 }
                 @if (allTypeCheckForSubjects[item.i].Count() != 0)
