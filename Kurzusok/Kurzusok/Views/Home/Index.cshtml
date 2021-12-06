@@ -13,8 +13,18 @@
         Context.Session.SetString("Training", "Nappali");
     }
     int colthespan = 7;
+    int colthespanexcel = 0;
+    if (User.IsInRole("Admin"))
+    {
+        colthespanexcel = 10;
+    }
+    else
+    {
+        colthespanexcel = 9;
+    }
     List<string> whoCommented = new List<string>();
     string commentHelper, displayComment;
+
 }
 @*Félév törlés, tábla nyitás*@
 <div class="container-fluid overflow-hidden">
@@ -188,9 +198,9 @@
             errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
             foreach (var a in allTypeCheckForSubjects[item.i])
             {
-                errormessage = errormessage + a + ",";
-
+                errormessage = errormessage + a + ", ";
             }
+            errormessage = errormessage.Remove(errormessage.Length - 2, 2);
         }
 
         <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm @color rounded w-85 w-d1" style="word-wrap:break-word;" title="@errormessage">
@@ -314,12 +324,7 @@
             <div class="col-12 text-center mt-1">
                 @if (allTypeCheckForSubjects[item.i].Count() != 0)
                 {
-                    @Html.Raw("A tárgyhoz még fel kell venni a következő típusú kurzusokat: ")
-                    foreach (var a in allTypeCheckForSubjects[item.i])
-                    {
-                        @Html.Raw(a);
-                        @Html.Raw(", ");
-                    }
+                    <p style="color:red;">@errormessage</p>
                 }
                 <div class="table-responsive">
                     <table class="table bg-white">
@@ -474,10 +479,7 @@
     <table class="table">
         <thead class="thead-light">
             <tr>
-                @if (User.IsInRole("Admin"))
-                {
-                    <th scope="col"></th>
-                }
+                <th scope="col"></th>
                 <th scope="col">
                     Tárgy kód
                 </th>
@@ -531,56 +533,44 @@
             @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
             {
                 bool everythingCorrect = true;
-                string color = "";
-                if (allTypeCheckForSubjects[item.i].Count() != 0)
-                {
-                    color = "bg-warning";
-                    everythingCorrect = false;
-                }
-                else color = "bg-white";
                 string errormessage = "";
                 @if (allTypeCheckForSubjects[item.i].Count() != 0)
                 {
+                    everythingCorrect = false;
                     errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
                     foreach (var a in allTypeCheckForSubjects[item.i])
                     {
-                        errormessage = errormessage + a + ",";
-
+                        errormessage = errormessage + a + ", ";
+                    }
+                    errormessage = errormessage.Remove(errormessage.Length - 2, 2);
+                }
+                @foreach (var kurzus in item.value.Courses)
+                {
+                    if (kurzus.NeptunOk == false)
+                    {
+                        everythingCorrect = false;
                     }
                 }
-
                 int courseCount = item.value.Courses.Count();
-                <tr class="newSubject border-bottom @color " style="word-wrap:break-word;" title="@errormessage">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                            <table>
-                                @if (everythingCorrect)
-                                {
-                                    <tr>
-                                        <td class="border-0 py-0 maxwidth">
-                                            <span class="fa  fa-check" style="color: green !important;"></span>
-                                        </td>
-                                    </tr>
-                                }
-
-                                <tr>
-                                    <td class="border-0 py-0 maxwidth">
-                                        <a class="dropdown-toggle border-0 py-0" id="subjectdropdownMenu" data-toggle="dropdown">
-                                            <span class="fa fa-cog"></span>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                                            <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
-                                            <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                            <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </table>
-                        </td>
-
-                    }
+                <tr class="newSubject border-bottom">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @if (everythingCorrect)
+                        {
+                            <span class="fa  fa-check" style="color: green !important;"></span>
+                            <br />
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="dropdown-toggle border-0 py-0" id="subjectdropdownMenu" data-toggle="dropdown">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
+                                <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
+                            </div>
+                        }
+                    </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @Html.DisplayFor(modelItem => item.value.SubjectCode)
                     </td>
@@ -847,6 +837,12 @@
                             }
                         </td>
 
+                    </tr>
+                }
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    <tr>
+                        <td colspan="@colthespanexcel" style="color:red;">@errormessage</td>
                     </tr>
                 }
             }
