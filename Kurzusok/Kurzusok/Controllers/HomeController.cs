@@ -137,6 +137,7 @@ namespace Kurzusok.Controllers
             }
             HttpContext.Session.SetString("Training", training);
             _homeViewModel.CurrentSemester = currentSemester;
+            //Warning üzenet létrehozása a kurzusokhoz
             List<List<string>> allTypeCheckForSubjects = new List<List<string>>();
             foreach (var item in _homeViewModel.CurrentSemester.Subjects)
             {

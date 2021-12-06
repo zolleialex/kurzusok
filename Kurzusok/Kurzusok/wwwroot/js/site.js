@@ -65,14 +65,14 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
         for (var value of formdata.entries()) {
             if (value[0] == "LoadList") {
                 isCourse = true;
-                sumLoads = sumLoads + parseInt(value[1]);                
+                sumLoads = sumLoads + parseInt(value[1]);
             }
         }
         let difference = 0;
         if (isCourse) {
-             difference = 100 - sumLoads;
+            difference = 100 - sumLoads;
         }
-        if (difference != 0) {            
+        if (difference != 0) {
             $('#errorLoad').show();
             $('#errorLoadmessage').html("A tanárok össz terhelése nem 100%!");
         } else {
@@ -111,32 +111,31 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
     return false;
 }
 
-window.addEventListener("load", function () {// TĂˇblĂˇzat nĂ©zet megtartĂˇsa Local Storage-val.
-    if (screen.width > 1500 || $(window).width() > 1500) {
-        let checkBox = document.getElementById("tableView");
-        let chtblId = localStorage.getItem("tableViewStore");
-        if (chtblId === null) {
-            chtblId = "1";
-            localStorage.setItem("tableViewStore", chtblId);
-        }
-        else {
-            if (chtblId == "0") {
-                checkBox.checked = true;
-            }
-            else {
-                checkBox.checked = false;
-                keepCollapse();
-            }
-            changeTable();
-        }
+window.addEventListener("load", function () {// TĂˇblĂˇzat nĂ©zet megtartĂˇsa Local Storage-val.   
+    let chtblId = localStorage.getItem("tableViewStore");
+    if (chtblId === null) {
+        chtblId = "1";
+        localStorage.setItem("tableViewStore", chtblId);
+        changeTable();
     }
     else {
-        keepCollapse();
+        let checkBox = document.getElementById("tableView");
+        if (chtblId == "0" && $(window).width() > 1500) {
+
+            checkBox.checked = true;
+            changeTable();
+        }
+        else {
+            checkBox.checked = false;
+            changeTable();
+            keepCollapse();
+        }
     }
+
 })
 
 window.addEventListener("resize", function () {
-    if (screen.width < 1500 || $(window).width() < 1500) {
+    if ($(window).width() < 1500) {
         let checkBox = document.getElementById("tableView");
         checkBox.checked = false;
         changeTable();

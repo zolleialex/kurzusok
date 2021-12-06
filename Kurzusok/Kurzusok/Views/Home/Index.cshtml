@@ -12,13 +12,13 @@
         training = "Nappali";
         Context.Session.SetString("Training", "Nappali");
     }
-    int colthespan = 6;
+    int colthespan = 7;
     List<string> whoCommented = new List<string>();
     string commentHelper, displayComment;
 }
 @*Félév törlés, tábla nyitás*@
 <div class="container-fluid overflow-hidden">
-    <h1>@date félév</h1> 
+    <h1>@date félév</h1>
     <h3>@training tagozat</h3>
     @if (User.IsInRole("Admin"))
     {
@@ -174,17 +174,47 @@
 <div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
     {
+        bool everythingCorrect = true;
         string color = "";
-        if (allTypeCheckForSubjects[item.i] != null) color = "bg-warning";
+        if (allTypeCheckForSubjects[item.i].Count() != 0)
+        {
+            color = "bg-warning";
+            everythingCorrect = false;
+        }
         else color = "bg-white";
-       
+        string errormessage = "";
+        @if (allTypeCheckForSubjects[item.i].Count() != 0)
+        {
+            errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
+            foreach (var a in allTypeCheckForSubjects[item.i])
+            {
+                errormessage = errormessage + a + ",";
 
-        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm @color rounded w-85 w-d1">
+            }
+        }
+
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm @color rounded w-85 w-d1" style="word-wrap:break-word;" title="@errormessage">
             <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.value.SubjectCode">
+                @foreach (var kurzus in item.value.Courses)
+                {
+                    if (kurzus.NeptunOk == false)
+                    {
+                        everythingCorrect = false;
+                    }
+                }
+                @if (everythingCorrect)
+                {
+                    <div class="col-1 m-0 h5"> <span class="fa  fa-check" style="color: green !important;"></span></div>
+                }
+                else
+                {
+                    <div class="col-1 m-0 h5"> </div>
+
+                }
                 <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.value.SubjectCode)</div>
                 @if (User.IsInRole("Admin"))
                 {
-                    <div class="col-6 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.value.Name)</div>
+                    <div class="col-5 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.value.Name)</div>
                     <div class="col-1 m-0 h5 border-right p-0 no-collapsable" id="options">
                         <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId">
                             <span class="far fa-edit"></span>
@@ -195,7 +225,7 @@
                 }
                 else
                 {
-                    <div class="col-6 m-0 h5"> @Html.DisplayFor(modelItem => item.value.Name)</div>
+                    <div class="col-5 m-0 h5"> @Html.DisplayFor(modelItem => item.value.Name)</div>
                     <div class="col-1 m-0 h5 p-0" id="options"></div>
                     <div class="col-1 text-center m-0 h5 border-left"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
                 }
@@ -282,7 +312,7 @@
                 </div>
             </div>
             <div class="col-12 text-center mt-1">
-                @if (allTypeCheckForSubjects[item.i] != null)
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
                 {
                     @Html.Raw("A tárgyhoz még fel kell venni a következő típusú kurzusokat: ")
                     foreach (var a in allTypeCheckForSubjects[item.i])
@@ -295,6 +325,7 @@
                     <table class="table bg-white">
                         <thead class="thead-dark">
                             <tr>
+                                <th>N-ok</th>
                                 <th scope="col">
                                     Kurzus típus
                                 </th>
@@ -329,6 +360,16 @@
                             @foreach (var course in item.value.Courses)
                             {
                                 <tr>
+                                    <td>
+                                        @if (course.NeptunOk == true)
+                                        {
+                                            <span class="fa  fa-check" style="color: green !important;"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa  fa-times" style="color: red !important;"></span>
+                                        }
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => course.CourseType)
                                     </td>
@@ -425,7 +466,7 @@
                 </div>
             </div>
         </div>
-        }
+    }
 </div>
 
 @*Normal table*@
@@ -487,73 +528,109 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.CurrentSemester.Subjects)
+            @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
             {
-                int courseCount = item.Courses.Count();
-                <tr class="newSubject border-bottom">
+                bool everythingCorrect = true;
+                string color = "";
+                if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    color = "bg-warning";
+                    everythingCorrect = false;
+                }
+                else color = "bg-white";
+                string errormessage = "";
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
+                    foreach (var a in allTypeCheckForSubjects[item.i])
+                    {
+                        errormessage = errormessage + a + ",";
+
+                    }
+                }
+
+                int courseCount = item.value.Courses.Count();
+                <tr class="newSubject border-bottom @color " style="word-wrap:break-word;" title="@errormessage">
                     @if (User.IsInRole("Admin"))
                     {
                         <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                            <a class="dropdown-toggle" id="subjectdropdownMenu" data-toggle="dropdown">
-                                <span class="fa fa-cog"></span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
-                                <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
-                            </div>
+                            <table>
+                                @if (everythingCorrect)
+                                {
+                                    <tr>
+                                        <td class="border-0 py-0 maxwidth">
+                                            <span class="fa  fa-check" style="color: green !important;"></span>
+                                        </td>
+                                    </tr>
+                                }
+
+                                <tr>
+                                    <td class="border-0 py-0 maxwidth">
+                                        <a class="dropdown-toggle border-0 py-0" id="subjectdropdownMenu" data-toggle="dropdown">
+                                            <span class="fa fa-cog"></span>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                                            <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
+                                            <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                            <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </table>
                         </td>
+
                     }
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                        @Html.DisplayFor(modelItem => item.SubjectCode)
+                        @Html.DisplayFor(modelItem => item.value.SubjectCode)
                     </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.value.Name)
                     </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
                         @if (training == "Levelezős")
                         {
-                            @Html.DisplayFor(modelItem => item.CorrespondHours)
+                            @Html.DisplayFor(modelItem => item.value.CorrespondHours)
                         }
                         else
                         {
-                            @if (item.EHours != null)
+                            @if (item.value.EHours != null)
                             {
                                 @Html.Raw("Elmélet: ")
-                                @Html.DisplayFor(modelItem => item.EHours)
+                                @Html.DisplayFor(modelItem => item.value.EHours)
                                 <br />
                             }
-                            @if (item.GyHours != null)
+                            @if (item.value.GyHours != null)
                             {
                                 @Html.Raw("Gyakorlat: ")
-                                @Html.DisplayFor(modelItem => item.GyHours)
+                                @Html.DisplayFor(modelItem => item.value.GyHours)
                                 <br />
                             }
-                            @if (item.LHours != null)
+                            @if (item.value.LHours != null)
                             {
                                 @Html.Raw("Labor: ")
-                                @Html.DisplayFor(modelItem => item.LHours)
+                                @Html.DisplayFor(modelItem => item.value.LHours)
                                 <br />
                             }
                         }
 
                     </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                        @if (item.EducationType == "traditional")
+                        @if (item.value.EducationType == "traditional")
                         {
                             @Html.Raw("Jelenléti");
                         }
-                        else if (item.EducationType == "sync")
+                        else if (item.value.EducationType == "sync")
                         {
                             @Html.Raw("Szinkron");
                         }
-                        else if (item.EducationType == "async")
+                        else if (item.value.EducationType == "async")
                         {
                             @Html.Raw("Asszinkron");
                         }
                     </td>
                     <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
-                        @foreach (var programme in item.ProgrammesLink)
+                        @foreach (var programme in item.value.ProgrammesLink)
                         {
                             @programme.Programme.Name
                             @if (programme.Obligatory == true)
@@ -567,7 +644,7 @@
                             <br />
                         }
                     </td>
-                    @foreach (var course in item.Courses.Take(1))
+                    @foreach (var course in item.value.Courses.Take(1))
                     {
                         <td class="border-left-3">
                             @Html.DisplayFor(modelItem => course.CourseCode)
@@ -656,12 +733,20 @@
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                                @if (course.NeptunOk == true)
+                                {
+                                    <span class="fa  fa-check" style="color: green !important;"></span>
+                                }
+                                else
+                                {
+                                    <span class="fa  fa-times" style="color: red !important;"></span>
+                                }
                             }
                         </td>
 
                     }
                 </tr>
-                @foreach (var course in item.Courses.Skip(1))
+                @foreach (var course in item.value.Courses.Skip(1))
                 {
                     <tr class="border-bottom">
                         <td class="border-left-3">
@@ -751,6 +836,14 @@
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
                                 <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                            }
+                            @if (course.NeptunOk == true)
+                            {
+                                <span class="fa  fa-check" style="color: green !important;"></span>
+                            }
+                            else
+                            {
+                                <span class="fa  fa-times" style="color: red !important;"></span>
                             }
                         </td>
 
