@@ -32,7 +32,10 @@
     <h3>@training tagozat</h3>
     @if (User.IsInRole("Admin"))
     {
-        <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
+        @if (Model.SemestersList.Count > 1)
+        {
+            <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
+        }
         <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
 
     }

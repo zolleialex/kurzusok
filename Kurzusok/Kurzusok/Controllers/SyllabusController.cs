@@ -52,21 +52,27 @@ namespace Kurzusok.Controllers
                 ModelState.AddModelError("ReadError", TempData["ErrorMessage"].ToString());
                 TempData.Remove("ErrorMessage");
             }
-            var SyllabusList = _context.Programmes.ToListAsync();
-            _syllabusViewModel.SyllabusList = await SyllabusList;
-            int lastId = _syllabusViewModel.SyllabusList.Last().ProgrammeId;
-            Programmes CurrentSyllabus;
-            CurrentSyllabus = await _context.Programmes.Where(c => c.ProgrammeId == currentSyllabusId).Include(b => b.ProgrammeDetails).FirstOrDefaultAsync();
-            if (CurrentSyllabus == null) //Ha nincs a megadott ID-s mintatanterv akkor az utolsót kérdezzük le
+            _syllabusViewModel.SyllabusList = await _context.Programmes.ToListAsync();
+            if (_syllabusViewModel.SyllabusList.Count()>0)
             {
-                CurrentSyllabus = await _context.Programmes.Where(c => c.ProgrammeId == lastId).Include(b => b.ProgrammeDetails).FirstOrDefaultAsync();
-                HttpContext.Session.SetString("SyllabusId", Convert.ToString(lastId));
+                int lastId = _syllabusViewModel.SyllabusList.Last().ProgrammeId;
+                Programmes CurrentSyllabus;
+                CurrentSyllabus = await _context.Programmes.Where(c => c.ProgrammeId == currentSyllabusId).Include(b => b.ProgrammeDetails).FirstOrDefaultAsync();
+                if (CurrentSyllabus == null) //Ha nincs a megadott ID-s mintatanterv akkor az utolsót kérdezzük le
+                {
+                    CurrentSyllabus = await _context.Programmes.Where(c => c.ProgrammeId == lastId).Include(b => b.ProgrammeDetails).FirstOrDefaultAsync();
+                    HttpContext.Session.SetString("SyllabusId", Convert.ToString(lastId));
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SyllabusId", Convert.ToString(currentSyllabusId));
+                }
+                _syllabusViewModel.CurrentSyllabus = CurrentSyllabus;
             }
             else
             {
-                HttpContext.Session.SetString("SyllabusId", Convert.ToString(currentSyllabusId));
+                _syllabusViewModel.CurrentSyllabus = new Programmes();
             }
-            _syllabusViewModel.CurrentSyllabus = CurrentSyllabus;
             return View(_syllabusViewModel);
         }
         // GET: Create syllabus 
