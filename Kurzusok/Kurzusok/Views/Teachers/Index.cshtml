@@ -96,7 +96,7 @@
                             }
                             else
                             {
-                                @hours
+                                @hours.Value.ToString("0.##");
                             }
 
                         </td>
@@ -132,7 +132,34 @@
     <div id="jump" class="pb-5"></div>
     @for (int i = 1; i < Model.Positions.Count() + 1; i++)
     {
-        @Html.Raw("<div id='chart_div" + i + "' class='container-fluid m-auto text-center w-100' style='height: 400px;'></div>")
+        int maxwidth = 400;
+        Console.WriteLine(Model.Positions[i - 1].Teachers.Count());
+        if (Model.Positions[i - 1].Teachers.Count()>3)
+        {
+            if (Model.Positions[i - 1].Teachers.Count() > 5)
+            {
+                if (Model.Positions[i - 1].Teachers.Count() > 7)
+                {
+                    if (Model.Positions[i - 1].Teachers.Count() > 10)
+                    {
+                        maxwidth = 1500;
+                    }
+                    else
+                    {
+                        maxwidth = 1000;
+                    }
+                }
+                else
+                {
+                    maxwidth = 800;
+                }
+            }
+            else
+            {
+                maxwidth = 600;
+            }
+        }
+        @Html.Raw("<div id='chart_div" + i + "' class='container-fluid m-auto text-center' style='height: 400px; min-width:400px; max-width:" + maxwidth + "px;'></div>")
     }
 
 </div>
@@ -171,6 +198,7 @@
                     else {
                         document.getElementById(toDiv).innerText = dat.response;
                         document.getElementById(toDiv).style.height = '30px';
+                        document.getElementById(toDiv).style.maxWidth = '800px';
                         document.getElementById(toDiv).style.color='red';
                     }
             },

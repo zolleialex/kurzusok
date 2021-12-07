@@ -20,8 +20,9 @@ namespace Kurzusok.Models
         [Required(ErrorMessage = "A kurzus kódjának megadása kötelező!")]
         [Range(1, 100, ErrorMessage = "A kurzus kódja 1 és 100 között egész érték lehet!")]
         public int CourseCode { get; set; }
-
-        public virtual Subjects Subject { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public Subjects Subject { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
         public ICollection<CoursesTeachers> TeachersLink { get; set; }
     }
 }

@@ -183,7 +183,7 @@ namespace Kurzusok.Controllers
             }
             ViewBag.allTypeCheckForSubjects = allTypeCheckForSubjects;
            
-            return View(_homeViewModel);
+             return View(_homeViewModel);
         }
 
         // GET: Create subject

@@ -10,8 +10,8 @@ namespace Kurzusok.Models
         public int SubjectId { get; set; }
         public int ProgrammeId { get; set; }
         public bool Obligatory { get; set; }
-
-        public virtual Programmes Programme { get; set; }
-        public virtual Subjects Subject { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public  Programmes Programme { get; set; }
+        public  Subjects Subject { get; set; }
     }
 }
