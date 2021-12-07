@@ -11,7 +11,6 @@ namespace Kurzusok.Models
         public int PositionId { get; set; }
         public string PositionName { get; set; }
         public int Hoursperweek { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public ICollection<Teachers> Teachers { get; set; }
     }
 }

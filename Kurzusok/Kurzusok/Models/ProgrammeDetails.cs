@@ -18,7 +18,6 @@ namespace Kurzusok.Models
         public int Credit { get; set; }
         public int? RecommendedSemester { get; set; }
         public bool Obligatory { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public Programmes Programme { get; set; }
     }
 }

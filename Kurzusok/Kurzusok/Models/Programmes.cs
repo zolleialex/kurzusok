@@ -14,9 +14,7 @@ namespace Kurzusok.Models
         public int ProgrammeId { get; set; }
         public string Name { get; set; }
         public string Training { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public ICollection<ProgrammeDetails> ProgrammeDetails { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public ICollection<SubjectProgrammes> SubjectLink { get; set; }
     }
 }

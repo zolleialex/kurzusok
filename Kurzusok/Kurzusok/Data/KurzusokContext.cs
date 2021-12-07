@@ -16,9 +16,7 @@ namespace Kurzusok.Data
         public KurzusokContext(DbContextOptions<KurzusokContext> options)
             : base(options)
         {
-            base.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             base.ChangeTracker.LazyLoadingEnabled = false;
-            base.ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }

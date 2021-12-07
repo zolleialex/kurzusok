@@ -35,11 +35,11 @@ namespace Kurzusok.Controllers
             List<Teachers> teachers = new List<Teachers>();
             if (!string.IsNullOrEmpty(search))
             {
-                teachers = await _context.Teachers.Where(b => b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(k => k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v => v.ProgrammesLink).ThenInclude(i => i.Programme).AsSplitQuery().ToListAsync();
+                teachers = await _context.Teachers.AsNoTracking().Where(b => b.Name.Contains(search)).OrderByDescending(b => b.IsWorking).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(k => k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v => v.ProgrammesLink).ThenInclude(i => i.Programme).ToListAsync();
             }
             else
             {
-                teachers = await _context.Teachers.OrderByDescending(b => b.IsWorking).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(k => k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v => v.ProgrammesLink).ThenInclude(i => i.Programme).AsSplitQuery().ToListAsync();
+                teachers = await _context.Teachers.AsNoTracking().OrderByDescending(b => b.IsWorking).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(k => k.Semester).Include(b => b.CoursesLink).ThenInclude(c => c.Course).ThenInclude(b => b.Subject).ThenInclude(v => v.ProgrammesLink).ThenInclude(i => i.Programme).ToListAsync();
             }
             _teacherViewModel.TeachersList = teachers;
             if (justData != true)

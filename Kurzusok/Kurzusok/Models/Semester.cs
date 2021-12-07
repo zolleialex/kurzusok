@@ -17,7 +17,6 @@ namespace Kurzusok.Models
         //[Required(ErrorMessage = "A kötelező!")]
         //[Range(1, 100, ErrorMessage = "Az oktató terheltsége csak 1 és 100 között egész érték lehet!")]
         public int Weeks { get; set; }
-        [Newtonsoft.Json.JsonIgnore]
         public ICollection<Subjects> Subjects { get; set; }
     }
 }
