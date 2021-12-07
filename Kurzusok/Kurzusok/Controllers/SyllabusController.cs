@@ -279,7 +279,7 @@ namespace Kurzusok.Controllers
                             TempData["ErrorMessage"] = "Nem sikerült lekérni a táblázatot az oldalról!";
                             return RedirectToAction("Index");
                         }
-                        if (training == "full" && (ehour == null || gyhour == null || labhour == null))
+                        if (training == "full" && (ehour == null || gyhour == null))
                         {
                             TempData["ErrorMessage"] = "Nem sikerült lekérni a táblázatot az oldalról!";
                             return RedirectToAction("Index");
@@ -314,7 +314,11 @@ namespace Kurzusok.Controllers
                                 {
                                     HtmlNode ehours = row.SelectSingleNode($"td[{ehour}]");
                                     HtmlNode gyhours = row.SelectSingleNode($"td[{gyhour}]");
-                                    HtmlNode lhours = row.SelectSingleNode($"td[{labhour}]");
+                                    int? lhours=null;
+                                    if (labhour!=null)
+                                    {
+                                        lhours = int.Parse(row.SelectSingleNode($"td[{labhour}]").InnerText);
+                                    }
                                     prDetails = new ProgrammeDetails
                                     {
                                         ProgrammeId = id,
@@ -322,7 +326,7 @@ namespace Kurzusok.Controllers
                                         Name = subjectname.InnerText,
                                         EHours = int.Parse(ehours.InnerText),
                                         GyHours = int.Parse(gyhours.InnerText),
-                                        LabHours = int.Parse(lhours.InnerText),
+                                        LabHours = lhours,
                                         Obligatory = oblig,
                                         Credit = int.Parse(credit.InnerText),
                                         RecommendedSemester = semester
