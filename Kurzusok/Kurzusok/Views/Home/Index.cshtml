@@ -335,6 +335,9 @@
                             <tr>
                                 <th>N-ok</th>
                                 <th scope="col">
+                                    Kurzus kód
+                                </th>
+                                <th scope="col">
                                     Kurzus típus
                                 </th>
                                 <th scope="col">
@@ -342,9 +345,6 @@
                                 </th>
                                 <th scope="col">
                                     Terhelés
-                                </th>
-                                <th scope="col">
-                                    Kurzus kód
                                 </th>
                                 <th scope="col">
                                     Terem, szoftver igény
@@ -367,67 +367,68 @@
                         <tbody>
                             @foreach (var course in item.value.Courses)
                             {
-                                <tr>
-                                    <td>
-                                        @if (course.NeptunOk == true)
+                            <tr>
+                                <td>
+                                    @if (course.NeptunOk == true)
+                                    {
+                                        <span class="fa  fa-check" style="color: green !important;"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fa  fa-times" style="color: red !important;"></span>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => course.CourseCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => course.CourseType)
+                                </td>
+                                <td>
+                                    @foreach (var teacher in course.TeachersLink)
+                                    {
+                                        @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                        <br />
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var teacher in course.TeachersLink)
+                                    {
+                                        @Html.DisplayFor(modelItem => teacher.Loads)
+                                        @Html.Raw(" %")
+                                        <br />
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (course.Classroom != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => course.Classroom)
+                                        if (course.Software != null)
                                         {
-                                            <span class="fa  fa-check" style="color: green !important;"></span>
-                                        }
-                                        else
-                                        {
-                                            <span class="fa  fa-times" style="color: red !important;"></span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.CourseType)
-                                    </td>
-                                    <td>
-                                        @foreach (var teacher in course.TeachersLink)
-                                        {
-                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
-                                            <br />
-                                        }
-                                    </td>
-                                    <td>
-                                        @foreach (var teacher in course.TeachersLink)
-                                        {
-                                            @Html.DisplayFor(modelItem => teacher.Loads)
-                                            @Html.Raw(" %")
-                                            <br />
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.CourseCode)
-                                    </td>
-                                    <td>
-                                        @if (course.Classroom != null)
-                                        {
-                                            @Html.DisplayFor(modelItem => course.Classroom)
-                                            if (course.Software != null)
-                                            {
-                                                @Html.Raw(", ")
-                                                @Html.DisplayFor(modelItem => course.Software)
-                                            }
-                                        }
-                                        else
-                                        {
+                                            @Html.Raw(", ")
                                             @Html.DisplayFor(modelItem => course.Software)
                                         }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => course.Members)
-                                        @Html.Raw("fő")
-                                    </td>
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <td>
-                                            <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
-                                                <span class="far fa-edit" aria-hidden="true"></span>
-                                            </button>
-                                            <a class="btn btn-danger" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
-                                        </td>
                                     }
-                                </tr>
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => course.Software)
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => course.Members)
+                                    @Html.Raw("fő")
+                                </td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                            <span class="far fa-edit" aria-hidden="true"></span>
+                                        </button>
+                                        <a class="btn btn-danger" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                                    </td>
+                                }
+                            </tr>
                                 <tr>
                                     <td colspan="@colthespan" class="text-left">
                                         @{displayComment = course.Comment;

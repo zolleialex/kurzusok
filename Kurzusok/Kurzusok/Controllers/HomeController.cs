@@ -155,11 +155,15 @@ namespace Kurzusok.Controllers
                 {
                     typeCheck.Add("Labor");
                 }
+                if (item.CorrespondHours != null && item.CorrespondHours != 0)
+                {
+                    typeCheck.Add("Elmélet");
+                }
                 foreach (var i in item.Courses)
                 {
-                    if (i.CourseType == "E-learning" || i.CourseType == "Egyéni felkészülés" || i.CourseType == "Csak vizsga")
+                    if (i.CourseType == "E-learning" || i.CourseType == "Egyéni felkészülés" || i.CourseType == "Csak Vizsga")
                     {
-                        typeCheck = null;
+                        typeCheck.Clear();
                     }
                     else if (i.CourseType == "Elmélet")
                     {
