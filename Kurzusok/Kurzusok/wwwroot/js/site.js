@@ -1,9 +1,7 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
+﻿
 const PlaceHolderElement = $('#PlaceHolderHere');//GET fĂĽggvĂ©nyek meghĂ­vĂˇsa
 var SubmitValue = "asd";
-$('button[data-toggle="subject-modal"]').click(function (event) {
+$('button[data-toggle="home-modal"]').click(function (event) {
     var url = $(this).data('url');
     var id = $(this).data('id');
     $.get(url, { id: id }).done(function (data) {
@@ -17,12 +15,35 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
         else if (url == "/Home/EditCourse") {
             PlaceHolderElement.find('.editcoursemodal').modal('show');
         }
+        else if (url == "/Home/DeleteCourse") {
+            PlaceHolderElement.find('.deletecoursemodal').modal('show');
+        }
+        else if (url == "/Home/DeleteSemester") {
+            PlaceHolderElement.find('.deletesemestermodal').modal('show');
+        }
+        else if (url == "/Home/DeleteSubject") {
+            PlaceHolderElement.find('.deletesubjectmodal').modal('show');
+        }
+        else if (url == "/Home/AddComment") {
+            PlaceHolderElement.find('.addcommentmodal').modal('show');
+        }
         else {
             PlaceHolderElement.find('.coursemodal').modal('show');
-
         }
     })
 })
+
+$('button[data-toggle="semester-modal"]').click(function (event) {
+    var url = $(this).data('url');
+    $.get(url).done(function (data) {
+        PlaceHolderElement.html(data);
+        if (url == "/Home/CreateSemester") {
+            PlaceHolderElement.find('.addsemestermodal').modal('show');
+        }
+
+    })
+})
+
 PlaceHolderElement.on('click', '[data-dismiss="modal"]', function (event) {// Oldal ĂşjratĂ¶ltĂ©se 
     location.reload();
 })
@@ -85,7 +106,10 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
                 processData: false,
                 success: function (response) {
                     if (response.isvalid) {// Ha a sikeresen vĂ©ghezment minden                
-                        PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltĂĽntetĂ©se
+                        PlaceHolderElement.find('.subjectmodal').modal('hide');
+                        PlaceHolderElement.find('.deletecoursemodal').modal('hide');
+                        PlaceHolderElement.find('.deletesubjectmodal').modal('hide');
+                        PlaceHolderElement.find('.addcommentmodal').modal('hide');
                         if (response.createCourse || SubmitValue == "saveandnext") { // Ăšj kurzus felvĂ©telre irĂˇnyĂ­tĂˇs
                             $.get("/Home/CreateCourse", { id: response.subjectid }).done(function (data) {
                                 PlaceHolderElement.find('.coursemodal').modal('hide');
@@ -174,24 +198,6 @@ function changeTable() {
     }
 }
 
-$('a[data-toggle="subject-delete-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    let route = "/Home/SubjectDelete/" + id;
-    $('#sdel').attr("href", route)
-    $('#applySubjectDelete').modal('show');
-})
-
-$('a[data-toggle="course-delete-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    let route = "/Home/CourseDelete/" + id;
-    $('#cdel').attr("href", route)
-    $('#applyCourseDelete').modal('show');
-})
-$('a[data-toggle="add-comment-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    $('#courseId').attr("value", id)
-    $('#applyComment').modal('show');
-})
 
 
 $(".collapse").on('show.bs.collapse', function (e) {

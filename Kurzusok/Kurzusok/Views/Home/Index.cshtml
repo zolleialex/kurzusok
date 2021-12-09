@@ -5,12 +5,15 @@
     List<List<string>> allTypeCheckForSubjects = ViewBag.allTypeCheckForSubjects;
     string date = Model.CurrentSemester.Date;
     string id = Model.CurrentSemester.Id.ToString();
-    string lastSemester = Model.SemestersList.Last().Date;
     string training = Context.Session.GetString("Training");
     if (string.IsNullOrEmpty(training))
     {
         training = "Nappali";
         Context.Session.SetString("Training", "Nappali");
+    }
+    else if(training=="Levelezos")
+    {
+        training = "Levelezős";
     }
     int colthespan = 7;
     int colthespanexcel = 0;
@@ -26,6 +29,7 @@
     string commentHelper, displayComment;
 
 }
+
 @*Félév törlés, tábla nyitás*@
 <div class="container-fluid overflow-hidden">
     <h1>@date félév</h1>
@@ -34,9 +38,9 @@
     {
         @if (Model.SemestersList.Count > 1)
         {
-            <a class="btn btn-danger" data-toggle="modal" data-target="#applySemesterDelete">Félév törlése</a>
+            <button type="button" class="btn btn-danger" data-toggle="home-modal" data-target="#applySemesterDelete" id="semesterdelete" data-url="@Url.Action("DeleteSemester")" data-id="@id">Félév törlése</button>
         }
-        <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+        <button type="button" class="btn btn-primary" data-toggle="home-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
 
     }
     @if (Model.CurrentSemester.Subjects.Count != 0)
@@ -50,138 +54,6 @@
     }
 </div>
 <div id="PlaceHolderHere"></div>
-
-@*Course delete*@
-<div class="modal fade course-delete-modal" id="applyCourseDelete" tabindex="-1" role="dialog" aria-labelledby="applyCourseDelete" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applyCourseDeleteLabel">Kurzus törlése</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Biztosan törölni szeretnéd ezt a kurzust?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                <a class="btn btn-danger" id="cdel" asp-action="CourseDelete">Kurzus törlése</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Semester delete*@
-<div class="modal fade" id="applySemesterDelete" tabindex="-1" role="dialog" aria-labelledby="applySemesterDelete" aria-hidden="true" ar>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applySemesterDeleteLabel">Szemeszter törlése</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Biztosan törölni szeretnéd ezt a szemesztert?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                <a class="btn btn-danger" asp-action="SemesterDelete" asp-route-id="@id">Félév törlése</a>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Subject delete*@
-<div class="modal fade subject-delete-modal" id="applySubjectDelete" tabindex="-1" role="dialog" aria-labelledby="applySubjectDelete" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applySubjectDeleteLabel">Tárgy törlése</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Biztosan törölni szeretnéd ezt a tárgyat?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                <a class="btn btn-danger" id="sdel" asp-action="SubjectDelete">Tárgy törlése</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Insert komment*@
-<div class="modal fade add-comment-modal" id="applyComment" tabindex="-1" role="dialog" aria-labelledby="applyComment" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applyCommentLabel">Megjegyzés hozzáadása</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" asp-action="AddComment" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="text" placeholder="Írjon megjegyzést a kurzushoz" autofocus name="comment" class="w-100" />
-                    <input type="hidden" id="courseId" name="courseId" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                    <button type="submit" class="btn btn-danger" id="addcomment">Mentés</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@*Add semester*@
-<div class="modal fade" id="addSemester" tabindex="-1" role="dialog" aria-labelledby="addSemester" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addSemesterLabel">Új szemeszter felvétele</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form method="post" asp-controller="Home" asp-action="CreateSemester" enctype="multipart/form-data">
-                @if (Model.SemestersList.Count >= 2)
-                {
-                    <div class="modal-body">
-                        <label for="week">Adja meg hány hét van az adott félévben!</label>
-                        <input type="number" min="0" max="30" autofocus name="week" id="week" required />
-                        <input type="hidden" name="lastSemester" value="@lastSemester" />
-                        <br />
-                        Szeretné hozzáadni az 1 évvel korábbi tantárgyakat az új szemeszterthez?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
-                        <button class="btn btn-danger" name="withSubjects" value="0">Nem</button>
-                        <button class="btn btn-primary" name="withSubjects" value="1">Igen</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="modal-body">
-                        <label for="week">Adja meg hány hét van az adott félévben!</label>
-                        <input type="number" min="0" max="30" autofocus name="week" id="week" required />
-                        <input type="hidden" name="lastSemester" value="@lastSemester" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
-                        <button class="btn btn-danger" name="withSubjects" value="0">Hozzáadás</button>
-                    </div>
-                }
-
-            </form>
-        </div>
-    </div>
-</div>
 
 @*Collapse table*@
 <div class="container-fluid pt-2" id="dropdownTable">
@@ -229,10 +101,11 @@
                 {
                     <div class="col-5 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.value.Name)</div>
                     <div class="col-1 m-0 h5 border-right p-0 no-collapsable" id="options">
-                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId">
+                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="home-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId">
                             <span class="far fa-edit"></span>
                         </button>
-                        <a class="btn btn-xs py-0 col-6 no-collapsable" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></a>
+
+                        <button class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="home-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubject")" data-id="@item.value.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></button>
                     </div>
                     <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
                 }
@@ -355,7 +228,7 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <th>
-                                        <button type="button" class="btn btn-secondary" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId">
+                                        <button type="button" class="btn btn-secondary" data-toggle="home-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId">
                                             <span class="fa  fa-plus"></span>
                                         </button>
 
@@ -367,68 +240,68 @@
                         <tbody>
                             @foreach (var course in item.value.Courses)
                             {
-                            <tr>
-                                <td>
-                                    @if (course.NeptunOk == true)
-                                    {
-                                        <span class="fa  fa-check" style="color: green !important;"></span>
-                                    }
-                                    else
-                                    {
-                                        <span class="fa  fa-times" style="color: red !important;"></span>
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => course.CourseCode)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => course.CourseType)
-                                </td>
-                                <td>
-                                    @foreach (var teacher in course.TeachersLink)
-                                    {
-                                        @Html.DisplayFor(modelItem => teacher.Teacher.Name)
-                                        <br />
-                                    }
-                                </td>
-                                <td>
-                                    @foreach (var teacher in course.TeachersLink)
-                                    {
-                                        @Html.DisplayFor(modelItem => teacher.Loads)
-                                        @Html.Raw(" %")
-                                        <br />
-                                    }
-                                </td>
-
-                                <td>
-                                    @if (course.Classroom != null)
-                                    {
-                                        @Html.DisplayFor(modelItem => course.Classroom)
-                                        if (course.Software != null)
+                                <tr>
+                                    <td>
+                                        @if (course.NeptunOk == true)
                                         {
-                                            @Html.Raw(", ")
+                                            <span class="fa  fa-check" style="color: green !important;"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa  fa-times" style="color: red !important;"></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseType)
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Loads)
+                                            @Html.Raw(" %")
+                                            <br />
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (course.Classroom != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => course.Classroom)
+                                            if (course.Software != null)
+                                            {
+                                                @Html.Raw(", ")
+                                                @Html.DisplayFor(modelItem => course.Software)
+                                            }
+                                        }
+                                        else
+                                        {
                                             @Html.DisplayFor(modelItem => course.Software)
                                         }
-                                    }
-                                    else
-                                    {
-                                        @Html.DisplayFor(modelItem => course.Software)
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => course.Members)
-                                    @Html.Raw("fő")
-                                </td>
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <td>
-                                        <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
-                                            <span class="far fa-edit" aria-hidden="true"></span>
-                                        </button>
-                                        <a class="btn btn-danger" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
                                     </td>
-                                }
-                            </tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Members)
+                                        @Html.Raw("fő")
+                                    </td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td>
+                                            <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                                <span class="far fa-edit" aria-hidden="true"></span>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
+                                        </td>
+                                    }
+                                </tr>
                                 <tr>
                                     <td colspan="@colthespan" class="text-left">
                                         @{displayComment = course.Comment;
@@ -461,7 +334,7 @@
                                         }
                                     </td>
                                     <td>
-                                        <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                                        <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
                                         @if (displayComment != null)
                                         {
                                             <p class="h6 small mb-0">Utoljára szerkesztette:</p>
@@ -572,9 +445,9 @@
                                 <span class="fa fa-cog"></span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
-                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
-                                <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
+                                <button class=" btn btn-xs" data-toggle="home-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubject")" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</button>
                             </div>
                         }
                     </td>
@@ -733,13 +606,13 @@
                             }
                         </td>
                         <td>
-                            <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                            <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
                             @if (User.IsInRole("Admin"))
                             {
-                                <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
-                                <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
                             }
                         </td>
 
@@ -838,13 +711,13 @@
                             }
                         </td>
                         <td>
-                            <a class="btn btn-xs" data-toggle="add-comment-modal" data-target="#applyComment" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></a>
+                            <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
                             @if (User.IsInRole("Admin"))
                             {
-                                <button class="btn btn-default btn-xs" data-toggle="subject-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
                                     <span class="far fa-edit" aria-hidden="true"></span>
                                 </button>
-                                <a class="btn btn-xs" data-toggle="course-delete-modal" data-target="#applyCourseDelete" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></a>
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
                             }
                         </td>
                     </tr>
@@ -915,7 +788,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <li class="nav-item pb-1 height">
-                    <a class="nav-link text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="modal" data-target="#addSemester" onclick="clearCollapse()">Új félév felvétele</a>
+                    <button type="button" class="text-dark pl-1 py-0 text-nowrap border-0" data-toggle="semester-modal" data-target="#addSemester" id="addsemester" data-url="@Url.Action("CreateSemester")" onclick="clearCollapse()">Új félév felvétele</button>
                 </li>
             }
             <li class="nav-item pt-2 pl-1 changetable">

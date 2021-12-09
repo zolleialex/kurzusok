@@ -69,13 +69,20 @@
                         <input asp-for="Comment" class="form-control" />
                         <span asp-validation-for="Comment" class="text-danger"></span>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Oktató</label>
+                        </div>
+                        <div class="col-6">
+                            <label>Terhelés (%)</label>
+                        </div>
+                    </div>
                     <div class="teacherSelect">
                         <div id="errorLoad" class="collapse">
                             <span class="text-danger" id="errorLoadmessage"></span>
                         </div>
                         <div class="row form-group copyThisDiv">
                             <div class="col-6">
-                                <label>Oktató</label>
                                 <select class="custom-select" name="Teachers">
                                     @foreach (var item in teachers)
                                     {
@@ -86,9 +93,11 @@
                                     }
                                 </select>
                             </div>
-                            <div class="col-6">
-                                <label>Terhelés (%)</label>
+                            <div class="col-5">
                                 <input type="number" name="LoadList" min="1" max="100" class="form-control" required />
+                            </div>
+                            <div class="col-1 px-0">
+                                <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
                             </div>
                         </div>
                     </div>

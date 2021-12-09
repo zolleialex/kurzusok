@@ -15,49 +15,6 @@
     }
 
 }
-@*Subject delete*@
-<div class="modal fade subject-delete-modal" id="applySubjectDelete" tabindex="-1" role="dialog" aria-labelledby="applySubjectDelete" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applySubjectDeleteLabel">Tárgy törlése</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Biztosan törölni szeretnéd ezt a tárgyat a mintatantervből?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                <a class="btn btn-danger" id="sdel" asp-action="SubjectDelete">Tárgy törlése</a>
-            </div>
-        </div>
-    </div>
-</div>
-@*Syllabus delete*@
-<div class="modal fade" id="applySyllabusDelete" tabindex="-1" role="dialog" aria-labelledby="applySemesterDelete" aria-hidden="true" ar>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="applySyllabusDeleteLabel">Mintatanterv törlése</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="errorAlert" class="collapse">
-                    <span class="text-danger" id="errormessage"></span>
-                </div>
-                Biztosan törölni szeretnéd ezt a mintatantervet?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
-                <button class="btn btn-danger" data-toggle="delete-syllabus" data-url="@Url.Action("SyllabusDelete")" data-id="@id">Tanterv törlése</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @if (Model.SyllabusList.Count > 0)
 {
@@ -68,13 +25,12 @@
                 <h1>@currentSyllabusName tanterv</h1>
 
             </div>
-               @if (Model.SyllabusList.Count > 1)
-                {
-            <div class="col-1">
-                <a class="btn btn-danger" data-toggle="modal" data-target="#applySyllabusDelete">Tanterv törlése</a>
-
-            </div>
-                }
+            @if (Model.SyllabusList.Count > 1)
+            {
+                <div class="col-1">
+                    <button class="btn btn-xs btn-danger" data-toggle="subject-modal" data-target="#applySyllabusDelete" data-url="@Url.Action("DeleteSyllabus")" data-id="@currentSyllabusId" id="deletesubject">Tanterv törlése</button>
+                </div>
+            }
         </div>
 
         @Html.ValidationMessage("ReadError", new { @class = "text-danger" })
@@ -143,7 +99,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
                                 <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubjectSyllabus")" data-id="@item.Id"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
-                                <a class="btn btn-xs" data-toggle="subject-delete-modal" data-target="#applySubjectDelete" data-id="@item.Id" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</a>
+                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubjectSyllabus")" data-id="@item.Id" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</button>
                             </div>
                         </td>
 

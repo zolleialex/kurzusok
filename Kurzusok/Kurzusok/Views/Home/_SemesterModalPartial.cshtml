@@ -1,0 +1,39 @@
+﻿@model IList<Kurzusok.Models.Semester>
+
+<div class="modal fade addsemestermodal" id="addSemester" tabindex="-1" role="dialog" aria-labelledby="addSemester" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSemesterLabel">Új szemeszter felvétele</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" asp-controller="Home" asp-action="CreateSemesterPost" enctype="multipart/form-data" >
+                <div class="modal-body">
+                    <label for="week">Adja meg hány hét van az adott félévben!</label>
+                    <input type="number" min="0" max="30" name="week" id="week" required />
+                    <input type="hidden" name="lastSemester" value="@Model.Last().Date" />
+                    @if (Model.Count >= 2)
+                    {
+                        <br />
+                        @Html.Raw("Szeretné hozzáadni az 1 évvel korábbi tantárgyakat az új szemeszterthez?")
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                    @if (Model.Count >= 2)
+                    {
+                        <button type="submit" class="btn btn-danger" name="withSubjects" value="0">Nem</button>
+                        <button type="submit" class="btn btn-primary" name="withSubjects" value="1">Igen</button>
+
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-danger" name="withSubjects" value="0">Hozzáadás</button>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

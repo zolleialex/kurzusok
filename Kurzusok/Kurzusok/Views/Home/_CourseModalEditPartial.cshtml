@@ -138,12 +138,19 @@
                     <div id="errorLoad" class="collapse">
                         <span class="text-danger" id="errorLoadmessage"></span>
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Oktató</label>
+                        </div>
+                        <div class="col-6">
+                            <label>Terhelés (%)</label>
+                        </div>
+                    </div>
                     @foreach (var item in Model.TeachersLink)
                     {
                         <div class="teacherSelect">
                             <div class="row form-group copyThisDiv">
                                 <div class="col-6">
-                                    <label>Oktató</label>
                                     <select class="custom-select" name="Teachers">
 
                                         @foreach (var teacher in teachers)
@@ -163,12 +170,10 @@
                                     </select>
                                 </div>
                                 <div class="col-5">
-                                    <label>Terhelés (%)</label>
-                                    @*<input type="number" name="LoadList" min="1" value="@item.Loads" max="100" class="form-control" />*@
                                     <input asp-for="@item.Loads" class="form-control" name="LoadList" value="@item.Loads" min="1" max="100" required />
                                     <span asp-validation-for="@item.Loads" class="text-danger"></span>
                                 </div>
-                                <div class="col-1 p-0">
+                                <div class="col-1 px-0">
                                     <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
                                 </div>
                             </div>

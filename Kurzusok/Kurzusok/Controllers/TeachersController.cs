@@ -29,7 +29,7 @@ namespace Kurzusok.Controllers
         [Route("Teachers")]
         public async Task<IActionResult> Index(bool justData, string search)
         {
-            _teacherViewModel.LastTwoSemester = await _context.Semester.OrderByDescending(b => b.Id).Take(2).ToListAsync();
+            _teacherViewModel.LastTwoSemester = await _context.Semester.OrderByDescending(b => b.Date).Take(2).ToListAsync();
             _teacherViewModel.LastSemesterWeek = _teacherViewModel.LastTwoSemester.Where(b => b.Id == _teacherViewModel.LastTwoSemester.Max(b => b.Id)).Select(b => b.Weeks).FirstOrDefault();
             _teacherViewModel.Positions = await _context.Positions.AsNoTracking().Include(b => b.Teachers.Where(c => c.IsWorking)).ToListAsync();
             List<Teachers> teachers = new List<Teachers>();

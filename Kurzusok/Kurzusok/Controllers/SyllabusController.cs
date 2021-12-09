@@ -180,20 +180,43 @@ namespace Kurzusok.Controllers
 
         }
 
-        // GET: Delete one subject from programmedetails
-        [Route("Syllabus/SubjectDeleteSyllabus/{id?}")]
-        public async Task<IActionResult> SubjectDeleteSyllabus(int id)
+        public IActionResult DeleteSubjectSyllabus(int id)
+        {
+            return PartialView("_DeleteSubjectToSyllabus", id);
+        }
+
+        // Post: Delete one subject from programmedetails
+        [Route("Syllabus/DeleteSubjectSyllabusPost/{id?}")]
+        public async Task<IActionResult> DeleteSubjectSyllabusPost(int id)
         {
             var programmeDetail = await _context.ProgrammeDetails.Where(c => c.Id == id).FirstAsync();
-            _context.ProgrammeDetails.Remove(programmeDetail);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.ProgrammeDetails.Remove(programmeDetail);
+                var success = await _context.SaveChangesAsync();
+                if (success > 0)
+                {
+                    return Json(new { isvalid = true });
+                }
+                else
+                {
+
+                    return Json(new { isvalid = false });
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+        }
+
+        public IActionResult DeleteSyllabus(int id)
+        {
+            return PartialView("_DeleteSyllabus", id);
         }
 
 
-        // GET: Delete Syllabus 
-        [HttpGet]
-        public async Task<IActionResult> SyllabusDelete(int id)
+        public async Task<IActionResult> DeleteSyllabusPost(int id)
         {
             //Ez még így nem jó kéne egy ellenőrzés
             var subjectlist = await _context.Semester.Include(a => a.Subjects).ThenInclude(c => c.ProgrammesLink).Where(i => i.Subjects.Any(o =>o.ProgrammesLink.Any(p=>p.ProgrammeId==id))).ToListAsync();
@@ -207,12 +230,26 @@ namespace Kurzusok.Controllers
                 return Json(new { isvalid = false, responseText = response });
 
             }
-
             var programme = await _context.Programmes.Where(c => c.ProgrammeId == id).Include(d => d.ProgrammeDetails).FirstAsync();
-            _context.Programmes.Remove(programme);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Programmes.Remove(programme);
+                int success = await _context.SaveChangesAsync();
+                if (success > 0)
+                {
+                    return Json(new { isvalid = true, responseText = "Jó adatok." });
+                }
+                else
+                {
 
-            return Json(new { isvalid = true, responseText = "Jó adatok." });
+                    return Json(new { isvalid = false });
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return NotFound();
+            }
+
         }
 
         public async Task<IActionResult> ReadFromWeb(int id, string url, string training)

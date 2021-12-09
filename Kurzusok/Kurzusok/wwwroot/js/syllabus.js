@@ -11,29 +11,14 @@ $('button[data-toggle="subject-modal"]').click(function (event) {
             PlaceHolderElement.find('.editsubjectsyllabusmodal').modal('show');
         } else if (url == "/Syllabus/CreateSyllabus") {
             PlaceHolderElement.find('.createsyllabusmodal').modal('show');
+        } else if (url == "/Syllabus/DeleteSubjectSyllabus") {
+            PlaceHolderElement.find('.subjectdeletemodal').modal('show');
+        } else if (url == "/Syllabus/DeleteSyllabus") {
+            PlaceHolderElement.find('.deletesyllabusmodal').modal('show');
         }
 
     })
 })
-
-$('button[data-toggle="delete-syllabus"]').click(function (event) {
-    var url = $(this).data('url');
-    var id = $(this).data('id');
-    $.get(url, { id: id }).done(function (response) {
-        if (response.isvalid) { 
-            
-                window.location.href = "/Syllabus/" + response.programmeid;
-            
-
-        } else {
-            $('#errorAlert').show();
-            $('#errormessage').html(response.responseText);
-        }
-    })
-})
-
-
-
 
 ajaxpostBasic = form => {// Form PostolĂˇsa
     try {
@@ -48,7 +33,10 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
                     if (response.createdsyllabus) {
                         window.location.href = "/Syllabus/" + response.programmeid;
                     } else {
-                        PlaceHolderElement.find('.subjectmodal').modal('hide');// Jelenlegi Modal eltĂĽntetĂ©se                    
+                        PlaceHolderElement.find('.subjectmodal').modal('hide');
+                        PlaceHolderElement.find('.subjectdeletemodal').modal('hide');
+                        PlaceHolderElement.find('.deletesyllabusmodal').modal('hide');
+                        // Jelenlegi Modal eltĂĽntetĂ©se
                         location.reload();
                     }
                    
@@ -66,11 +54,3 @@ ajaxpostBasic = form => {// Form PostolĂˇsa
     //A default event megelĹ‘zĂ©se miatt
     return false;
 }
-
-
-$('a[data-toggle="subject-delete-modal"]').click(function (event) {
-    let id = $(this).data('id');
-    let route = "/Syllabus/SubjectDeleteSyllabus/" + id;
-    $('#sdel').attr("href", route)
-    $('#applySubjectDelete').modal('show');
-})
