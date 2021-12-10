@@ -72,6 +72,11 @@ namespace Kurzusok
                             Configuration["EmailSender:UserName"],
                             Configuration["EmailSender:Password"])
             );
+            // This allows routes to be in lowercase
+            services.AddRouting(options =>
+            {
+                options.LowercaseQueryStrings = false;
+            });
             //services.AddSingleton<HomeViewModel>();
         }
 

@@ -62,11 +62,15 @@
                         </tr>
                     }
                 }
-                <tr>
-                    <td class="pt-3 border-top-0" colspan="3">
-                        <button type="submit" class="btn btn-danger w-15" data-toggle="account-delete-modal" data-target="#deleteAccount">Törlés</button>
-                    </td>
-                </tr>
+                @if (Model.Count() > 1)
+                {
+                    <tr>
+                        <td class="pt-3 border-top-0" colspan="3">
+                            <button type="submit" class="btn btn-danger w-15" data-toggle="account-delete-modal" data-target="#deleteAccount">Törlés</button>
+                        </td>
+                    </tr>
+                }
+
 
             </tbody>
         </table>

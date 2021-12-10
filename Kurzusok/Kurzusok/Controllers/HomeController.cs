@@ -64,6 +64,11 @@ namespace Kurzusok.Controllers
         [Route("{currentSemesterId}/{training}")]
         public async Task<IActionResult> Index(int currentSemesterId, string training, string anysearch)
         {
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                ModelState.AddModelError("ReadError", TempData["ErrorMessage"].ToString());
+                TempData.Remove("ErrorMessage");
+            }
             if (training!="Levelezos" && training!="Nappali")
             {
                 return Index();
@@ -246,7 +251,7 @@ namespace Kurzusok.Controllers
                 string subjectId = Convert.ToString(subjects.SubjectId);
                 return Json(new { isvalid = true, createCourse = true, subjectid = subjectId });
             }
-            return Json(new { isvalid = false });
+            return Json(new { isvalid = false, responseText = "Hiba történt a tárgy hozzáadása közben." });
 
         }
         // GET: Create Course
@@ -462,7 +467,9 @@ namespace Kurzusok.Controllers
                 else
                 {
                     int currentSemesterId= Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
-                    return RedirectToAction(nameof(Index), new { currentSemesterId });
+                    string training = HttpContext.Session.GetString("Training");
+                    TempData["ErrorMessage"] = "Probléma lépett fel a szemeszter hozzáadása közben!";
+                    return RedirectToAction(nameof(Index), new { currentSemesterId, training });
                 }
             }
             try
@@ -698,7 +705,7 @@ namespace Kurzusok.Controllers
                 else
                 {
 
-                    return Json(new { isvalid = false });
+                    return Json(new { isvalid = false, responseText = "Hiba történt a kurzus törlése közben." });
                 }
             }
             catch (DbUpdateConcurrencyException)
@@ -748,7 +755,7 @@ namespace Kurzusok.Controllers
                 }
                 else
                 {
-
+                    TempData["ErrorMessage"] = "Probléma lépett fel a szemeszter törlése közben!";
                     int currentSemesterId = Convert.ToInt32(HttpContext.Session.GetString("SemesterId"));
                     string training = HttpContext.Session.GetString("Training");
                     return RedirectToAction(nameof(Index), new { currentSemesterId, training });
@@ -805,7 +812,7 @@ namespace Kurzusok.Controllers
                     }
                     else
                     {
-                        return Json(new { isvalid = false });
+                        return Json(new { isvalid = false, responseText="Hiba történt a komment hozzáadása közben." });
                     }
                 }
                 catch (DbUpdateConcurrencyException)
@@ -815,7 +822,7 @@ namespace Kurzusok.Controllers
             }
             else
             {
-                return Json(new { isvalid = false });
+                return Json(new { isvalid = false, responseText="Üres kommentet nem lehet adni!" });
             }
         }
     }

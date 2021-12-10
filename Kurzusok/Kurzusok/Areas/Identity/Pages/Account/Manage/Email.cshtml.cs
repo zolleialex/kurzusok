@@ -45,7 +45,7 @@ namespace Kurzusok.Areas.Identity.Pages.Account.Manage
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Új Email")]
             public string NewEmail { get; set; }
         }
 
@@ -100,14 +100,16 @@ namespace Kurzusok.Areas.Identity.Pages.Account.Manage
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Kurzuskiírás - email",
+                    $"Tisztelt Felhasználó! <br /> <br />" +
+                    $"Kérjük erősítse meg az email címét a következő linkre kattintva! <br />  <br /> <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>{HtmlEncoder.Default.Encode(callbackUrl)}</a> <br /> <br /> " +
+                    $"Ez egy automatikusan generált üzenet. Kérjük, ne válaszoljon a feladó címére!");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Megerősítő email elküldve, kérjük nézze meg az emailjeit.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Az email címed változatlan.";
             return RedirectToPage();
         }
 

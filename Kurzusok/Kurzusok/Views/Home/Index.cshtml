@@ -11,18 +11,20 @@
         training = "Nappali";
         Context.Session.SetString("Training", "Nappali");
     }
-    else if(training=="Levelezos")
+    else if (training == "Levelezos")
     {
         training = "Levelezős";
     }
-    int colthespan = 7;
+    int colthespan = 0;
     int colthespanexcel = 0;
     if (User.IsInRole("Admin"))
     {
         colthespanexcel = 11;
+        colthespan = 7;
     }
     else
     {
+        colthespan = 6;
         colthespanexcel = 10;
     }
     List<string> whoCommented = new List<string>();
@@ -54,7 +56,7 @@
     }
 </div>
 <div id="PlaceHolderHere"></div>
-
+@Html.ValidationMessage("ReadError", new { @class = "text-danger" })
 @*Collapse table*@
 <div class="container-fluid pt-2" id="dropdownTable">
     @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
