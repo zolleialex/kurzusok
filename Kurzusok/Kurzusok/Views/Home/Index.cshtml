@@ -1,0 +1,829 @@
+﻿@model Kurzusok.ViewModels.HomeViewModel
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "Kurzusok";
+    List<List<string>> allTypeCheckForSubjects = ViewBag.allTypeCheckForSubjects;
+    string date = Model.CurrentSemester.Date;
+    string id = Model.CurrentSemester.Id.ToString();
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
+    else if (training == "Levelezos")
+    {
+        training = "Levelezős";
+    }
+    int colthespan = 0;
+    int colthespanexcel = 0;
+    if (User.IsInRole("Admin"))
+    {
+        colthespanexcel = 11;
+        colthespan = 7;
+    }
+    else
+    {
+        colthespan = 6;
+        colthespanexcel = 10;
+    }
+    List<string> whoCommented = new List<string>();
+    string commentHelper, displayComment;
+
+}
+
+@*Félév törlés, tábla nyitás*@
+<div class="container-fluid overflow-hidden">
+    <h1>@date félév</h1>
+    <h3>@training tagozat</h3>
+    @if (User.IsInRole("Admin"))
+    {
+        @if (Model.SemestersList.Count > 1)
+        {
+            <button type="button" class="btn btn-danger" data-toggle="home-modal" data-target="#applySemesterDelete" id="semesterdelete" data-url="@Url.Action("DeleteSemester")" data-id="@id">Félév törlése</button>
+        }
+        <button type="button" class="btn btn-primary" data-toggle="home-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubject")" data-id="@id">Tárgy hozzáadása</button>
+
+    }
+    @if (Model.CurrentSemester.Subjects.Count != 0)
+    {
+        <div class="btn-group float-right" role="group" id="opencloseButtons">
+            <button type="button" class="btn btn-primary" id="allopen">Táblák nyitása</button>
+            <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
+            <button type="button" class="btn btn-primary" id="allclose">Táblák zárása</button>
+        </div>
+        <div class="clearfix"></div>
+    }
+</div>
+<div id="PlaceHolderHere"></div>
+@Html.ValidationMessage("ReadError", new { @class = "text-danger" })
+@*Collapse table*@
+<div class="container-fluid pt-2" id="dropdownTable">
+    @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
+    {
+        bool everythingCorrect = true;
+        string color = "";
+        if (allTypeCheckForSubjects[item.i].Count() != 0)
+        {
+            color = "bg-warning";
+            everythingCorrect = false;
+        }
+        else color = "bg-white";
+        string errormessage = "";
+        @if (allTypeCheckForSubjects[item.i].Count() != 0)
+        {
+            errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
+            foreach (var a in allTypeCheckForSubjects[item.i])
+            {
+                errormessage = errormessage + a + ", ";
+            }
+            errormessage = errormessage.Remove(errormessage.Length - 2, 2);
+        }
+
+        <div class="container-fluid border border border-secondary rounded-top mt-1 shadow-sm @color rounded w-85 w-d1" style="word-wrap:break-word;" title="@errormessage">
+            <div class="row border-bottom border-light rounded-top align-items-center p-1" data-toggle="collapse" data-target="#@item.value.SubjectCode">
+                @foreach (var kurzus in item.value.Courses)
+                {
+                    if (kurzus.NeptunOk == false)
+                    {
+                        everythingCorrect = false;
+                    }
+                }
+                @if (everythingCorrect)
+                {
+                    <div class="col-1 m-0 h5"> <span class="fa  fa-check" style="color: green !important;"></span></div>
+                }
+                else
+                {
+                    <div class="col-1 m-0 h5"> </div>
+
+                }
+                <div class="col-4 m-0 h5 border-right">  @Html.DisplayFor(modelItem => item.value.SubjectCode)</div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-5 m-0 h5 border-right"> @Html.DisplayFor(modelItem => item.value.Name)</div>
+                    <div class="col-1 m-0 h5 border-right p-0 no-collapsable" id="options">
+                        <button type="button" class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="home-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId">
+                            <span class="far fa-edit"></span>
+                        </button>
+
+                        <button class="btn btn-default btn-xs py-0 col-6 no-collapsable" data-toggle="home-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubject")" data-id="@item.value.SubjectId" id="deletesubject"><span class="fas fa-trash-alt"></span></button>
+                    </div>
+                    <div class="col-1 text-center m-0 h5"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
+                }
+                else
+                {
+                    <div class="col-5 m-0 h5"> @Html.DisplayFor(modelItem => item.value.Name)</div>
+                    <div class="col-1 m-0 h5 p-0" id="options"></div>
+                    <div class="col-1 text-center m-0 h5 border-left"><span class="fas fa-chevron-down" id="chevronIcon"></span></div>
+                }
+            </div>
+        </div>
+        <div class="container-fluid collapse pt-0 px-3 pb-3 m-auto bg-light w-80 w-d2 allcollapse" id="@item.value.SubjectCode">
+            <div class="row align-items-center flex-grow-1 p-2">
+                <div class="col-md-4 d-flex flex-column">
+                    <div class="align-items-center m-auto flex-grow-1 mt-lg-1">
+
+                        <div>
+                            @if (training == "Levelezős")
+                            {
+                                <strong>Óraszám/félév: </strong>
+                                @Html.DisplayFor(modelItem => item.value.CorrespondHours)
+                            }
+                            else
+                            {
+                                @if (item.value.EHours != null)
+                                {
+                                    <strong>Elméleti órák/hét: </strong>
+                                    @Html.DisplayFor(modelItem => item.value.EHours)
+                                    <br />
+                                }
+                                @if (item.value.GyHours != null)
+                                {
+                                    <strong>Gyakorlati órák/hét: </strong>
+                                    @Html.DisplayFor(modelItem => item.value.GyHours)
+                                    <br />
+                                }
+                                @if (item.value.LHours != null)
+                                {
+                                    <strong>Labor órák/hét: </strong>
+                                    @Html.DisplayFor(modelItem => item.value.LHours)
+                                    <br />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex flex-column">
+                    <div class="align-items-center d-flex m-auto flex-grow-1 mt-lg-1">
+                        <div>
+                            @if (item.value.EducationType == "traditional")
+                            {
+                                <strong>Jelenléti oktatás</strong>
+                            }
+                            else if (item.value.EducationType == "sync")
+                            {
+                                <strong>Szinkron oktatás</strong>
+                            }
+                            else if (item.value.EducationType == "async")
+                            {
+                                <strong>Asszinkron oktatás</strong>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="align-items-center d-flex m-auto flex-grow-1 mt-lg-1">
+                        <div class="pr-lg-2">
+                            <strong>Szakok:</strong>
+                        </div>
+                        <ul class="m-0">
+                            @foreach (var programme in item.value.ProgrammesLink)
+                            {
+                                <li class="text-left">
+                                    <i>@programme.Programme.Name</i>
+                                    @if (programme.Obligatory == true)
+                                    {
+                                        @Html.Raw(", ")
+                                        <u>kötelező</u>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(", ")
+                                        <u>választható</u>
+                                    }
+                                    <br />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 text-center mt-1">
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    <p style="color:red;">@errormessage</p>
+                }
+                <div class="table-responsive">
+                    <table class="table bg-white">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>N-ok</th>
+                                <th scope="col">
+                                    Kurzus kód
+                                </th>
+                                <th scope="col">
+                                    Kurzus típus
+                                </th>
+                                <th scope="col">
+                                    Oktató
+                                </th>
+                                <th scope="col">
+                                    Terhelés
+                                </th>
+                                <th scope="col">
+                                    Terem, szoftver igény
+                                </th>
+                                <th scope="col">
+                                    Létszám
+                                </th>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <th>
+                                        <button type="button" class="btn btn-secondary" data-toggle="home-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId">
+                                            <span class="fa  fa-plus"></span>
+                                        </button>
+
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var course in item.value.Courses)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (course.NeptunOk == true)
+                                        {
+                                            <span class="fa  fa-check" style="color: green !important;"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fa  fa-times" style="color: red !important;"></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.CourseType)
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                            <br />
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var teacher in course.TeachersLink)
+                                        {
+                                            @Html.DisplayFor(modelItem => teacher.Loads)
+                                            @Html.Raw(" %")
+                                            <br />
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (course.Classroom != null)
+                                        {
+                                            @Html.DisplayFor(modelItem => course.Classroom)
+                                            if (course.Software != null)
+                                            {
+                                                @Html.Raw(", ")
+                                                @Html.DisplayFor(modelItem => course.Software)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => course.Software)
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => course.Members)
+                                        @Html.Raw("fő")
+                                    </td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td>
+                                            <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                                <span class="far fa-edit" aria-hidden="true"></span>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="@colthespan" class="text-left">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                @Html.Raw("Megjegyzések:")
+                                                <div class="d-inline-block">
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline-block" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("Megjegyzések:")
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
+                                        @if (displayComment != null)
+                                        {
+                                            <p class="h6 small mb-0">Utoljára szerkesztette:</p>
+                                            <p class="h6 small">@whoCommented.Last()</p>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@*Normal table*@
+<div class="table-responsive pt-3" id="excelTable">
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">
+                    Tárgy kód
+                </th>
+                <th scope="col">
+                    Név
+                </th>
+                <th scope="col">
+                    @if (training == "Nappali")
+                    {
+
+                        @Html.Raw("Óra/hét")
+                    }
+                    else
+                    {
+                        @Html.Raw("Óra/félév")
+                    }
+                </th>
+                <th scope="col">
+                    Forma
+                </th>
+                <th scope="col">
+                    Szak
+                </th>
+                <th scope="col">
+                </th>
+                <th scope="col">
+                    Kurzus kód
+                </th>
+                <th scope="col">
+                    Kurzus típus
+                </th>
+                <th scope="col">
+                    Létszám
+                </th>
+                <th scope="col">
+                    Terem, szoftver igény
+                </th>
+                <th scope="col">
+                    Megjegyzés
+                </th>
+                <th scope="col">
+                    Oktató
+                </th>
+                <th scope="col">
+                    Terhelés
+                </th>
+                <th scope="col">
+                    Kurzus kezelés
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CurrentSemester.Subjects.Select((value, i) => new { i, value }))
+            {
+                bool everythingCorrect = true;
+                string errormessage = "";
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    everythingCorrect = false;
+                    errormessage = "A tárgyhoz még fel kell venni a következő típusú kurzusokat: ";
+                    foreach (var a in allTypeCheckForSubjects[item.i])
+                    {
+                        errormessage = errormessage + a + ", ";
+                    }
+                    errormessage = errormessage.Remove(errormessage.Length - 2, 2);
+                }
+                @foreach (var kurzus in item.value.Courses)
+                {
+                    if (kurzus.NeptunOk == false)
+                    {
+                        everythingCorrect = false;
+                    }
+                }
+                int courseCount = item.value.Courses.Count();
+                <tr class="newSubject border-bottom">
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @if (everythingCorrect)
+                        {
+                            <span class="fa  fa-check" style="color: green !important;"></span>
+                            <br />
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="dropdown-toggle border-0 py-0" id="subjectdropdownMenu" data-toggle="dropdown">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#addCourse" data-url="@Url.Action("CreateCourse")" data-id="@item.value.SubjectId"><span class="far fa-plus-square pr-1"></span>Kurzus hozzáadás</button><br />
+                                <button class=" btn btn-xs" data-toggle="home-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubject")" data-id="@item.value.SubjectId"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubject")" data-id="@item.value.SubjectId" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</button>
+                            </div>
+                        }
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @Html.DisplayFor(modelItem => item.value.SubjectCode)
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @Html.DisplayFor(modelItem => item.value.Name)
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @if (training == "Levelezős")
+                        {
+                            @Html.DisplayFor(modelItem => item.value.CorrespondHours)
+                        }
+                        else
+                        {
+                            @if (item.value.EHours != null)
+                            {
+                                @Html.Raw("Elmélet: ")
+                                @Html.DisplayFor(modelItem => item.value.EHours)
+                                <br />
+                            }
+                            @if (item.value.GyHours != null)
+                            {
+                                @Html.Raw("Gyakorlat: ")
+                                @Html.DisplayFor(modelItem => item.value.GyHours)
+                                <br />
+                            }
+                            @if (item.value.LHours != null)
+                            {
+                                @Html.Raw("Labor: ")
+                                @Html.DisplayFor(modelItem => item.value.LHours)
+                                <br />
+                            }
+                        }
+
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @if (item.value.EducationType == "traditional")
+                        {
+                            @Html.Raw("Jelenléti");
+                        }
+                        else if (item.value.EducationType == "sync")
+                        {
+                            @Html.Raw("Szinkron");
+                        }
+                        else if (item.value.EducationType == "async")
+                        {
+                            @Html.Raw("Asszinkron");
+                        }
+                    </td>
+                    <td @{if (courseCount != 0) { <text> rowspan="@courseCount" </text>  } }>
+                        @foreach (var programme in item.value.ProgrammesLink)
+                        {
+                            @programme.Programme.Name
+                            @if (programme.Obligatory == true)
+                            {
+                                @Html.Raw(", kötelező")
+                            }
+                            else
+                            {
+                                @Html.Raw(", választható")
+                            }
+                            <br />
+                        }
+                    </td>
+                    @foreach (var course in item.value.Courses.Take(1))
+                    {
+                        <td class="border-left-3">
+                            @if (course.NeptunOk == true)
+                            {
+                                <span class="fa fa-check" style="color: green !important;" title="Neptunba beírva"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times" style="color: red !important;" title="Nincs beírva neptunba"></span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.CourseCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.CourseType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.Members)
+                            @Html.Raw("fő")
+                        </td>
+                        <td>
+                            @if (course.Classroom != null)
+                            {
+                                @Html.DisplayFor(modelItem => course.Classroom)
+                                if (course.Software != null)
+                                {
+                                    @Html.Raw(", ")
+                                    @Html.DisplayFor(modelItem => course.Software)
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => course.Software)
+                            }
+                        </td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td class="border-0 py-0 maxwidth">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                <div>
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline" style="word-wrap:break-word;" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                @if (displayComment != null)
+                                {
+                                    <tr>
+                                        <td class="border-0 py-0">
+                                            <p class="smaller m-0">Utoljára szerkesztette: @whoCommented.Last()</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                        <td>
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Loads)
+                                @Html.Raw(" %")
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                    <span class="far fa-edit" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
+                            }
+                        </td>
+
+                    }
+                </tr>
+                @foreach (var course in item.value.Courses.Skip(1))
+                {
+                    <tr class="border-bottom">
+                        <td class="border-left-3">
+                            @if (course.NeptunOk == true)
+                            {
+                                <span class="fa fa-check" style="color: green !important;" title="Neptunba beírva"></span>
+                            }
+                            else
+                            {
+                                <span class="fa fa-times" style="color: red !important;" title="Nincs beírva neptunba"></span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.CourseCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.CourseType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => course.Members)
+                            @Html.Raw("fő")
+                        </td>
+                        <td>
+                            @if (course.Classroom != null)
+                            {
+                                @Html.DisplayFor(modelItem => course.Classroom)
+                                if (course.Software != null)
+                                {
+                                    @Html.Raw(", ")
+                                    @Html.DisplayFor(modelItem => course.Software)
+                                }
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(modelItem => course.Software)
+                            }
+                        </td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td class="border-0 py-0 maxwidth">
+                                        @{displayComment = course.Comment;
+                                            if (displayComment != null)
+                                            {
+                                                while (displayComment.Contains("$]]"))
+                                                {
+                                                    commentHelper = displayComment.Substring(0, displayComment.IndexOf("$]]") + 3);
+                                                    int pos = displayComment.IndexOf(commentHelper);
+                                                    displayComment = displayComment.Substring(0, pos) + "" + displayComment.Substring(pos + commentHelper.Length);
+                                                    commentHelper = commentHelper.Substring(3, commentHelper.IndexOf("$]]") - 3);
+                                                    whoCommented.Add(commentHelper);
+                                                }
+                                                string[] commentList = displayComment.Split('ß');
+                                                whoCommented.Reverse();
+                                                <div>
+                                                    @{
+                                                        for (int i = 0; i < commentList.Length; i++)
+                                                        {
+                                                            <p class="d-inline" style="word-wrap:break-word;" title="írta: @whoCommented[i]">@commentList[i]</p>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                @if (displayComment != null)
+                                {
+                                    <tr>
+                                        <td class="border-0 py-0">
+                                            <p class="smaller m-0">Utoljára szerkesztette: @whoCommented.Last()</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                        <td>
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Teacher.Name)
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            @foreach (var teacher in course.TeachersLink)
+                            {
+                                @Html.DisplayFor(modelItem => teacher.Loads)
+                                @Html.Raw(" %")
+                                <br />
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyComment" data-url="@Url.Action("AddComment")" data-id="@course.CourseId"><span class="far fa-comment" aria-hidden="true"></span></button>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <button class="btn btn-default btn-xs" data-toggle="home-modal" data-target="#editCourse" id="editecourse" data-url="@Url.Action("EditCourse")" data-id="@course.CourseId">
+                                    <span class="far fa-edit" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-xs" data-toggle="home-modal" data-target="#applyCourseDelete" data-url="@Url.Action("DeleteCourse")" data-id="@course.CourseId" id="deletecourse"><span class="fas fa-trash-alt"></span></button>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (allTypeCheckForSubjects[item.i].Count() != 0)
+                {
+                    <tr>
+                        <td colspan="@colthespanexcel" style="color:red;">@errormessage</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section SideBar{
+    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+        <ul class="nav nav-sidebar justify-content-center" id="opened">
+            <li class="nav-item pb-1 height">
+                <form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                    <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
+                </form>
+            </li>
+            <li class="nav-item pb-1 height">
+                @if (Model.SemestersList.Count > 1)
+                {
+                    <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+                        @date
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                        @foreach (var item in Model.SemestersList)
+                        {
+                            if (date != item.Date)
+                            {
+                                string temptrain = "Nappali";
+                                if (training == "Levelezős")
+                                {
+                                    temptrain = "Levelezos";
+                                }
+                                <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@item.Id" asp-route-training="@temptrain" onclick="clearCollapse()">@item.Date</a>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-dark pl-1 py-0 d-inline">
+                        @date
+                    </p>
+                }
+
+            </li>
+            <li class="nav-item pb-1 height">
+                <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline text-nowrap" id="dropdownMenuTraining" data-toggle="dropdown">
+                    @training tagozat
+                </a>
+                <div class="dropdown-menu p-0 w-75 text-center" aria-labelledby="dropdownMenuTraining" role="menu">
+                    @if (training == "Nappali")
+                    {
+                        <a class="text-dark nav-link text-nowrap px-0" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@id" asp-route-training="Levelezos" onclick="clearCollapse()">Váltás Levelezőre</a>
+                    }
+                    else
+                    {
+                        <a class="text-dark nav-link text-nowrap  px-0" role="menuitem" tabindex="-1" asp-route-currentSemesterId="@id" asp-route-training="Nappali" onclick="clearCollapse()">Váltás nappalira</a>
+                    }
+                </div>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1 height">
+                    <button type="button" class="text-dark pl-1 py-0 text-nowrap border-0" data-toggle="semester-modal" data-target="#addSemester" id="addsemester" data-url="@Url.Action("CreateSemester")" onclick="clearCollapse()">Új félév felvétele</button>
+                </li>
+            }
+            <li class="nav-item pt-2 pl-1 changetable">
+                <div class="custom-control custom-switch text-nowrap">
+                    <input type="checkbox" class="custom-control-input pl-1" id="tableView" onclick="changeTable()">
+                    <label class="custom-control-label text-dark" for="tableView">Táblázatos nézet</label>
+                </div>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar" id="closed">
+            <li class="nav-item pb-1">
+                <i class="fas fa-search"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-list-ul"></i>
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-exchange-alt"></i>
+            </li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item pb-1">
+                    <i class="fas fa-plus-square"></i>
+                </li>
+            }
+            <li class="nav-item pb-1 changetable">
+                <i class="fas fa-table"></i>
+            </li>
+        </ul>
+    </div>
+}
+
+@section Scripts{
+    <script src="~/js/sidebar.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+}

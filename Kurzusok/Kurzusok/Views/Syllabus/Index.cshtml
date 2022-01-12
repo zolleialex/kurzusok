@@ -1,0 +1,223 @@
+﻿@model Kurzusok.ViewModels.SyllabusViewModel
+@{
+    ViewData["Title"] = "Mintatantervek";
+    string currentSyllabusId = "0";
+    string currentSyllabusName = "";
+    string training = "";
+    int id = 0;
+    if (Model.SyllabusList.Count > 0)
+    {
+        currentSyllabusId = Model.CurrentSyllabus.ProgrammeId.ToString();
+        currentSyllabusName = Model.CurrentSyllabus.Name + " " + Model.CurrentSyllabus.Training;
+        training = Model.CurrentSyllabus.Training;
+        training = char.ToUpper(training[0]) + training[1..];
+        id = Model.CurrentSyllabus.ProgrammeId;
+    }
+
+}
+
+@if (Model.SyllabusList.Count > 0)
+{
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-11">
+                <h1>Mintatantervek</h1>
+                <h1>@currentSyllabusName tanterv</h1>
+
+            </div>
+            @if (Model.SyllabusList.Count > 1)
+            {
+                <div class="col-1">
+                    <button class="btn btn-xs btn-danger" data-toggle="subject-modal" data-target="#applySyllabusDelete" data-url="@Url.Action("DeleteSyllabus")" data-id="@currentSyllabusId" id="deletesubject">Tanterv törlése</button>
+                </div>
+            }
+        </div>
+
+        @Html.ValidationMessage("ReadError", new { @class = "text-danger" })
+        <form class="form-group d-flex pt-3" asp-controller="Syllabus" asp-action="ReadFromWeb">
+            <input class="form-control w-25" type="url" id="tableUrl" placeholder="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" title="Adja meg a felvenni kívánt mintatanterv URL-jét (it.sze.hu-ról)" name="url" />
+            <input type="hidden" name="id" value="@currentSyllabusId" />
+            @if (training == "Nappali")
+            {
+                <input type="hidden" name="training" value="full" />
+            }
+            else
+            {
+                <input type="hidden" name="training" value="part" />
+            }
+
+            <button type="submit" class="btn btn-primary ml-1">Felvétel</button>
+        </form>
+        <button type="button" class="btn btn-primary" data-toggle="subject-modal" data-target="#addSubject" id="createsubject" data-url="@Url.Action("CreateSubjectToSyllabus")" data-id="@currentSyllabusId">Tárgy felvétele a mintatantervhez manuálisan</button>
+    </div>
+    <div id="PlaceHolderHere"></div>
+
+    <div class="table-responsive pt-3">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        Tárgy kód
+                    </th>
+                    <th scope="col">
+                        Név
+                    </th>
+                    <th scope="col">
+                        Tárgy típus
+                    </th>
+                    <th scope="col">
+                        @if (training == "Nappali")
+                        {
+
+                            @Html.Raw("Óra/hét")
+                        }
+                        else
+                        {
+                            @Html.Raw("Óra/félév")
+                        }
+                    </th>
+                    <th scope="col">
+                        Kredit
+                    </th>
+                    <th scope="col">
+                        Ajánlott félév
+                    </th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CurrentSyllabus.ProgrammeDetails)
+                {
+
+                    <tr class="newSubject border-bottom">
+
+                        <td>
+                            <a class="dropdown-toggle" id="subjectdropdownMenu" data-toggle="dropdown">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                                <button class=" btn btn-xs" data-toggle="subject-modal" data-target="#editSubject" id="editesubject" data-url="@Url.Action("EditSubjectSyllabus")" data-id="@item.Id"><span class="far fa-edit pr-1"></span>Tárgy szerkesztése</button> <br />
+                                <button class="btn btn-xs" data-toggle="subject-modal" data-target="#applySubjectDelete" data-url="@Url.Action("DeleteSubjectSyllabus")" data-id="@item.Id" id="deletesubject"><span class="far fa-trash-alt pr-1"></span>Tárgy törlése</button>
+                            </div>
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SubjectCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+
+                            @if (item.Obligatory == true)
+                            {
+                                @Html.Raw("Kötelező")
+                            }
+                            else
+                            {
+                                @Html.Raw("Választható szakmai")
+                            }
+                            <br />
+                        </td>
+                        <td>
+                            @if (training == "Levelezős")
+                            {
+                                @Html.DisplayFor(modelItem => item.CorrespondHours)
+                            }
+                            else
+                            {
+                                @if (item.EHours != null)
+                                {
+                                    @Html.Raw("Elmélet: ")
+                                    @Html.DisplayFor(modelItem => item.EHours)
+                                    <br />
+                                }
+                                @if (item.GyHours != null)
+                                {
+                                    @Html.Raw("Gyakorlat: ")
+                                    @Html.DisplayFor(modelItem => item.GyHours)
+                                    <br />
+                                }
+                                @if (item.LabHours != null)
+                                {
+                                    @Html.Raw("Labor: ")
+                                    @Html.DisplayFor(modelItem => item.LabHours)
+                                    <br />
+                                }
+                            }
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Credit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RecommendedSemester)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+
+
+
+@section SideBar{
+    <div class="sidebar" id="SideBar" onmouseover="openBar()" onmouseout="delay()">
+        <ul class="nav nav-sidebar justify-content-center" id="opened">
+            <li class="nav-item pb-1 height">
+                @*<form asp-area="" asp-controller="Home" asp-action="AnySearch" id="anysearchform">
+                        <input type="text" name="anysearch" class="form-control" placeholder="Keresés" />
+                    </form>*@
+            </li>
+            <li class="nav-item pb-1 height">
+                @if (Model.SyllabusList.Count > 1)
+                {
+                    <a class="nav-link text-dark dropdown-toggle pl-1 py-0 d-inline" id="dropdownMenuSemester" data-toggle="dropdown">
+                        @currentSyllabusName
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" role="menu">
+                        @foreach (var item in Model.SyllabusList)
+                        {
+                            if (currentSyllabusId != Convert.ToString(item.ProgrammeId))
+                            {
+                                <a class="text-dark nav-link" role="menuitem" tabindex="-1" asp-route-currentSyllabusId="@item.ProgrammeId">@item.Name @item.Training</a>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-dark pl-1 py-0 d-inline">
+                        @currentSyllabusName
+                    </p>
+                }
+
+            </li>
+            <li class="nav-item pb-1 height">
+                <button class=" btn text-dark pl-1 py-0 d-inline text-nowrap" data-toggle="subject-modal" data-target="#addSyllabus" data-url="@Url.Action("CreateSyllabus")">Új mintatanterv</button>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar" id="closed">
+
+            <li class="nav-item pb-1">
+            </li>
+            <li class="nav-item pb-1">
+                <i class="fas fa-list-ul"></i>
+            </li>
+
+            <li class="nav-item pb-1">
+                <i class="fas fa-plus-square"></i>
+            </li>
+        </ul>
+    </div>
+}
+
+
+@section Scripts{
+    <script src="~/js/sidebar.js" asp-append-version="true"></script>
+    <script src="~/js/syllabus.js" asp-append-version="true"></script>
+}

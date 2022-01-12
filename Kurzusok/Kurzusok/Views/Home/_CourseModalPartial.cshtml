@@ -1,0 +1,120 @@
+﻿@model Courses
+@using Microsoft.AspNetCore.Http;
+@{
+    IList<Teachers> teachers = ViewBag.teachers;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
+}
+
+<div class="modal  coursemodal" id="addCourse">
+    <div class="modal-dialog">
+        <form asp-action="CreateCoursePost" onsubmit="return ajaxpostBasic(this);">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addCourseLabel">Kurzus hozzáadása</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorAlert" class="collapse">
+                        <span class="text-danger" id="errormessage"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NeptunOk">Neptunba beírva?</label>
+                        <input asp-for="NeptunOk" class="form-control" />
+                        <span asp-validation-for="NeptunOk" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CourseType">Kurzus típus</label>
+                        <select class="custom-select" name="CourseType">
+                            <option value="Elmélet">Elmélet</option>
+                            @if (training == "Nappali")
+                            {
+                                <option value="Gyakorlat">Gyakorlat</option>
+                                <option value="Labor">Labor</option>
+                            }
+                            <option value="Csak Vizsga">Csak Vizsga</option>
+                            <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                            <option value="E-learning">E-learning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CourseCode">Kurzus kód</label>
+                        <input asp-for="CourseCode" class="form-control" value="" required />
+                        <span asp-validation-for="CourseCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Members">Létszám</label>
+                        <input asp-for="Members" class="form-control" min="0" required />
+                        <span asp-validation-for="Members" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Classroom">Terem</label>
+                        <input asp-for="Classroom" class="form-control" />
+                        <span asp-validation-for="Classroom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Software">Szoftver</label>
+                        <input asp-for="Software" class="form-control" />
+                        <span asp-validation-for="Software" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Comment">Komment</label>
+                        <input asp-for="Comment" class="form-control" />
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Oktató</label>
+                        </div>
+                        <div class="col-6">
+                            <label>Terhelés (%)</label>
+                        </div>
+                    </div>
+                    <div class="teacherSelect">
+                        <div id="errorLoad" class="collapse">
+                            <span class="text-danger" id="errorLoadmessage"></span>
+                        </div>
+                        <div class="row form-group copyThisDiv">
+                            <div class="col-6">
+                                <select class="custom-select" name="Teachers">
+                                    @foreach (var item in teachers.OrderBy(b=>b.Name))
+                                    {
+                                        if (item.IsWorking)
+                                        {
+                                            <option value="@item.TeacherId">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <input type="number" name="LoadList" min="1" max="100" class="form-control" required />
+                            </div>
+                            <div class="col-1 px-0">
+                                <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="teacherMoreSelect" id="toCopy">
+
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Új tanár hozzáadása</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <div class="form-group">
+                        <input type="submit" id="save" value="Mentés" class="btn btn-primary" />
+                        <input type="submit" id="saveandnext" value="Mentés és tovább" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

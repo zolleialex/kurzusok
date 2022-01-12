@@ -1,0 +1,196 @@
+﻿@model Courses
+@using Microsoft.AspNetCore.Http;
+@{
+    IList<Teachers> teachers = ViewBag.teachers;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
+}
+
+<div class="modal  editcoursemodal" id="editCourse">
+    <div class="modal-dialog">
+        <form asp-action="EditCoursePost" onsubmit="return ajaxpostBasic(this);">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addCourseLabel">Kurzus szerkesztése</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorAlert" class="collapse">
+                        <span class="text-danger" id="errormessage"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="CourseId" class="form-control" value="@Model.CourseId" />
+                        <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NeptunOk">Neptunba beírva?</label>
+                        <input asp-for="NeptunOk" class="form-control" />
+                        <span asp-validation-for="NeptunOk" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label asp-for="CourseType">Kurzus típus</label>
+                        <select class="custom-select" name="CourseType">
+                            @if (Model.CourseType == "Elmélet")
+                            {
+                                <option value="Elmélet" selected>Elmélet</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
+                                }
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "Gyakorlat")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat" selected>Gyakorlat</option>
+                                <option value="Labor">Labor</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "Labor")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                <option value="Gyakorlat">Gyakorlat</option>
+                                <option value="Labor" selected>Labor</option>
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "Csak Vizsga")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
+                                }
+                                <option value="Csak Vizsga" selected>Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "Egyéni felkészülés")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
+                                }
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés" selected>Egyéni felkészülés</option>
+                                <option value="E-learning">E-learning</option>
+                            }
+                            else if (Model.CourseType == "E-learning")
+                            {
+                                <option value="Elmélet">Elmélet</option>
+                                @if (training == "Nappali")
+                                {
+                                    <option value="Gyakorlat">Gyakorlat</option>
+                                    <option value="Labor">Labor</option>
+
+                                }
+                                <option value="Csak Vizsga">Csak Vizsga</option>
+                                <option value="Egyéni felkészülés">Egyéni felkészülés</option>
+                                <option value="E-learning" selected>E-learning</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CourseCode">Kurzus kód</label>
+                        <input asp-for="CourseCode" class="form-control" required />
+                        <span asp-validation-for="CourseCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Members">Létszám</label>
+                        <input asp-for="Members" class="form-control" required min="0" max="1000" />
+                        <span asp-validation-for="Members" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Classroom">Terem</label>
+                        <input asp-for="Classroom" class="form-control" />
+                        <span asp-validation-for="Classroom" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Software">Szoftver</label>
+                        <input asp-for="Software" class="form-control" />
+                        <span asp-validation-for="Software  " class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="Comment" class="form-control" rows="4" />
+                    </div>
+                    <div class="form-group">
+                        <label>Törli az összes kommentet?</label>
+                        <input type="checkbox" id="DeleteComment" name="DeleteComments" value="1" />
+                    </div>
+                    <div id="errorLoad" class="collapse">
+                        <span class="text-danger" id="errorLoadmessage"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Oktató</label>
+                        </div>
+                        <div class="col-6">
+                            <label>Terhelés (%)</label>
+                        </div>
+                    </div>
+                    @foreach (var item in Model.TeachersLink)
+                    {
+                        <div class="teacherSelect">
+                            <div class="row form-group copyThisDiv">
+                                <div class="col-6">
+                                    <select class="custom-select" name="Teachers">
+
+                                        @foreach (var teacher in teachers.OrderBy(b => b.Name))
+                                        {
+                                            if (item.TeacherId == teacher.TeacherId)
+                                            {
+                                                <option value="@teacher.TeacherId" selected>@teacher.Name</option>
+                                            }
+                                            else
+                                            {
+                                                if (teacher.IsWorking)
+                                                {
+                                                    <option value="@teacher.TeacherId">@teacher.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <input asp-for="@item.Loads" class="form-control" name="LoadList" value="@item.Loads" min="1" max="100" required />
+                                    <span asp-validation-for="@item.Loads" class="text-danger"></span>
+                                </div>
+                                <div class="col-1 px-0">
+                                    <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="teacherMoreSelect" id="toCopy">
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Új tanár hozzáadása</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <div class="form-group">
+                        <input type="submit" id="save" value="Mentés" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+<h2>Adminisztráció</h2>
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item"> <a class="nav-link" asp-area="" asp-controller="Administration" asp-action="Index" id="Edit">Felhasználói szintek</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Administration" asp-action="RegisterAccount" id="Register">Új felhasználó regisztrálása</a></li>
+                <li class="nav-item"> <a class="nav-link" asp-area="" asp-controller="Administration" asp-action="DeleteAccounts" id="Delete">Felhasználók törlése</a></li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+@if (ViewData["Active"] != null)
+{
+    <script type="text/javascript">document.getElementById("@ViewData["Active"]").classList.add("active")</script>
+}
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

@@ -1,0 +1,137 @@
+﻿@model Subjects
+@using Microsoft.AspNetCore.Http;
+@{
+    IList<Programmes> programmes = ViewBag.programmes;
+    string training = Context.Session.GetString("Training");
+    if (string.IsNullOrEmpty(training))
+    {
+        training = "Nappali";
+        Context.Session.SetString("Training", "Nappali");
+    }
+    else if (training == "Levelezos")
+    {
+        training = "Levelezős";
+    }
+}
+
+<div class="modal editsubjectmodal" id="editSubject">
+    <div class="modal-dialog">
+        <form asp-action="EditSubjectPost" onsubmit="return ajaxpostBasic(this);">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editSubjectLabel">Tárgy szerkesztése</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span>X</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorAlert" class="collapse">
+                        <span class="text-danger" id="errormessage"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="SubjectId" class="form-control" value="@Model.SubjectId" />
+                        <input type="hidden" asp-for="SemesterId" class="form-control" value="@Model.SemesterId" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SubjectCode">Tantárgy kód</label>
+                        <input asp-for="SubjectCode" class="form-control" required />
+                        <span asp-validation-for="SubjectCode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name">Megnevezés</label>
+                        <input asp-for="Name" class="form-control" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    @if (training == "Nappali")
+                    {
+                        <div class="form-group">
+                            <label asp-for="EHours" class="control-label">Elméleti órák száma</label>
+                            <input asp-for="EHours" class="form-control" min="0" />
+                            <span asp-validation-for="EHours" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="GyHours" class="control-label">Gyakorlati órák száma</label>
+                            <input asp-for="GyHours" class="form-control" min="0" />
+                            <span asp-validation-for="GyHours" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LHours" class="control-label">Labor órák száma</label>
+                            <input asp-for="LHours" class="form-control" min="0" />
+                            <span asp-validation-for="LHours" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label asp-for="CorrespondHours" class="control-label">Órák száma</label>
+                            <input asp-for="CorrespondHours" class="form-control" min="0" />
+                            <span asp-validation-for="CorrespondHours" class="text-danger"></span>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label asp-for="EducationType" class="control-label">Képzési forma</label>
+                        <select class="custom-select" asp-for="EducationType">
+                            @if (Model.EducationType == "traditional")
+                            {
+                                <option value="traditional" selected>Jelenléti</option>
+                                @if (training == "Levelezős")
+                                {
+                                    <option value="sync">Szinkron</option>
+                                }
+                                <option value="async">Asszinkron</option>
+                            }
+                            else if (Model.EducationType == "sync")
+                            {
+                                <option value="traditional">Jelenléti</option>
+                                <option value="sync" selected>Szinkron</option>
+                                <option value="async">Asszinkron</option>
+                            }
+                            else
+                            {
+                                <option value="traditional">Jelenléti</option>
+                                @if (training == "Levelezős")
+                                {
+                                    <option value="sync">Szinkron</option>
+                                }
+                                <option value="async" selected>Asszinkron</option>
+                            }
+                        </select>
+                    </div>
+                    <label>Képzés</label>
+                    @foreach (var item in Model.ProgrammesLink)
+                    {
+                        <div class="Formselect">
+                            <div class="d-flex form-group copyThisDiv">
+                                <select class="custom-select mr-3" name="Programmes">
+                                    @foreach (var programme in programmes)
+                                    {
+                                        if (programme.Training == training.ToLower())
+                                        {
+                                            string prName = programme.Name + " " + programme.Training;
+                                            if (item.ProgrammeId == programme.ProgrammeId)
+                                            {
+                                                <option value="@programme.ProgrammeId" selected>@prName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@programme.ProgrammeId">@prName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <button type="button" class="btn btn-danger" id="hidedivbutton">x</button>
+                            </div>
+                        </div>
+                    }
+                    <div class="teacherMoreSelect" id="toCopy"></div>
+                    <button type="button" class="btn btn-secondary" onclick="copyDivContent();">Hozzárendelés másik képzéshez</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Bezárás</button>
+                    <div class="form-group">
+                        <input type="submit" value="Mentés" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}

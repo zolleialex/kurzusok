@@ -1,0 +1,104 @@
+﻿
+
+#excelTable, #dropdownTable, #opencloseButtons {
+    display: none;
+}
+
+
+body {
+    padding-top: 100px;
+}
+
+@media (min-width: 288px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 90px;
+        transition: 0.5s;
+    }
+}
+
+@media (min-width: 1200px) {
+    #dropdownTable #options {
+        display: flex;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    #dropdownTable #options {
+        display: block;
+    }
+}
+
+#subjectdropdownMenu {
+    color: #7b8a8b !important;
+    cursor: pointer;
+}
+
+    #subjectdropdownMenu:hover {
+        text-decoration: none !important;
+        color: black !important;
+    }
+
+td {
+    border: 0;
+}
+
+.newSubject {
+    border-top: 3px solid rgba(44, 62, 80, 0.25) !important;
+}
+
+    .newSubject .dropdown-menu > :hover {
+        text-decoration: underline !important;
+    }
+
+.border-left-3 {
+    border-left: 3px solid rgba(44, 62, 80, 0.25) !important;
+}
+
+.w-85 {
+    width: 85%;
+}
+
+.w-80 {
+    width: 80%;
+}
+.w-15 {
+    width: 15%;
+}
+.dark-border {
+    border: 1px solid #7b8a8b !important;
+}
+
+.smaller {
+    font-size: 70%;
+}
+
+.maxwidth {
+    max-width: 350px;
+}
+
+@media only screen and (max-width: 1200px) {
+    .w-d1 {
+        width: 95%;
+    }
+
+    .w-d2 {
+        width: 94%;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .w-d1 {
+        width: 100%;
+    }
+
+    .w-d2 {
+        width: 98%;
+    }
+}
+
+@media (max-width: 1500px) {
+    #excelTable, .changetable {
+        display: none;
+    }
+}

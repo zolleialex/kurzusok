@@ -1,0 +1,60 @@
+﻿ 
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8-hu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" runat="server" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" runat="server" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" runat="server" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top navbar-dark bg-dark border-bottom box-shadow mb-3 px-6">
+            <div class="container-fluid">
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Kurzusok</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Teachers" asp-action="Index">Oktatók</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Administration" asp-action="Index">Adminisztráció</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Syllabus" asp-action="Index">Mintatantervek</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">Beállítások</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "", new { area = "" })">
+                                <button type="submit" class="nav-link btn btn-link">Kijelentkezés</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    @if (IsSectionDefined("SideBar"))
+    {
+        @RenderSection("SideBar")
+    }
+    <div class="col-sm-12 main" id="main">
+        @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

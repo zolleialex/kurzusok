@@ -1,0 +1,50 @@
+﻿@using Kurzusok.ViewModels
+@model List<RoleEditViewModel>
+@{
+    var roleId = ViewBag.roleId;
+    var roleName = ViewBag.roleName;
+    ViewData["Title"] = roleName+" szint";
+}
+
+<form method="post">
+
+    <div class="card w-50 m-auto">
+        <div class="card-header">
+            <p>@roleName hozzáadása, vagy törlése</p>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+            <div class="form-check">
+
+                @if (User.Identity.Name== Model[i].UserName&&roleName=="Admin")
+                {
+                    <input type="hidden" asp-for="@Model[i].UserId" />
+                    <input type="hidden" asp-for="@Model[i].UserName" />
+                    <input asp-for="@Model[i].Selected" class="form-check-input" disabled/>
+                    <input type="hidden" asp-for="@Model[i].Selected" class="form-check-input" />
+                    <label asp-for="@Model[i].Selected" class="form-check-label">
+                        @Model[i].UserName
+                    </label>
+                }
+                else
+                {
+                    <input type="hidden" asp-for="@Model[i].UserId" />
+                    <input type="hidden" asp-for="@Model[i].UserName" />
+                    <input asp-for="@Model[i].Selected" class="form-check-input" />
+                    <label asp-for="@Model[i].Selected" class="form-check-label">
+                        @Model[i].UserName
+                    </label>
+                }
+
+            </div>
+            }
+
+
+            <input type="submit" class="btn btn-primary mt-3" value="Mentés" />
+            <a asp-controller="Administration" asp-action="Index" asp-route-roleId="@roleId" class="btn btn-primary  mt-3">Mégse</a>
+
+        </div>
+    </div>
+
+</form>

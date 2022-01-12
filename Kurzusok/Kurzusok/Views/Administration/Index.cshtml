@@ -1,0 +1,34 @@
+﻿@using Kurzusok.ViewModels
+@model List<RolesViewModel>
+@{;
+    ViewData["Title"] = "Felhasználói szintek";
+    Layout = "/Views/Administration/_AdminLayout.cshtml";
+    ViewData["Active"] = "Edit";
+}
+<div class="w-80 row">
+    @if (Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="card col-5 p-0 m-2">
+                <div class="card-header">
+                    <h5 class="card-title text-center">@item.roleName</h5>
+                </div>
+                <div class="card-body">
+                    @foreach (var userName in item.Users)
+                    {
+                        <p>@userName</p>
+                    }
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-controller="Administration" asp-action="EditUserRole" asp-route-roleId="@item.roleId" class="btn btn-primary">@item.roleName szint kezelése</a>
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <p>Nincsenek felhasználói szintek!</p>
+    }
+</div>

@@ -1,0 +1,24 @@
+﻿<div class="modal fade deletesemestermodal" id="applySemesterDelete" tabindex="-1" role="dialog" aria-labelledby="applySemesterDelete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form asp-action="DeleteSemesterPost">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applySemesterDeleteLabel">Szemeszter törlése</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Biztosan törölni szeretnéd ezt a szemesztert?
+                    <input type="hidden" name="id" value="@Model">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Mégse</button>
+                    <div class="form-group">
+                        <input type="submit" value="Félév törlése" class="btn btn-primary" id="delete" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
